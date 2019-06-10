@@ -18,31 +18,35 @@ public class DeviceManager{
         this.wemoArrayList = new ArrayList<>();
     }
 
-    public Object queryForDevice(String deviceName, String deviceType){
-        switch (deviceType){
-            case "WEMO":
-                for(WEMO holder: wemoArrayList)
-                    if(holder.getName().equals(deviceName)){ return holder; }
-                return null;
-            case "UNTS":
-                for(UNTS holder: untsArrayList)
-                    if(holder.getName().equals(deviceName)){ return holder; }
-                return null;
-            case "DLC":
-                for(DLC holder: dlcArrayList)
-                    if(holder.getName().equals(deviceName)){ return holder; }
-                return null;
-            case "PHLE":
-                for(PHLE holder: phleArrayList)
-                    if(holder.getName().equals(deviceName)){ return holder; }
-                return null;
-            default:
-                return null;
-        }
-    }
     public void pushNewDLC(String deviceID){ dlcArrayList.add(new DLC(deviceID));}
+
     public void pushNewUNTS(String deviceID){ untsArrayList.add(new UNTS(deviceID));}
+
     public void pushNewPHLE(String deviceID){ phleArrayList.add(new PHLE(deviceID));}
+
     public void pushNewWEMO(String deviceID){ wemoArrayList.add(new WEMO(deviceID));}
 
+    public DLC queryForDLC(String deviceName){
+        for(DLC holder: dlcArrayList)
+            if(holder.getName().equals(deviceName)){ return holder; }
+        return null;
+    }
+
+    public WEMO queryForWEMO(String deviceName){
+        for(WEMO holder: wemoArrayList)
+            if(holder.getName().equals(deviceName)){ return holder; }
+        return null;
+    }
+
+    public UNTS queryForUNTS(String deviceName){
+        for(UNTS holder: untsArrayList)
+            if(holder.getName().equals(deviceName)){ return holder; }
+        return null;
+    }
+
+    public PHLE queryForPHLE(String deviceName){
+        for(PHLE holder: phleArrayList)
+            if(holder.getName().equals(deviceName)){ return holder; }
+        return null;
+    }
 }

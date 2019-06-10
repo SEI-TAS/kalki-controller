@@ -1,30 +1,21 @@
 package kalki.controller;
-public class PHLE implements Runnable{
+
+public class PHLE extends StateMachine{
     static {
         System.loadLibrary("fsm");
     }
-    private String deviceName;
-    //Init current state to 0;
-    private int currentState = 0;
-
-    private int currentEvent = 0;
-
-    @Override
     public void run() {
         this.generateNextState();
+        System.out.println("finished in JNI Code");
+        return;
     }
-    public PHLE(String name) { deviceName = name; }
+    public PHLE(String name) { super(name);}
 
     private native void generateNextState();
 
-    public String getName() {
-        return this.deviceName;
+    public void printConfirmation(){
+        System.out.println("completed C code in PHLE");
     }
-
-    public void setEvent(int event) {
-        this.currentEvent = event;
-        System.out.println("New Event = " + this.currentEvent);
-    }
-    public void deviceString() { System.out.println("Device Name: " + this.deviceName + " current state: " + this.currentState); }
 }
+
 

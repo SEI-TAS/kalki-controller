@@ -1,9 +1,13 @@
 #include <jni.h>
 #include <stdio.h>
-#include "FSM.h"
+#include "kalki_controller_DLC.h"
+#include "kalki_controller_UNTS.h"
+#include "kalki_controller_PHLE.h"
+#include "kalki_controller_WEMO.h"
 
 JNIEXPORT void JNICALL Java_kalki_controller_WEMO_generateNextState(JNIEnv *env, jobject fsmObj)
 {
+    (*env) -> MonitorEnter(env, fsmObj);
     //Need to get the Class reference for the FSM
     jclass fsmClass = (*env) -> GetObjectClass(env, fsmObj);
     //Need to get the Field IDs of the instance variables
@@ -21,7 +25,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_WEMO_generateNextState(JNIEnv *env,
                 {1, 2, 2},
                 {0, 0, 0}
             };
-         int newState = lookup_table[newEvent][currentState];
+         int newState = lookup_table[currentEvent][currentState];
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
@@ -29,11 +33,13 @@ JNIEXPORT void JNICALL Java_kalki_controller_WEMO_generateNextState(JNIEnv *env,
     }
     else {
         printf("Incorrect State not setting\n");
-        return;
     }
+    (*env) -> MonitorExit(env, fsmObj);
+    return;
 }
 JNIEXPORT void JNICALL Java_kalki_controller_DLC_generateNextState(JNIEnv *env, jobject fsmObj)
 {
+    (*env) -> MonitorEnter(env, fsmObj);
     //Need to get the Class reference for the FSM
     jclass fsmClass = (*env) -> GetObjectClass(env, fsmObj);
     //Need to get the Field IDs of the instance variables
@@ -51,7 +57,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_DLC_generateNextState(JNIEnv *env, 
                 {1, 2, 2},
                 {0, 0, 0}
             };
-         int newState = lookup_table[newEvent][currentState];
+         int newState = lookup_table[currentEvent][currentState];
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
@@ -59,12 +65,14 @@ JNIEXPORT void JNICALL Java_kalki_controller_DLC_generateNextState(JNIEnv *env, 
     }
     else {
         printf("Incorrect State not setting\n");
-        return;
     }
+    (*env) -> MonitorExit(env, fsmObj);
+    return;
 }
 
 JNIEXPORT void JNICALL Java_kalki_controller_PHLE_generateNextState(JNIEnv *env, jobject fsmObj)
 {
+    (*env)->MonitorEnter(env, fsmObj);
     //Need to get the Class reference for the FSM
     jclass fsmClass = (*env) -> GetObjectClass(env, fsmObj);
     //Need to get the Field IDs of the instance variables
@@ -82,7 +90,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_PHLE_generateNextState(JNIEnv *env,
                 {1, 2, 2},
                 {0, 0, 0}
             };
-         int newState = lookup_table[newEvent][currentState];
+         int newState = lookup_table[currentEvent][currentState];
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
@@ -90,12 +98,14 @@ JNIEXPORT void JNICALL Java_kalki_controller_PHLE_generateNextState(JNIEnv *env,
     }
     else {
         printf("Incorrect State not setting\n");
-        return;
     }
+    (*env) -> MonitorExit(env, fsmObj);
+    return;
 }
 
 JNIEXPORT void JNICALL Java_kalki_controller_UNTS_generateNextState(JNIEnv *env, jobject fsmObj)
 {
+    (*env) -> MonitorEnter(env, fsmObj);
     //Need to get the Class reference for the FSM
     jclass fsmClass = (*env) -> GetObjectClass(env, fsmObj);
     //Need to get the Field IDs of the instance variables
@@ -113,7 +123,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_UNTS_generateNextState(JNIEnv *env,
                 {1, 2, 2},
                 {0, 0, 0}
             };
-         int newState = lookup_table[newEvent][currentState];
+         int newState = lookup_table[currentEvent][currentState];
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
@@ -121,6 +131,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_UNTS_generateNextState(JNIEnv *env,
     }
     else {
         printf("Incorrect State not setting\n");
-        return;
     }
+    (*env) -> MonitorExit(env, fsmObj);
+    return;
 }

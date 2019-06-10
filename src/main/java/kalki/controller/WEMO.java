@@ -1,31 +1,19 @@
 package kalki.controller;
 
-public class WEMO implements Runnable{
+public class WEMO extends StateMachine{
     static {
         System.loadLibrary("fsm");
     }
-    private String deviceName;
-    //Init current state to 0;
-    private int currentState = 0;
-
-    private int currentEvent = 0;
-
-    @Override
     public void run() {
         this.generateNextState();
     }
-    public WEMO(String name) { deviceName = name; }
+    public WEMO(String name) { super(name);}
 
     private native void generateNextState();
 
-    public String getName() {
-        return this.deviceName;
+    public static void main(String[] args) {
+        WEMO test = new WEMO("device");
+        test.setEvent(0);
     }
-
-    public void setEvent(int event) {
-        this.currentEvent = event;
-        System.out.println("New Event = " + this.currentEvent);
-    }
-    public void deviceString() { System.out.println("Device Name: " + this.deviceName + " current state: " + this.currentState); }
 }
 

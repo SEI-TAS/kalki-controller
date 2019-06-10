@@ -1,29 +1,18 @@
 package kalki.controller;
-public class DLC implements Runnable{
+
+public class DLC extends StateMachine{
     static {
         System.loadLibrary("fsm");
     }
-    private String deviceName;
-    //Init current state to 0;
-    private int currentState = 0;
-
-    private int currentEvent = 0;
-
-    @Override
     public void run() {
         this.generateNextState();
     }
-    public DLC(String name) { deviceName = name; }
+    public DLC(String name) { super(name);}
 
     private native void generateNextState();
 
-    public String getName() {
-        return this.deviceName;
+    public static void main(String[] args) {
+        DLC test = new DLC("device");
+        test.setEvent(0);
     }
-
-    public void setEvent(int event) {
-        this.currentEvent = event;
-        System.out.println("New Event = " + this.currentEvent);
-    }
-    public void deviceString() { System.out.println("Device Name: " + this.deviceName + " current state: " + this.currentState); }
 }
