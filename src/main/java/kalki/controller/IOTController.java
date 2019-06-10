@@ -28,22 +28,27 @@ public class IOTController implements InsertHandler {
                     deviceType->{return deviceType;}).toCompletableFuture().get();
             Device test_device = new Device("phle00",
                     "light", 4, 24, "0.0.0.0", 5, 5);
+            Device test_device0 = new Device("wemo00",
+                    "light", 3, 24, "0.0.0.0", 5, 5);
             test_device.insert();
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(3);
+            test_device0.insert();
+            TimeUnit.SECONDS.sleep(3);
             DeviceStatus status = new DeviceStatus(test_device.getId());
+            DeviceStatus status0 = new DeviceStatus(test_device0.getId());
             status.insert();
+            TimeUnit.SECONDS.sleep(3);
+            status0.insert();
             TimeUnit.SECONDS.sleep(2);
-            List<DeviceStatus> ds = Postgres.findAllDeviceStatuses().thenApplyAsync(
-                    statusList -> {return statusList;}).toCompletableFuture().get();
-            for (DeviceStatus pointer: ds) {
-               System.out.println(pointer.toString());
-            }
             Postgres.insertAlert(new Alert("alert", status.getId(), 5));
             TimeUnit.SECONDS.sleep(4);
             Postgres.insertAlert(new Alert("alert1", status.getId(), 6));
             TimeUnit.SECONDS.sleep(4);
             Postgres.insertAlert(new Alert("alert2", status.getId(), 4));
             TimeUnit.SECONDS.sleep(4);
+            Postgres.insertAlert(new Alert("alert3", status0.getId(), 6));
+            TimeUnit.SECONDS.sleep(4);
+            System.exit(0);
         }
         catch (ExecutionException | InterruptedException e){
             System.out.println("We messed up in main");
