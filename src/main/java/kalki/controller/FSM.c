@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_WEMO_generateNextState(JNIEnv *env,
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
-         printf("Successfully set newState %d\n", newState);
+         printf("Successfully set newState WEMO %d\n", newState);
     }
     else {
         printf("Incorrect State not setting\n");
@@ -61,7 +61,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_DLC_generateNextState(JNIEnv *env, 
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
-         printf("Successfully set newState %d\n", newState);
+         printf("Successfully set newState DLC %d\n", newState);
     }
     else {
         printf("Incorrect State not setting\n");
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_PHLE_generateNextState(JNIEnv *env,
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
-         printf("Successfully set newState %d\n", newState);
+         printf("Successfully set newState PHLE %d\n", newState);
     }
     else {
         printf("Incorrect State not setting\n");
@@ -127,7 +127,7 @@ JNIEXPORT void JNICALL Java_kalki_controller_UNTS_generateNextState(JNIEnv *env,
             //Assign new State
          (*env)->SetIntField(env, fsmObj, fsmCurrentState, newState);
 
-         printf("Successfully set newState %d\n", newState);
+         printf("Successfully set newState UNTS %d\n", newState);
     }
     else {
         printf("Incorrect State not setting\n");
