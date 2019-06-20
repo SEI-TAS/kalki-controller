@@ -1,6 +1,7 @@
-# kalki-controller - Dev Branch
+# kalki-controller - Feature Controller 
 
 Main controller for Kalki Platform
-    - This branch contains approved code
+    run compilation.sh 
+    need to uncomment Postgres lines in Java StateMachines and import statements before running Main() of IOTController
 
 
