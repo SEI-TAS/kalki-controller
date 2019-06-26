@@ -1,4 +1,4 @@
-package edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines;
+package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
 public class StateMachine implements Runnable{
 
@@ -8,13 +8,13 @@ public class StateMachine implements Runnable{
 
     private int currentState;
 
-    private int currentEvent;
+    private String currentEvent;
 
     public String getName(){
         return this.deviceName;
     }
 
-    public void setEvent(int newEvent){
+    public void setEvent(String newEvent){
         this.currentEvent = newEvent;
     }
 

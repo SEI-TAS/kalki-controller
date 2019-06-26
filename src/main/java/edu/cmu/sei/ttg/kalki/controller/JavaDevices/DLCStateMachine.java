@@ -1,8 +1,8 @@
-package edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines;
+package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
-//import edu.cmu.sei.ttg.kalki.database.Postgres;
-//import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
-//import java.util.logging.Level;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
+import java.util.logging.Level;
 
 public class DLCStateMachine extends StateMachine {
 
@@ -10,13 +10,19 @@ public class DLCStateMachine extends StateMachine {
         System.loadLibrary("dlcfsm");
     }
 
+    public static void main(String[] args) {
+
+        DLCStateMachine main = new DLCStateMachine("device00", 0);
+        main.setEvent("brute-force");
+        new Thread(main).start();
+    }
     @Override
     public void run() {
         System.out.println("DLC pre gen: current state: " + this.getCurrentState());
         this.generateNextState();
         System.out.println("DLC post gen: current state: " + this.getCurrentState());
         //Uncomment this for running
-        //Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
+        Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
     }
     public DLCStateMachine(String name, int id) { super(name, id);}
 

@@ -1,16 +1,12 @@
 package edu.cmu.sei.ttg.kalki.controller;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.DLCStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.PHLEStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.UNTSStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.WEMOStateMachine;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
+
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.DLCStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.PHLEStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.UNTSStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.WEMOStateMachine;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 public class DeviceManager {
