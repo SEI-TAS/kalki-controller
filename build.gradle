@@ -148,6 +148,17 @@ repositories {
     mavenCentral()
 }
 
+test {
+    dependsOn 'cleanTest'
+    testLogging {
+        events "passed", "skipped", "failed", "standard_out"
+        exceptionFormat 'full'
+        showCauses true
+        showExceptions true
+        showStackTraces true
+    }
+}
+
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'com.google.guava:guava:27.0.1-jre'
