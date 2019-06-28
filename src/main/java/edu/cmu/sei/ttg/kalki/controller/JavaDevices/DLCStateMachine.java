@@ -2,7 +2,6 @@ package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
-import java.util.logging.Level;
 
 public class DLCStateMachine extends StateMachine {
 

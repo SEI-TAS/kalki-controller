@@ -5,7 +5,6 @@ import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
 import edu.cmu.sei.ttg.kalki.listeners.InsertListener;
 import edu.cmu.sei.ttg.kalki.models.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
