@@ -40,61 +40,54 @@ public class IOTController implements InsertHandler {
     @Override
     public void handleNewInsertion(int id) {
         System.out.println("Here in handler");
-        try {
-            Alert receivedAlert = Postgres.findAlert(id).thenApplyAsync(alert->{return alert;}).toCompletableFuture().get();
-            if(receivedAlert == null){
-                System.out.println("alert not found");
+        Alert receivedAlert = Postgres.findAlert(id);
+        if (receivedAlert == null) {
+            System.out.println("alert not found");
+        } else {
+            System.out.println("alert found");
+            //find device type
+            Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
+            String deviceName = foundDevice.getName();
+            int deviceID = foundDevice.getId();
+            int deviceTypeID = foundDevice.getType().getId();
+            int alertTypeID = receivedAlert.getAlertTypeId();
+            String alertTypeName = Postgres.findAlertType(alertTypeID).getName();
+            System.out.println("Alert Type Name: " + alertTypeName);
+            Thread opThread;
+            switch (deviceTypeID) {
+                case 1:
+                    System.out.println("pushing new state to DLC: " + deviceName);
+                    deviceManager.pushNewDLC(deviceName, deviceID);
+                    DLCStateMachine dlc = deviceManager.queryForDLC(deviceName);
+                    dlc.setEvent(alertTypeName);
+                    opThread = new Thread(dlc);
+                    break;
+                case 2:
+                    System.out.println("pushing new state to UNTS: " + deviceName);
+                    deviceManager.pushNewUNTS(deviceName, deviceID);
+                    UNTSStateMachine unts = deviceManager.queryForUNTS(deviceName);
+                    unts.setEvent(alertTypeName);
+                    opThread = new Thread(unts);
+                    break;
+                case 3:
+                    System.out.println("pushing new state to WEMO: " + deviceName);
+                    deviceManager.pushNewWEMO(deviceName, deviceID);
+                    WEMOStateMachine wemo = deviceManager.queryForWEMO(deviceName);
+                    wemo.setEvent(alertTypeName);
+                    opThread = new Thread(wemo);
+                    break;
+                case 4:
+                    System.out.println("pushing new state to PHLE: " + deviceName);
+                    deviceManager.pushNewPHLE(deviceName, deviceID);
+                    PHLEStateMachine phle = deviceManager.queryForPHLE(deviceName);
+                    phle.setEvent(alertTypeName);
+                    opThread = new Thread(phle);
+                    break;
+                default:
+                    opThread = new Thread(new StateMachine("empty", 0));
+                    break;
             }
-            else {
-                System.out.println("alert found");
-                //find device type
-                Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
-                String deviceName = foundDevice.getName();
-                int deviceID = foundDevice.getId();
-                int deviceTypeID = foundDevice.getType().getId();
-                int alertTypeID = receivedAlert.getAlertTypeId();
-                String alertTypeName = Postgres.findAlertType(alertTypeID).thenApplyAsync(
-                        alertType->{return alertType;}).toCompletableFuture().get().getName();
-                System.out.println("Alert Type Name: "+ alertTypeName);
-                Thread opThread;
-                switch(deviceTypeID){
-                    case 1:
-                        System.out.println("pushing new state to DLC: " + deviceName);
-                        deviceManager.pushNewDLC(deviceName, deviceID);
-                        DLCStateMachine dlc = deviceManager.queryForDLC(deviceName);
-                        dlc.setEvent(alertTypeName);
-                        opThread = new Thread(dlc);
-                        break;
-                    case 2:
-                        System.out.println("pushing new state to UNTS: " + deviceName);
-                        deviceManager.pushNewUNTS(deviceName, deviceID);
-                        UNTSStateMachine unts = deviceManager.queryForUNTS(deviceName);
-                        unts.setEvent(alertTypeName);
-                        opThread = new Thread(unts);
-                        break;
-                    case 3:
-                        System.out.println("pushing new state to WEMO: " + deviceName);
-                        deviceManager.pushNewWEMO(deviceName, deviceID);
-                        WEMOStateMachine wemo = deviceManager.queryForWEMO(deviceName);
-                        wemo.setEvent(alertTypeName);
-                        opThread = new Thread(wemo);
-                        break;
-                    case 4:
-                        System.out.println("pushing new state to PHLE: " + deviceName);
-                        deviceManager.pushNewPHLE(deviceName, deviceID);
-                        PHLEStateMachine phle = deviceManager.queryForPHLE(deviceName);
-                        phle.setEvent(alertTypeName);
-                        opThread = new Thread(phle);
-                        break;
-                    default:
-                        opThread = new Thread(new StateMachine("empty", 0));
-                        break;
-                }
-                    opThread.start();
-            }
-        }
-        catch (InterruptedException | ExecutionException e){
-            System.out.println("Caught exception Interrupted or Execution");
+            opThread.start();
         }
     }
 

@@ -3,3 +3,16 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore out directory
+out/
+#Ignore Idea directory
+.idea/
+Ignore log files
+.log
+Class Files
+*.class
+Packages
+*.jar
+*.zip
+*.tar.gz

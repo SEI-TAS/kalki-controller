@@ -6,7 +6,7 @@
 JNIEXPORT void JNICALL
 Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextState(JNIEnv *env, jobject fsmObj)
 {
-    	(*env) -> MonitorEnter(env, fsmObj);
+    	    (*env) -> MonitorEnter(env, fsmObj);
         	jclass dlcClass = (*env) -> GetObjectClass(env, fsmObj);
         	jfieldID dlcCurrentStateField = (*env) -> GetFieldID(env, dlcClass, "currentState", "I");
         	jfieldID dlcCurrentEventField = (*env) -> GetFieldID(env, dlcClass, "currentEvent", "Ljava/lang/String;");
