@@ -8,12 +8,17 @@
 
 
 
-plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
-    // Apply the application plugin to add support for building an application
-    id 'application'
-    id 'c'
+apply plugin: 'c'
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'edu.cmu.sei.ttg.kalki.controller.IOTController'
+
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here
+    mavenLocal()
+    mavenCentral()
 }
 
 model {
@@ -141,22 +146,18 @@ model {
     }
 }
 
-repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here
-    mavenLocal()
-    mavenCentral()
+test {
+    systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
+            "${buildDir}/libs/untsfsm/shared:" +
+            "${buildDir}/libs/wemofsm/shared:" +
+            "${buildDir}/libs/phlefsm/shared").absolutePath
 }
 
-test {
-    dependsOn 'cleanTest'
-    testLogging {
-        events "passed", "skipped", "failed", "standard_out"
-        exceptionFormat 'full'
-        showCauses true
-        showExceptions true
-        showStackTraces true
-    }
+run {
+    systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
+            "${buildDir}/libs/untsfsm/shared:" +
+            "${buildDir}/libs/wemofsm/shared:" +
+            "${buildDir}/libs/phlefsm/shared").absolutePath
 }
 
 dependencies {
@@ -167,5 +168,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-// Define the main class for the application
-mainClassName = 'kalki.controller.IOTController'
+test.dependsOn 'dlcfsmSharedLibrary'
+test.dependsOn 'wemofsmSharedLibrary'
+test.dependsOn 'untsfsmSharedLibrary'
+test.dependsOn 'phlefsmSharedLibrary'
+run.dependsOn 'dlcfsmSharedLibrary'
+run.dependsOn 'wemofsmSharedLibrary'
+run.dependsOn 'untsfsmSharedLibrary'
+run.dependsOn 'phlefsmSharedLibrary'

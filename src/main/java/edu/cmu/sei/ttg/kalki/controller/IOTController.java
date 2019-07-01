@@ -19,7 +19,7 @@ public class IOTController implements InsertHandler {
         mainController.initListeners(mainController);
         Device testDevice;
         DeviceStatus testStatus;
-        Postgres.insertGroup(new Group(10, "TestDevices"));
+//Postgres.insertGroup(new Group(10, "TestDevices"));
         for(int i = 1; i < 5; i++){
             testDevice = new Device("test_device", "its a "+i,
                     i, 10, "0.0.0.0", 5, 5);
@@ -34,8 +34,8 @@ public class IOTController implements InsertHandler {
                 wait(2);
             }
         }
-        System.exit(23);
     }
+
     @Override
     public void handleNewInsertion(int id) {
         System.out.println("Here in handler");
@@ -97,7 +97,7 @@ public class IOTController implements InsertHandler {
 
     }
 
-    IOTController(){
+    public IOTController(){
 
     }
 
@@ -111,6 +111,7 @@ public class IOTController implements InsertHandler {
         }
 
     }
+
     static void wait(int time){
         try {
             TimeUnit.SECONDS.sleep(time);

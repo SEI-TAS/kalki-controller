@@ -3,8 +3,6 @@ package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 
-import edu.cmu.sei.ttg.kalki.controller.JavaDevices.StateMachine;
-
 public class WEMOStateMachine extends StateMachine {
 
     static {
@@ -16,6 +14,7 @@ public class WEMOStateMachine extends StateMachine {
         main.setEvent("brute-force");
         new Thread(main).start();
     }
+
     @Override
     public void run() {
         System.out.println("WEMO pre gen: current state: " + this.getCurrentState());
@@ -25,7 +24,9 @@ public class WEMOStateMachine extends StateMachine {
         Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
     }
 
-    public WEMOStateMachine(String name, int id) { super(name, id);}
+    public WEMOStateMachine(String name, int id) {
+        super(name, id);
+    }
 
     private native void generateNextState();
 

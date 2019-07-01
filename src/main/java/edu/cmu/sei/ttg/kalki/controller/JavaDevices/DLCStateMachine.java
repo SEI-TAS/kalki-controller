@@ -15,6 +15,7 @@ public class DLCStateMachine extends StateMachine {
         main.setEvent("brute-force");
         new Thread(main).start();
     }
+
     @Override
     public void run() {
         System.out.println("DLC pre gen: current state: " + this.getCurrentState());
@@ -23,7 +24,10 @@ public class DLCStateMachine extends StateMachine {
         //Uncomment this for running
         Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
     }
-    public DLCStateMachine(String name, int id) { super(name, id);}
+
+    public DLCStateMachine(String name, int id) {
+        super(name, id);
+    }
 
     private native void generateNextState();
 

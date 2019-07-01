@@ -15,6 +15,7 @@ public class UNTSStateMachine extends StateMachine {
         main.setEvent("brute-force");
         new Thread(main).start();
     }
+
     @Override
     public void run() {
         System.out.println("UNTS pre gen: current state: " + this.getCurrentState());
@@ -24,7 +25,9 @@ public class UNTSStateMachine extends StateMachine {
         Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
     }
 
-    public UNTSStateMachine(String name, int id) { super(name, id);}
+    public UNTSStateMachine(String name, int id) {
+        super(name, id);
+    }
 
     private native void generateNextState();
 

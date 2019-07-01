@@ -1,6 +1,6 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
-public class StateMachine implements Runnable{
+public class StateMachine implements Runnable {
 
     private String deviceName;
 
@@ -10,36 +10,41 @@ public class StateMachine implements Runnable{
 
     private String currentEvent;
 
-    public String getName(){
+    public String getName() {
         return this.deviceName;
     }
 
-    public void setEvent(String newEvent){
+    public void setEvent(String newEvent) {
         this.currentEvent = newEvent;
     }
 
-    protected void printStateMachine(){
+    protected void printStateMachine() {
         System.out.println(
-                " Name: "+ this.deviceName +
-                " current state: "+ this.currentState +
-                " event: " + this.currentEvent +
-                " deviceID: " + this.deviceID);
+                " Name: " + this.deviceName +
+                        " current state: " + this.currentState +
+                        " event: " + this.currentEvent +
+                        " deviceID: " + this.deviceID);
     }
 
     @Override
-    public void run() { return; }
+    public void run() {
+        return;
+    }
 
-    public StateMachine(String name, int ID){
+    public StateMachine(String name, int ID) {
         this.deviceName = name;
         this.deviceID = ID;
     }
-    public int getDeviceID(){
+
+    public int getDeviceID() {
         return this.deviceID;
     }
-    public String getDeviceName(){
+
+    public String getDeviceName() {
         return this.deviceName;
     }
-    public int getCurrentState(){
+
+    public int getCurrentState() {
         return this.currentState;
     }
 
