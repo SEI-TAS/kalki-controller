@@ -1,19 +1,15 @@
 package edu.cmu.sei.ttg.kalki.controller;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.DLCStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.PHLEStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.UNTSStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.DeviceStateMachines.WEMOStateMachine;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
+
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.DLCStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.PHLEStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.UNTSStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.WEMOStateMachine;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
-public class DeviceManager {
+class DeviceManager {
 
     private ArrayList<DLCStateMachine> dlcArrayList;
     private ArrayList<PHLEStateMachine> phleArrayList;
@@ -26,36 +22,35 @@ public class DeviceManager {
         this.wemoArrayList = new ArrayList<>();
     }
 
+    void pushNewDLC(String deviceName, int deviceID){ dlcArrayList.add(new DLCStateMachine(deviceName, deviceID));}
 
-    public void pushNewDLC(String deviceName, int deviceID){ dlcArrayList.add(new DLCStateMachine(deviceName, deviceID));}
+    void pushNewUNTS(String deviceName, int deviceID){ untsArrayList.add(new UNTSStateMachine(deviceName, deviceID));}
 
-    public void pushNewUNTS(String deviceName, int deviceID){ untsArrayList.add(new UNTSStateMachine(deviceName, deviceID));}
+    void pushNewPHLE(String deviceName, int deviceID){ phleArrayList.add(new PHLEStateMachine(deviceName, deviceID));}
 
-    public void pushNewPHLE(String deviceName, int deviceID){ phleArrayList.add(new PHLEStateMachine(deviceName, deviceID));}
+    void pushNewWEMO(String deviceName, int deviceID){ wemoArrayList.add(new WEMOStateMachine(deviceName, deviceID));}
 
-    public void pushNewWEMO(String deviceName, int deviceID){ wemoArrayList.add(new WEMOStateMachine(deviceName, deviceID));}
-
-    public DLCStateMachine queryForDLC(String deviceName){
+    DLCStateMachine queryForDLC(String deviceName){
         for(DLCStateMachine holder: dlcArrayList)
             if(holder.getName().equals(deviceName)){ return holder; }
-        return null;
+        return new DLCStateMachine("empty", 99);
     }
 
-    public WEMOStateMachine queryForWEMO(String deviceName){
+    WEMOStateMachine queryForWEMO(String deviceName){
         for(WEMOStateMachine holder: wemoArrayList)
             if(holder.getName().equals(deviceName)){ return holder; }
-        return null;
+        return new WEMOStateMachine("empty", 99);
     }
 
-    public UNTSStateMachine queryForUNTS(String deviceName){
+    UNTSStateMachine queryForUNTS(String deviceName){
         for(UNTSStateMachine holder: untsArrayList)
             if(holder.getName().equals(deviceName)){ return holder; }
-        return null;
+        return new UNTSStateMachine("empty", 99);
     }
 
-    public PHLEStateMachine queryForPHLE(String deviceName){
+    PHLEStateMachine queryForPHLE(String deviceName){
         for(PHLEStateMachine holder: phleArrayList)
             if(holder.getName().equals(deviceName)){ return holder; }
-        return null;
+        return new PHLEStateMachine("empty", 99);
     }
 }
