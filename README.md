@@ -1,7 +1,12 @@
-# kalki-controller - Feature Controller 
+# Kalki-Controller
+ 
+## Prerequisites
+- Make sure JAVA_HOME variable is set
+- Make sure GCC is installed
+- Requires Kalki-DB library
+- Requires connection to database
 
-Main controller for Kalki Platform
-    run compilation.sh 
-    need to uncomment Postgres lines in Java StateMachines and import statements before running Main() of IOTController
-
+## Usage
+gradle build for testing and library generation
+gradle run for controller startup
 
