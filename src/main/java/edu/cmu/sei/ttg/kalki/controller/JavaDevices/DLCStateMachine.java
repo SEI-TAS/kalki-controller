@@ -1,8 +1,5 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
-
 public class DLCStateMachine extends StateMachine {
 
     static {
@@ -22,7 +19,6 @@ public class DLCStateMachine extends StateMachine {
         this.generateNextState();
         System.out.println("DLC post gen: current state: " + this.getCurrentState());
         //Uncomment this for running
-        Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
     }
 
     public DLCStateMachine(String name, int id) {
