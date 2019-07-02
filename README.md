@@ -7,6 +7,6 @@
 - Requires connection to database
 
 ## Usage
-gradle build for testing and library generation
-gradle run for controller startup
+- gradle build for testing and library generation
+- gradle run for controller startup
 
