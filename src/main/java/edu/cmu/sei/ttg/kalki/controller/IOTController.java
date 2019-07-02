@@ -17,23 +17,7 @@ public class IOTController implements InsertHandler {
         IOTController mainController = new IOTController();
         mainController.initializeDatabase();
         mainController.initListeners(mainController);
-        Device testDevice;
-        DeviceStatus testStatus;
-//Postgres.insertGroup(new Group(10, "TestDevices"));
-        for(int i = 1; i < 5; i++){
-            testDevice = new Device("test_device", "its a "+i,
-                    i, 10, "0.0.0.0", 5, 5);
-            testDevice.insert();
-            wait(2);
-            testStatus = new DeviceStatus(testDevice.getId());
-            testStatus.insert();
-            wait(2);
-            for(int j = 1; j < 6; j++){
-                Alert testAlert = new Alert("new-alert", testStatus.getId(), j);
-                testAlert.insert();
-                wait(2);
-            }
-        }
+
     }
 
     @Override
