@@ -17,7 +17,6 @@ public class IOTController implements InsertHandler {
         IOTController mainController = new IOTController();
         mainController.initializeDatabase();
         mainController.initListeners(mainController);
-
     }
 
     @Override
@@ -75,7 +74,7 @@ public class IOTController implements InsertHandler {
     }
 
     void initializeDatabase(){
-        Postgres.setLoggingLevel(Level.WARNING);
+        Postgres.setLoggingLevel(Level.ALL);
         Postgres.initialize("0.0.0.0", "5432", "kalkidb" , "kalkiuser", "kalkipass");
         Postgres.resetDatabase();
 

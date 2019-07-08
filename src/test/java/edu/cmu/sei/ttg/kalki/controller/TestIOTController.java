@@ -28,153 +28,112 @@ public class TestIOTController {
         Device testDevice;
         Alert testAlert;
         DeviceStatus testStatus;
-        testDevice = new Device("test_device", "its a PHLE",
-                4, 14, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing basic alerts PHLE");
-        for (int i = 1; i < 6; i = i+2) {
+        System.out.println("Testing alerts for PHLE");
+        int[] alerts = {1, 2, 3, 4, 6, 16, 17};
+        for (int i:alerts) {
             testDevice = new Device("test_device", "its a PHLE",
                     4, 14, "0.0.0.0", 5, 5);
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), i);
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
             testAlert.insert();
-            wait(2);
-            testAlert = new Alert("new-alert", testStatus.getId(), i+1);
-            testAlert.insert();
-        }
-        testDevice = new Device("test_device", "its a PHLE",
-                4, 14, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing unique PHLE Alerts");
-        wait(2);
-        int[] uniqueAlertQueue = {16, 17};
-        for (int alertType: uniqueAlertQueue) {
-            testAlert = new Alert("new-alert", testStatus.getId(), alertType);
-            System.out.println("Alert Type: " + Postgres.findAlertType(alertType).getName());
-            testAlert.insert();
-            wait(2);
+            for (int j = 0; j < 2; j++) {
+                testAlert = new Alert("new-alert", testStatus.getId(), i);
+                testAlert.insert();
+                wait(1);
+            }
         }
     }
 
     @Test
     public void testDLCAlerts(){
-        Postgres.insertGroup(new Group(11, "TestDLC"));
+        Postgres.insertGroup(new Group(14, "TestPHLE"));
         Device testDevice;
         Alert testAlert;
         DeviceStatus testStatus;
-        testDevice = new Device("test_device", "its a DLC",
-                1, 12, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing basic alerts DLC");
-        for (int i = 1; i < 6; i = i+2) {
+        System.out.println("Testing alerts for DLC");
+        int[] alerts = {1, 2, 3, 4, 6, 15};
+        for (int i:alerts) {
             testDevice = new Device("test_device", "its a DLC",
-                    1, 12, "0.0.0.0", 5, 5);
+                    1, 14, "0.0.0.0", 5, 5);
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), i);
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
             testAlert.insert();
-            wait(2);
-            testAlert = new Alert("new-alert", testStatus.getId(), i+1);
-            testAlert.insert();
-        }
-        testDevice = new Device("test_device", "its a DLC",
-                1, 12, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing unique DLC Alerts");
-        wait(2);
-        int[] uniqueAlertQueue = {15};
-        for (int alertType: uniqueAlertQueue) {
-            testAlert = new Alert("new-alert", testStatus.getId(), alertType);
-            System.out.println("Alert Type: " + Postgres.findAlertType(alertType).getName());
-            testAlert.insert();
-            wait(2);
+            for (int j = 0; j < 2; j++) {
+                testAlert = new Alert("new-alert", testStatus.getId(), i);
+                testAlert.insert();
+                wait(1);
+            }
         }
     }
 
     @Test
     public void testWEMOAlerts(){
-        Postgres.insertGroup(new Group(13, "TestWEMO"));
+        Postgres.insertGroup(new Group(14, "TestPHLE"));
         Device testDevice;
         Alert testAlert;
         DeviceStatus testStatus;
-        testDevice = new Device("test_device", "its a WEMO",
-                3, 13, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing basic alerts WEMO");
-        for (int i = 1; i < 6; i = i+2) {
+        System.out.println("Testing alerts for WEMO");
+        int[] alerts = {1, 2, 3, 4, 6, 18, 19, 20, 21, 22, 23};
+        for (int i:alerts) {
             testDevice = new Device("test_device", "its a WEMO",
-                    3, 13, "0.0.0.0", 5, 5);
+                    3, 14, "0.0.0.0", 5, 5);
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), i);
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
             testAlert.insert();
-            wait(2);
-            testAlert = new Alert("new-alert", testStatus.getId(), i+1);
-            testAlert.insert();
-        }
-        testDevice = new Device("test_device", "its a WEMO",
-                3, 13, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing unique WEMO Alerts");
-        wait(2);
-        int[] uniqueAlertQueue = {18, 19, 20, 5, 21, 22, 23};
-        for (int alertType: uniqueAlertQueue) {
-            testAlert = new Alert("new-alert", testStatus.getId(), alertType);
-            System.out.println("Alert Type: " + Postgres.findAlertType(alertType).getName());
-            testAlert.insert();
-            wait(2);
+            for (int j = 0; j < 2; j++) {
+                testAlert = new Alert("new-alert", testStatus.getId(), i);
+                testAlert.insert();
+                wait(1);
+            }
         }
     }
     
     @Test
     public void testUNTSAlerts(){
-        Postgres.insertGroup(new Group(12, "TestUNTS"));
+        Postgres.insertGroup(new Group(14, "TestPHLE"));
         Device testDevice;
         Alert testAlert;
         DeviceStatus testStatus;
-        System.out.println("Testing basic alerts UNTS");
-        for (int i = 1; i < 6; i = i+2) {
+        System.out.println("Testing alerts for UNTS");
+        int[] alerts = {1, 2, 3, 4, 6, 16, 17};
+        for (int i:alerts) {
             testDevice = new Device("test_device", "its a UNTS",
-                    2, 12, "0.0.0.0", 5, 5);
+                    2, 14, "0.0.0.0", 5, 5);
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), i);
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
             testAlert.insert();
-            wait(2);
-            testAlert = new Alert("new-alert", testStatus.getId(), i+1);
-            testAlert.insert();
+            for (int j = 0; j < 2; j++) {
+                testAlert = new Alert("new-alert", testStatus.getId(), i);
+                testAlert.insert();
+                wait(1);
+            }
         }
-        testDevice = new Device("test_device", "its a UNTS",
-                2, 12, "0.0.0.0", 5, 5);
+    }
+
+    @Test
+    public void testSecurityStateInsertion(){
+        Device testDevice;
+        DeviceStatus testStatus;
+        Alert testalert;
+        testDevice = new Device("test_device", "its a database tester",
+                1, 13, "0.0.0.0", 5, 5);
         testDevice.insert();
-        testStatus = new DeviceStatus(testDevice.getId());
-        testStatus.insert();
-        System.out.println("Testing unique UNTS Alerts");
         wait(2);
-        int[] uniqueAlertQueue = {7, 8, 9, 5, 10, 11, 12, 5, 13, 14};
-        for (int alertType: uniqueAlertQueue) {
-            testAlert = new Alert("new-alert", testStatus.getId(), alertType);
-            System.out.println("Alert Type: " + Postgres.findAlertType(alertType).getName());
-            testAlert.insert();
-            wait(2);
-        }
+        DeviceSecurityState testState = new DeviceSecurityState(testDevice.getId(), 1);
+        testState.insert();
+        wait(2);
+        testDevice.setCurrentState(testState);
+        testDevice.insertOrUpdate();
+        wait(2);
+        System.out.println(Postgres.findDevice(testDevice.getId()));
     }
 
     static void wait(int time){
