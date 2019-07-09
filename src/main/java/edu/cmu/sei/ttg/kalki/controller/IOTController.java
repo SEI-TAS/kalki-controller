@@ -5,8 +5,13 @@ import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
 import edu.cmu.sei.ttg.kalki.listeners.InsertListener;
 import edu.cmu.sei.ttg.kalki.models.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.File;
+import java.io.FileReader;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 
 public class IOTController implements InsertHandler {
@@ -74,10 +79,22 @@ public class IOTController implements InsertHandler {
     }
 
     void initializeDatabase(){
-        Postgres.setLoggingLevel(Level.ALL);
-        Postgres.initialize("0.0.0.0", "5432", "kalkidb" , "kalkiuser", "kalkipass");
-        Postgres.resetDatabase();
-
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(new FileReader("databaseVars.json"));
+            JSONObject json = (JSONObject) obj;
+            String ip = (String) json.get("ip");
+            String port = (String) json.get("port");
+            String dbName = (String) json.get("dbName");
+            String dbUser = (String) json.get("dbUser");
+            String dbPassword = (String) json.get("dbPassword");
+            //System.out.println("ip: "+ ip + "port: " + port + "dbName: " + dbName + "dbUser: " + dbUser + "dbPassword: " + dbPassword);
+            Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
+            Postgres.resetDatabase();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public IOTController(){
