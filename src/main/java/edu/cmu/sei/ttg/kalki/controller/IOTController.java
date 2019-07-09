@@ -13,17 +13,32 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class handles the initialization of the Postgres database connection as well as the initialization of
+ * the alert listeners and their handler
+ */
 
 public class IOTController implements InsertHandler {
 
     DeviceManager deviceManager = new DeviceManager();
 
+    /**
+     * Initializes the database with the given parameters from the databaseVars JSON file, resets the database, and
+     * initialized the alert listeners
+     */
     public static void main(String[] args) {
         IOTController mainController = new IOTController();
         mainController.initializeDatabase();
         mainController.initListeners(mainController);
     }
 
+    /**
+     *
+     * @param id The id of the alert inserted into the database
+     * Listens for alerts added to database retrieves the device associated with the alert and its type
+     * and generates a new state machine for this device pushing the alert type to the statemachine native code in a thread
+     *
+     */
     @Override
     public void handleNewInsertion(int id) {
         System.out.println("Here in handler");
@@ -45,28 +60,28 @@ public class IOTController implements InsertHandler {
                 case 1:
                     System.out.println("pushing new state to DLC: " + deviceName);
                     deviceManager.pushNewDLC(deviceName, deviceID);
-                    DLCStateMachine dlc = deviceManager.queryForDLC(deviceName);
+                    DLCStateMachine dlc = deviceManager.queryForDLC(deviceName, deviceID);
                     dlc.setEvent(alertTypeName);
                     opThread = new Thread(dlc);
                     break;
                 case 2:
                     System.out.println("pushing new state to UNTS: " + deviceName);
                     deviceManager.pushNewUNTS(deviceName, deviceID);
-                    UNTSStateMachine unts = deviceManager.queryForUNTS(deviceName);
+                    UNTSStateMachine unts = deviceManager.queryForUNTS(deviceName, deviceID);
                     unts.setEvent(alertTypeName);
                     opThread = new Thread(unts);
                     break;
                 case 3:
                     System.out.println("pushing new state to WEMO: " + deviceName);
                     deviceManager.pushNewWEMO(deviceName, deviceID);
-                    WEMOStateMachine wemo = deviceManager.queryForWEMO(deviceName);
+                    WEMOStateMachine wemo = deviceManager.queryForWEMO(deviceName, deviceID);
                     wemo.setEvent(alertTypeName);
                     opThread = new Thread(wemo);
                     break;
                 case 4:
                     System.out.println("pushing new state to PHLE: " + deviceName);
                     deviceManager.pushNewPHLE(deviceName, deviceID);
-                    PHLEStateMachine phle = deviceManager.queryForPHLE(deviceName);
+                    PHLEStateMachine phle = deviceManager.queryForPHLE(deviceName, deviceID);
                     phle.setEvent(alertTypeName);
                     opThread = new Thread(phle);
                     break;
@@ -78,6 +93,10 @@ public class IOTController implements InsertHandler {
         }
     }
 
+    /**
+     * Pulls relevant data from the databaseVars JSON file and call initialize using these values
+     * Resets database back to default state
+     */
     void initializeDatabase(){
         JSONParser parser = new JSONParser();
         try {
@@ -101,6 +120,11 @@ public class IOTController implements InsertHandler {
 
     }
 
+    /**
+     *
+     * @param alertHandler requires object that inherits from alertHandler
+     * Initializes database listener for the insertion of new alerts
+     */
     void initListeners(InsertHandler alertHandler){
         InsertListener.startUpListener("alerthistoryinsert", alertHandler);
         try {
@@ -112,13 +136,5 @@ public class IOTController implements InsertHandler {
 
     }
 
-    static void wait(int time){
-        try {
-            TimeUnit.SECONDS.sleep(time);
-        }
-        catch (InterruptedException e){
-            System.out.println("Error in wait");
-        }
-    }
 
 }

@@ -16,6 +16,11 @@ public class WEMOStateMachine extends StateMachine {
         new Thread(main).start();
     }
 
+    /**
+     * Calls Native C code to generate new currentState
+     * - C code contains synchronize statement on Java Obj
+     * Publishes new currentState to Postgres Database
+     */
     @Override
     public void run() {
         System.out.println("WEMO pre gen: current state: " + this.getCurrentState());
@@ -30,10 +35,19 @@ public class WEMOStateMachine extends StateMachine {
         System.out.println("Finished updating device security state");
     }
 
+    /**
+     * Constructor for DeviceStateMachine inherits from StateMachine
+     * @param name  deviceName
+     * @param id    deviceID
+     */
     public WEMOStateMachine(String name, int id) {
         super(name, id);
     }
 
+    /**
+     * Native call to method generateNextState from wemofsm.c
+     * Uses this.currentState and this.currentEvent
+     */
     private native void generateNextState();
 
 }
