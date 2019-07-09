@@ -22,7 +22,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextS
 	const char *eventString = (*env)->GetStringUTFChars(env, eventJString, NULL);
 	//get string elements for current state
 	jint untsCurrentState = (*env)->GetIntField(env, fsmObj, untsCurrentStateField);
-	if (untsCurrentState==0)
+	if (untsCurrentState==1)
 	{
 		if (strcmp(eventString, "unts-gyro")==0)
 		{
@@ -99,7 +99,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextS
 			printf("incorrect alert type\n");
 		}
 	}
-	else if (untsCurrentState==1)
+	else if (untsCurrentState==2)
 	{
 		if (strcmp(eventString, "unts-gyro-seconday")==0)
 		{
@@ -176,7 +176,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextS
 			printf("incorrect alert type\n");
 		}
 	}
-	else if (untsCurrentState==2)
+	else if (untsCurrentState==3)
 	{
 		if (strcmp(eventString, "state-reset")==0)
 		{
