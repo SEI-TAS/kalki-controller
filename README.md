@@ -39,7 +39,7 @@ Code Snippets
 
 ##### MonitorEnter
   - JNI equivalent to Synchronized():
-  - '(*env) -> MonitorEnter(env, fsmObj)'
+    - '(*env) -> MonitorEnter(env, fsmObj)'
   - fsmObj and env are defined in method header
 ##### retreiveObj
 
