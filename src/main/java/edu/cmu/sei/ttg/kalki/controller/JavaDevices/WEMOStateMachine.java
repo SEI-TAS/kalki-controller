@@ -24,15 +24,9 @@ public class WEMOStateMachine extends StateMachine {
     @Override
     public void run() {
         System.out.println("WEMO pre gen: current state: " + this.getCurrentState());
-        this.generateNextState();
+        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
         System.out.println("WEMO post gen: current state: " + this.getCurrentState());
         // Uncomment this for running
-        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        newState.insert();
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        thisDevice.setCurrentState(newState);
-        thisDevice.insertOrUpdate();
-        System.out.println("Finished updating device security state");
     }
 
     /**
@@ -48,7 +42,7 @@ public class WEMOStateMachine extends StateMachine {
      * Native call to method generateNextState from wemofsm.c
      * Uses this.currentState and this.currentEvent
      */
-    private native void generateNextState();
+    private native int generateNextState(String alertType, int newState);
 
 }
 
