@@ -12,12 +12,13 @@ public class DLCStateMachine extends StateMachine {
     static {
         System.loadLibrary("dlcfsm");
     }
-
+    /*
     public static void main(String[] args) {
         DLCStateMachine main = new DLCStateMachine("device00", 0);
         main.setEvent("brute-force");
         new Thread(main).start();
     }
+    */
 
     /**
      * Calls Native C code to generate new currentState
@@ -28,8 +29,14 @@ public class DLCStateMachine extends StateMachine {
     public void run() {
         System.out.println("DLC pre gen: current state: " + this.getCurrentState());
         this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
-
         System.out.println("DLC post gen: current state: " + this.getCurrentState());
+        System.out.println("Posting new security state to Postgres");
+        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
+        newState.insert();
+        Device thisDevice = Postgres.findDevice(this.getDeviceID());
+        thisDevice.setCurrentState(newState);
+        thisDevice.insertOrUpdate();
+        System.out.println("Finished updating device security state");
     }
 
     /**

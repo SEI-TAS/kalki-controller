@@ -27,6 +27,13 @@ public class WEMOStateMachine extends StateMachine {
         this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
         System.out.println("WEMO post gen: current state: " + this.getCurrentState());
         // Uncomment this for running
+        System.out.println("Posting new security state to Postgres");
+        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
+        newState.insert();
+        Device thisDevice = Postgres.findDevice(this.getDeviceID());
+        thisDevice.setCurrentState(newState);
+        thisDevice.insertOrUpdate();
+        System.out.println("Finished updating device security state");
     }
 
     /**

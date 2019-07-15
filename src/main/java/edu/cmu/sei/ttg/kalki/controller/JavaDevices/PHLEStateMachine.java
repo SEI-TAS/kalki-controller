@@ -27,6 +27,13 @@ public class PHLEStateMachine extends StateMachine {
         System.out.println("PHLE pre gen: current state: " + this.getCurrentState());
         this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
         System.out.println("PHLE post gen: current state: " + this.getCurrentState());
+        System.out.println("Posting new security state to Postgres");
+        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
+        newState.insert();
+        Device thisDevice = Postgres.findDevice(this.getDeviceID());
+        thisDevice.setCurrentState(newState);
+        thisDevice.insertOrUpdate();
+        System.out.println("Finished updating device security state");
     }
     /**
      * Constructor for DeviceStateMachine inherits from StateMachine
