@@ -73,4 +73,7 @@ public class StateMachine implements Runnable {
         return this.currentState;
     }
 
+    String getCurrentEvent(){ return this.currentEvent; }
+
+    void setCurrentState(int newState){ this.currentState = newState; }
 }
