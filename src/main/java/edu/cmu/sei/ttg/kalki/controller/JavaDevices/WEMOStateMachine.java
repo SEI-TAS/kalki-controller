@@ -24,9 +24,14 @@ public class WEMOStateMachine extends StateMachine {
     @Override
     public void run() {
         System.out.println("WEMO pre gen: current state: " + this.getCurrentState());
-        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        try {
+            this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        }
+        catch (UnsatisfiedLinkError e){
+            System.out.println("Library not found, check build files");
+            e.printStackTrace();
+        }
         System.out.println("WEMO post gen: current state: " + this.getCurrentState());
-        // Uncomment this for running
         System.out.println("Posting new security state to Postgres");
         DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
         newState.insert();

@@ -25,7 +25,13 @@ public class UNTSStateMachine extends StateMachine {
     @Override
     public void run() {
         System.out.println("UNTS pre gen: current state: " + this.getCurrentState());
-        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        try {
+            this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        }
+        catch (UnsatisfiedLinkError e){
+            System.out.println("Library not found, check build files");
+            e.printStackTrace();
+        }
         System.out.println("UNTS post gen: current state: " + this.getCurrentState());
         //uncomment this for running
         System.out.println("Posting new security state to Postgres");

@@ -25,7 +25,13 @@ public class PHLEStateMachine extends StateMachine {
     @Override
     public void run() {
         System.out.println("PHLE pre gen: current state: " + this.getCurrentState());
-        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        try {
+            this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        }
+        catch (UnsatisfiedLinkError e){
+            System.out.println("Library not found, check build files");
+            e.printStackTrace();
+        }
         System.out.println("PHLE post gen: current state: " + this.getCurrentState());
         System.out.println("Posting new security state to Postgres");
         DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
