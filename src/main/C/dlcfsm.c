@@ -13,7 +13,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 	{
 		if (strcmp(eventString, "dlc-motion-sense")==0)
 		{
-			printf("dlc-motion-senset\n");
+			printf("dlc-motion-sense\n");
 			return currentState = currentState + 1;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
