@@ -50,6 +50,7 @@ public class StateMachine implements Runnable {
     public StateMachine(String name, int ID) {
         this.deviceName = name;
         this.deviceID = ID;
+        this.currentState=0;
     }
 
     /**
