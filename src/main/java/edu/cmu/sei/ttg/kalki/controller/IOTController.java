@@ -11,6 +11,8 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileReader;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,12 +43,13 @@ public class IOTController implements InsertHandler {
      */
     @Override
     public void handleNewInsertion(int id) {
-        System.out.println("Here in handler");
+        //System.out.println("Here in handler");
+        Instant start = Instant.now();
         Alert receivedAlert = Postgres.findAlert(id);
         if (receivedAlert == null) {
             System.out.println("alert not found");
         } else {
-            System.out.println("alert found");
+            //System.out.println("alert found");
             //find device type
             Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
             String deviceName = foundDevice.getName();
@@ -54,32 +57,32 @@ public class IOTController implements InsertHandler {
             int deviceTypeID = foundDevice.getType().getId();
             int alertTypeID = receivedAlert.getAlertTypeId();
             String alertTypeName = Postgres.findAlertType(alertTypeID).getName();
-            System.out.println("Alert Type Name: " + alertTypeName);
+            //System.out.println("Alert Type Name: " + alertTypeName);
             Thread opThread;
             switch (deviceTypeID) {
                 case 1:
-                    System.out.println("pushing new state to DLC: " + deviceName);
+                    //System.out.println("pushing new state to DLC: " + deviceName);
                     deviceManager.pushNewDLC(deviceName, deviceID);
                     DLCStateMachine dlc = deviceManager.queryForDLC(deviceName, deviceID);
                     dlc.setEvent(alertTypeName);
                     opThread = new Thread(dlc);
                     break;
                 case 2:
-                    System.out.println("pushing new state to UNTS: " + deviceName);
+                    //System.out.println("pushing new state to UNTS: " + deviceName);
                     deviceManager.pushNewUNTS(deviceName, deviceID);
                     UNTSStateMachine unts = deviceManager.queryForUNTS(deviceName, deviceID);
                     unts.setEvent(alertTypeName);
                     opThread = new Thread(unts);
                     break;
                 case 3:
-                    System.out.println("pushing new state to WEMO: " + deviceName);
+                    //System.out.println("pushing new state to WEMO: " + deviceName);
                     deviceManager.pushNewWEMO(deviceName, deviceID);
                     WEMOStateMachine wemo = deviceManager.queryForWEMO(deviceName, deviceID);
                     wemo.setEvent(alertTypeName);
                     opThread = new Thread(wemo);
                     break;
                 case 4:
-                    System.out.println("pushing new state to PHLE: " + deviceName);
+                    //System.out.println("pushing new state to PHLE: " + deviceName);
                     deviceManager.pushNewPHLE(deviceName, deviceID);
                     PHLEStateMachine phle = deviceManager.queryForPHLE(deviceName, deviceID);
                     phle.setEvent(alertTypeName);
@@ -89,6 +92,8 @@ public class IOTController implements InsertHandler {
                     opThread = new Thread(new StateMachine("empty", 0));
                     break;
             }
+            Instant finish = Instant.now();
+            System.out.println("Time = " + Duration.between(start, finish).toMillis() + " ms");
             opThread.start();
         }
     }

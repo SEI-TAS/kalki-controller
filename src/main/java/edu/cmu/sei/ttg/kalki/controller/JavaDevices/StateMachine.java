@@ -20,7 +20,7 @@ public class StateMachine implements Runnable {
     /**
      * @param newEvent this is the latest alert-type received from listener given by the handler
      */
-    public void setEvent(String newEvent) {
+    public synchronized void setEvent(String newEvent) {
         this.currentEvent = newEvent;
     }
 
@@ -50,6 +50,7 @@ public class StateMachine implements Runnable {
     public StateMachine(String name, int ID) {
         this.deviceName = name;
         this.deviceID = ID;
+        this.currentState = 0;
     }
 
     /**
@@ -69,11 +70,11 @@ public class StateMachine implements Runnable {
     /**
      * @return returns currentState
      */
-    int getCurrentState() {
+    synchronized int getCurrentState() {
         return this.currentState;
     }
 
     String getCurrentEvent(){ return this.currentEvent; }
 
-    void setCurrentState(int newState){ this.currentState = newState; }
+    synchronized void setCurrentState(int newState){ this.currentState = newState; }
 }

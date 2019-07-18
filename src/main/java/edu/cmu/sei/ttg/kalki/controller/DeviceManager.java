@@ -34,27 +34,27 @@ class DeviceManager {
         if(queryForDLC(deviceName, deviceID).getDeviceName().equals("empty")){
             dlcArrayList.add(new DLCStateMachine(deviceName, deviceID));
         }
-        else {
+        /*else {
             System.out.println("device already exists... returning");
-        }
+        } */
     }
 
     void pushNewUNTS(String deviceName, int deviceID){
         if(queryForUNTS(deviceName,deviceID).getDeviceName().equals("empty")){
             untsArrayList.add(new UNTSStateMachine(deviceName, deviceID));
         }
-        else {
+        /*else {
             System.out.println("device already exists... returning");
-        }
+        } */
     }
 
     void pushNewPHLE(String deviceName, int deviceID){
         if(queryForPHLE(deviceName, deviceID).getDeviceName().equals("empty")){
             phleArrayList.add(new PHLEStateMachine(deviceName, deviceID));
         }
-        else{
+        /*else{
             System.out.println("device already exists... returning");
-        }
+        } */
     }
 
     void pushNewWEMO(String deviceName, int deviceID){

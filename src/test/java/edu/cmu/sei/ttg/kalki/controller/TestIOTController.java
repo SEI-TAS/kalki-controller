@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 
 public class TestIOTController {
@@ -17,9 +18,11 @@ public class TestIOTController {
 
     @Before
     public void testIOTInit(){
+        Postgres.setLoggingLevel(Level.WARNING);
         mainIOTController = new IOTController();
         mainIOTController.initializeDatabase();
         mainIOTController.initListeners(mainIOTController);
+
     }
 
     @Test
@@ -62,10 +65,11 @@ public class TestIOTController {
             testStatus.insert();
             testAlert = new Alert("new-alert", testStatus.getId(), 5);
             testAlert.insert();
+            wait(2);
             for (int j = 0; j < 2; j++) {
-                testAlert = new Alert("new-alert", testStatus.getId(), i);
+                testAlert = new Alert( "new-alert", testStatus.getId(), i);
                 testAlert.insert();
-                wait(1);
+                wait(2);
             }
         }
     }
