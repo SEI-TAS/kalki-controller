@@ -27,7 +27,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
        printf("got null values from class obj");
        return;
     }
-	if (dlcCurrentState==1)
+	if (dlcCurrentState==0)
 	{
 		if (strcmp(eventString, "dlc-motion-sense")==0)
 		{
@@ -64,7 +64,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 			printf("incorrect alert type\n");
 		}
 	}
-	else if (dlcCurrentState==3)
+	else if (dlcCurrentState==2)
 	{
 		if (strcmp(eventString, "state-reset")==0)
 		{
@@ -76,7 +76,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 			printf("not reset event\n");
 		}
 	}
-	else if (dlcCurrentState==2)
+	else if (dlcCurrentState==1)
 	{
 		if (strcmp(eventString, "max-login-attempts")==0)
 		{

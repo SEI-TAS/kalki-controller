@@ -23,7 +23,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextS
     	const char *eventString = (*env)->GetStringUTFChars(env, eventJString, 0);
     	//get string elements for current state
     	jint phleCurrentState = (*env)->GetIntField(env, fsmObj, phleCurrentStateField);
-    	if (phleCurrentState==1)
+    	if (phleCurrentState==0)
     	{
     		if (strcmp(eventString, "brute-force")==0)
     		{
@@ -65,7 +65,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextS
     			printf("incorrect alert type\n");
     		}
     	}
-    	else if (phleCurrentState==3)
+    	else if (phleCurrentState==2)
     	{
     		if (strcmp(eventString, "state-reset")==0)
     		{
@@ -77,7 +77,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextS
     			printf("not reset event\n");
     		}
     	}
-    	else if (phleCurrentState==2)
+    	else if (phleCurrentState==1)
     	{
     		if (strcmp(eventString, "state-reset")==0)
     		{

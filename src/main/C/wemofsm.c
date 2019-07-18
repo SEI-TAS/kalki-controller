@@ -22,7 +22,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextS
     	const char *eventString = (*env)->GetStringUTFChars(env, eventJString, 0);
     	//get string elements for current state
     	jint wemoCurrentState = (*env)->GetIntField(env, fsmObj, wemoCurrentStateField);
-    	if (wemoCurrentState==1)
+    	if (wemoCurrentState==0)
     	{
     		if (strcmp(eventString, "wemo-current-mw-greater-low")==0)
     		{
@@ -84,7 +84,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextS
     			printf("incorrect alert type\n");
     		}
     	}
-    	else if (wemoCurrentState==2)
+    	else if (wemoCurrentState==1)
     	{
     		if (strcmp(eventString, "state-reset")==0)
     		{
@@ -146,7 +146,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextS
     			printf("incorrect alert type\n");
     		}
     	}
-    	else if (wemoCurrentState==3)
+    	else if (wemoCurrentState==2)
     	{
     		if (strcmp(eventString, "state-reset")==0)
     		{
