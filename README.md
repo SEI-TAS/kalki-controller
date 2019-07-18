@@ -41,7 +41,7 @@ Code Snippets
   - JNI equivalent to Synchronized():
     - '(*env) -> MonitorEnter(env, fsmObj)'
   - fsmObj and env are defined in method header
-##### retreiveObj
+##### retreive object
 
 - retrieves the class object from java environment
   - `jclass (deviceName)Class = (*env) -> GetObjectClass(env, fsmObj);`
@@ -69,7 +69,7 @@ Code Snippets
 - Retreives the value of the currentState from the class object and places it into a variable for use
   - ```jint (deviceName)CurrentState = (*env)->GetIntField(env, fsmObj, (deviceName)CurrentStateField)```	
 
-##### control flow guard code
+##### Control Flow guard code
 
  - Compares the event string and an alert using string compare from <string.h>
  - Leave the last line of code per action or guard without a ; 
@@ -77,14 +77,14 @@ Code Snippets
    - ```strcmp(eventString, "alert-name")==0```
 
 
-##### action code
+##### Action code
 
  - 	debug statement
    - ```printf("wemo-today-kwh\n");```
 
  - set the currentState of the retreived class object to currentState++ transitioning it to the next state
    - ```(*env) -> SetIntField(env, fsmObj, (deviceName)CurrentStateField, (deviceName)CurrentState = wemoCurrentState + 1)```	
-##### monitorExit
+##### MonitorExit
 
  - Release the references to the UTF chars used for the alert checks (MUST DO)
    - ```(*env) -> ReleaseStringUTFChars(env, eventJString, eventString);```	
@@ -99,6 +99,7 @@ Code Snippets
 -	In terminal inside the JavaDevices directory call
   -	```Javac -h . StateMachine.java (deviceName)StateMachine.java ```
 - Move the generated .h file into the C folder
+- Make sure stdio.h and string.h are included
 -	Add include statement with name of generated .h file into the C code template file for the device
 
 #### C File Template
