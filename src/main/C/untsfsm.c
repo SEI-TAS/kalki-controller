@@ -87,7 +87,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextS
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("brute-force event\n");
-			(*env) -> SetIntField(env, fsmObj, untsCurrentStateField, 0);
+			(*env) -> SetIntField(env, fsmObj, untsCurrentStateField, 1);
 		}
 		else if (strcmp(eventString, "unts-temperature-online")==0)
 		{
@@ -134,7 +134,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextS
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("brute-force event\n");
-			(*env) -> SetIntField(env, fsmObj, untsCurrentStateField, 0);
+			(*env) -> SetIntField(env, fsmObj, untsCurrentStateField, 1);
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
@@ -181,7 +181,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextS
 		if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("brute-force event\n");
-			(*env) -> SetIntField(env, fsmObj, untsCurrentStateField, 0);
+			(*env) -> SetIntField(env, fsmObj, untsCurrentStateField, 1);
 		}
 		else
 		{

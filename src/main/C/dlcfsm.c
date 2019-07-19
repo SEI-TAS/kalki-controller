@@ -37,7 +37,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			(*env) -> SetIntField(env, fsmObj, dlcCurrentStateField, 0);
+			(*env) -> SetIntField(env, fsmObj, dlcCurrentStateField, 1);
 		}
 		else if (strcmp(eventString, "brute-force") == 0)
 		{
@@ -69,7 +69,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			(*env) -> SetIntField(env, fsmObj, dlcCurrentStateField, 0);
+			(*env) -> SetIntField(env, fsmObj, dlcCurrentStateField, 1);
 		}
 		else
 		{
@@ -91,7 +91,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			(*env) -> SetIntField(env, fsmObj, dlcCurrentStateField, 0);
+			(*env) -> SetIntField(env, fsmObj, dlcCurrentStateField, 1);
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{

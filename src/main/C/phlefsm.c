@@ -53,7 +53,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextS
     		else if (strcmp(eventString, "state-reset")==0)
     		{
     			printf("state-reset event\n");
-    			(*env) -> SetIntField(env, fsmObj, phleCurrentStateField, 0);
+    			(*env) -> SetIntField(env, fsmObj, phleCurrentStateField, 1);
     		}
     		else if (strcmp(eventString, "default-login")==0)
     		{
@@ -70,7 +70,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextS
     		if (strcmp(eventString, "state-reset")==0)
     		{
     			printf("state-reset event\n");
-    			(*env) -> SetIntField(env, fsmObj, phleCurrentStateField, 0);
+    			(*env) -> SetIntField(env, fsmObj, phleCurrentStateField, 1);
     		}
     		else
     		{
@@ -82,7 +82,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextS
     		if (strcmp(eventString, "state-reset")==0)
     		{
     			printf("state-reset event\n");
-    			(*env) -> SetIntField(env, fsmObj, phleCurrentStateField, 0);
+    			(*env) -> SetIntField(env, fsmObj, phleCurrentStateField, 1);
     		}
     		else if (strcmp(eventString, "max-login-attempts")==0)
     		{

@@ -32,7 +32,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextS
     		else if (strcmp(eventString, "state-reset")==0)
     		{
     			printf("state-reset event\n");
-    			(*env) -> SetIntField(env, fsmObj, wemoCurrentStateField, 0);
+    			(*env) -> SetIntField(env, fsmObj, wemoCurrentStateField, 1);
     		}
     		else if (strcmp(eventString, "wemo-today-kwh")==0)
     		{
@@ -89,7 +89,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextS
     		if (strcmp(eventString, "state-reset")==0)
     		{
     			printf("state-reset event\n");
-    			(*env) -> SetIntField(env, fsmObj, wemoCurrentStateField, 0);
+    			(*env) -> SetIntField(env, fsmObj, wemoCurrentStateField, 1);
     		}
     		else if (strcmp(eventString, "wemo-time-on")==0)
     		{
@@ -151,7 +151,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextS
     		if (strcmp(eventString, "state-reset")==0)
     		{
     			printf("state-reset event\n");
-    			(*env) -> SetIntField(env, fsmObj, wemoCurrentStateField, 0);
+    			(*env) -> SetIntField(env, fsmObj, wemoCurrentStateField, 1);
     		}
     		else
     		{
