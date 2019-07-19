@@ -42,11 +42,16 @@ public class DLCStateMachine extends StateMachine {
     private native int generateNextState(String alertType, int currentState);
 
     public void callNative(){
-
-        int newState = this.generateNextState(this.getCurrentEvent(), this.getCurrentState());
-        this.setCurrentState(newState);
-
-
+        System.out.println("Previous State: " + this.getCurrentState());
+        int returnedState = this.generateNextState(this.getCurrentEvent(), this.getCurrentState());
+        this.setCurrentState(returnedState);
+        System.out.println("New State: " + this.getCurrentState());
+        //Postgres calls to add new state to DB
+        Device thisDevice = Postgres.findDevice(this.getDeviceID());
+        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), returnedState);
+        newState.insert();
+        thisDevice.setCurrentState(newState);
+        thisDevice.insertOrUpdate();
     }
 
 }

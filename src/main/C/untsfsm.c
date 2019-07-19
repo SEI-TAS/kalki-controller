@@ -73,8 +73,8 @@ jstring alertType, jint currentState)
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
-			printf("brute-force event\n");
-			return currentState = currentState +1;
+			printf("state-reset event\n");
+			return currentState = 1;
 		}
 		else if (strcmp(eventString, "unts-temperature-online")==0)
 		{
@@ -121,8 +121,8 @@ jstring alertType, jint currentState)
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
-			printf("brute-force event\n");
-			return currentState = 0;
+			printf("state-reset event\n");
+			return currentState = 1;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
@@ -169,8 +169,8 @@ jstring alertType, jint currentState)
 	{
 		if (strcmp(eventString, "state-reset")==0)
 		{
-			printf("brute-force event\n");
-			return currentState = 0;
+			printf("state-reset event\n");
+			return currentState = 1;
 		}
 		else
 		{

@@ -19,7 +19,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 0;
+			return currentState = 1;
 		}
 		else if (strcmp(eventString, "brute-force") == 0)
 		{
@@ -52,12 +52,12 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 0;
+			return currentState = 1;
 		}
 		else
 		{
 			printf("not reset event\n");
-			return currentState = 0;
+			return currentState;
 		}
 	}
 	else if (currentState==2)
@@ -75,7 +75,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 0;
+			return currentState = 1;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
@@ -95,7 +95,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else
 		{
 			printf("incorrect alert type\n");
-			return currentState = 0;
+			return currentState;
 		}
 	}
 	else

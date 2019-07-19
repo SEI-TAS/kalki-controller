@@ -34,6 +34,7 @@ class DeviceManager {
      */
     void pushNewDLC(String deviceName, int deviceID){
         if(queryForDLC(deviceName, deviceID).getDeviceName().equals("empty")){
+            System.out.println("New DLC added to Device Manager");
             dlcArrayList.add(new DLCStateMachine(deviceName, deviceID));
         }
         /*else {
@@ -43,6 +44,7 @@ class DeviceManager {
 
     void pushNewUNTS(String deviceName, int deviceID){
         if(queryForUNTS(deviceName,deviceID).getDeviceName().equals("empty")){
+            System.out.println("New UNTS added to Device Manager");
             untsArrayList.add(new UNTSStateMachine(deviceName, deviceID));
         }
         /*else {
@@ -52,6 +54,7 @@ class DeviceManager {
 
     void pushNewPHLE(String deviceName, int deviceID){
         if(queryForPHLE(deviceName, deviceID).getDeviceName().equals("empty")){
+            System.out.println("New PHLE added to Device Manager");
             phleArrayList.add(new PHLEStateMachine(deviceName, deviceID));
         }
         /*else{
@@ -61,6 +64,7 @@ class DeviceManager {
 
     void pushNewWEMO(String deviceName, int deviceID){
         if(queryForWEMO(deviceName, deviceID).getDeviceName().equals("empty")){
+            System.out.println("New WEMO added to Device Manager");
             wemoArrayList.add(new WEMOStateMachine(deviceName, deviceID));
         }
         else{

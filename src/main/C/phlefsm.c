@@ -40,7 +40,7 @@ jstring alertType, jint currentState)
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 0;
+			return currentState = 1;
 		}
 		else if (strcmp(eventString, "default-login")==0)
 		{
@@ -58,7 +58,7 @@ jstring alertType, jint currentState)
 		if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 0;
+			return currentState = 1;
 		}
 		else
 		{
@@ -71,7 +71,7 @@ jstring alertType, jint currentState)
 		if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 0;
+			return currentState = 1;
 		}
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{

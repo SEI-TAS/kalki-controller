@@ -44,12 +44,11 @@ public class IOTController implements InsertHandler{
     @Override
     public void handleNewInsertion(int id) {
         //System.out.println("Here in handler");
-        Instant start = Instant.now();
         Alert receivedAlert = Postgres.findAlert(id);
         if (receivedAlert == null) {
             System.out.println("alert not found");
         } else {
-            //System.out.println("alert found");
+            System.out.println("alert found");
             Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
             String deviceName = foundDevice.getName();
             int deviceID = foundDevice.getId();
@@ -57,6 +56,7 @@ public class IOTController implements InsertHandler{
             int alertTypeID = receivedAlert.getAlertTypeId();
             String eventName = Postgres.findAlertType(alertTypeID).getName();
             //System.out.println("Alert Type Name: " + alertTypeName);
+            System.out.println(deviceID);
             Thread handlerThread = new Thread()
             {
                 @Override
@@ -64,6 +64,7 @@ public class IOTController implements InsertHandler{
                     try {
                         switch (deviceTypeID){
                             case 1:
+                                deviceManager.pushNewDLC(deviceName, deviceID);
                                 DLCStateMachine foundDevice = deviceManager.queryForDLC(deviceName, deviceID);
                                 synchronized (foundDevice){
                                     foundDevice.setEvent(eventName);
