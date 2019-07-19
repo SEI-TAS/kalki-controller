@@ -10,37 +10,6 @@ public class WEMOStateMachine extends StateMachine {
         System.loadLibrary("wemofsm");
     }
 
-    public static void main(String[] args) {
-        WEMOStateMachine main = new WEMOStateMachine("device00", 0);
-        main.setEvent("brute-force");
-        new Thread(main).start();
-    }
-
-    /**
-     * Calls Native C code to generate new currentState
-     * - C code contains synchronize statement on Java Obj
-     * Publishes new currentState to Postgres Database
-     */
-    @Override
-    public void run() {
-        System.out.println("WEMO pre gen: current state: " + this.getCurrentState());
-        try {
-            this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
-        }
-        catch (UnsatisfiedLinkError e){
-            System.out.println("Library not found, check build files");
-            e.printStackTrace();
-        }
-        System.out.println("WEMO post gen: current state: " + this.getCurrentState());
-        System.out.println("Posting new security state to Postgres");
-        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        newState.insert();
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        thisDevice.setCurrentState(newState);
-        thisDevice.insertOrUpdate();
-        System.out.println("Finished updating device security state");
-    }
-
     /**
      * Constructor for DeviceStateMachine inherits from StateMachine
      * @param name  deviceName
@@ -55,6 +24,12 @@ public class WEMOStateMachine extends StateMachine {
      * Uses this.currentState and this.currentEvent
      */
     private native int generateNextState(String alertType, int newState);
+
+    public void callNative(){
+
+        setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+
+    }
 
 }
 

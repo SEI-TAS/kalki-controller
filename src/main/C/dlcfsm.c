@@ -9,7 +9,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
     (*env) -> MonitorEnter(env, fsmObj);
     char eventString[256];
     strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));
-	if (currentState==0)
+	if (currentState==1)
 	{
 		if (strcmp(eventString, "dlc-motion-sense")==0)
 		{
@@ -47,7 +47,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 			return currentState;
 		}
 	}
-	else if (currentState==2)
+	else if (currentState==3)
 	{
 		if (strcmp(eventString, "state-reset")==0)
 		{
@@ -60,7 +60,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 			return currentState = 0;
 		}
 	}
-	else if (currentState==1)
+	else if (currentState==2)
 	{
 		if (strcmp(eventString, "max-login-attempts")==0)
 		{

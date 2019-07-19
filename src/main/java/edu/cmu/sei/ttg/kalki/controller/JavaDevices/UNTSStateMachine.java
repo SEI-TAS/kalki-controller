@@ -18,31 +18,6 @@ public class UNTSStateMachine extends StateMachine {
      */
 
     /**
-     * Calls Native C code to generate new currentState
-     * - C code contains synchronize statement on Java Obj
-     * Publishes new currentState to Postgres Database
-     */
-    @Override
-    public void run() {
-        System.out.println("UNTS pre gen: current state: " + this.getCurrentState());
-        try {
-            this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
-        }
-        catch (UnsatisfiedLinkError e){
-            System.out.println("Library not found, check build files");
-            e.printStackTrace();
-        }
-        System.out.println("UNTS post gen: current state: " + this.getCurrentState());
-        //uncomment this for running
-        System.out.println("Posting new security state to Postgres");
-        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        newState.insert();
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        thisDevice.setCurrentState(newState);
-        thisDevice.insertOrUpdate();
-        System.out.println("Finished updating device security state");
-    }
-    /**
      * Constructor for DeviceStateMachine inherits from StateMachine
      * @param name  deviceName
      * @param id    deviceID
@@ -56,5 +31,11 @@ public class UNTSStateMachine extends StateMachine {
      * Uses this.currentState and this.currentEvent
      */
     private native int generateNextState(String alertType, int newState);
+
+    public void callNative(){
+
+        setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+
+    }
 
 }

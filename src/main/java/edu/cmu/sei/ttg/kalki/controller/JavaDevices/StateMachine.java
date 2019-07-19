@@ -1,6 +1,6 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
-public class StateMachine implements Runnable {
+public class StateMachine {
 
     private String deviceName; //name of device received from database
 
@@ -33,14 +33,6 @@ public class StateMachine implements Runnable {
                         " deviceID: " + this.deviceID);
     }
 
-    /**
-     * Returns immediately
-     * Empty for default StateMachine, required for inheritance
-     */
-    @Override
-    public void run() {
-        return;
-    }
 
     /**
      * Constructor for StateMachine
@@ -50,7 +42,7 @@ public class StateMachine implements Runnable {
     public StateMachine(String name, int ID) {
         this.deviceName = name;
         this.deviceID = ID;
-        this.currentState = 0;
+        this.currentState = 1; //default to normal
     }
 
     /**

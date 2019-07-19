@@ -9,7 +9,7 @@ jstring alertType, jint currentState)
     (*env) -> MonitorEnter(env, fsmObj);
 	char eventString[256];
 	    strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));;
-	if (currentState==0)
+	if (currentState==1)
 	{
 		if (strcmp(eventString, "wemo-current-mw-greater-low")==0)
 		{
@@ -72,7 +72,7 @@ jstring alertType, jint currentState)
 			return currentState;
 		}
 	}
-	else if (currentState==1)
+	else if (currentState==2)
 	{
 		if (strcmp(eventString, "state-reset")==0)
 		{
@@ -135,7 +135,7 @@ jstring alertType, jint currentState)
 			return currentState;
 		}
 	}
-	else if (currentState==2)
+	else if (currentState==3)
 	{
 		if (strcmp(eventString, "state-reset")==0)
 		{

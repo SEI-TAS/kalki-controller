@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * the alert listeners and their handler
  */
 
-public class IOTController implements InsertHandler {
+public class IOTController implements InsertHandler{
 
     DeviceManager deviceManager = new DeviceManager();
 
@@ -50,51 +50,40 @@ public class IOTController implements InsertHandler {
             System.out.println("alert not found");
         } else {
             //System.out.println("alert found");
-            //find device type
             Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
             String deviceName = foundDevice.getName();
             int deviceID = foundDevice.getId();
             int deviceTypeID = foundDevice.getType().getId();
             int alertTypeID = receivedAlert.getAlertTypeId();
-            String alertTypeName = Postgres.findAlertType(alertTypeID).getName();
+            String eventName = Postgres.findAlertType(alertTypeID).getName();
             //System.out.println("Alert Type Name: " + alertTypeName);
-            Thread opThread;
-            switch (deviceTypeID) {
-                case 1:
-                    //System.out.println("pushing new state to DLC: " + deviceName);
-                    deviceManager.pushNewDLC(deviceName, deviceID);
-                    DLCStateMachine dlc = deviceManager.queryForDLC(deviceName, deviceID);
-                    dlc.setEvent(alertTypeName);
-                    opThread = new Thread(dlc);
-                    break;
-                case 2:
-                    //System.out.println("pushing new state to UNTS: " + deviceName);
-                    deviceManager.pushNewUNTS(deviceName, deviceID);
-                    UNTSStateMachine unts = deviceManager.queryForUNTS(deviceName, deviceID);
-                    unts.setEvent(alertTypeName);
-                    opThread = new Thread(unts);
-                    break;
-                case 3:
-                    //System.out.println("pushing new state to WEMO: " + deviceName);
-                    deviceManager.pushNewWEMO(deviceName, deviceID);
-                    WEMOStateMachine wemo = deviceManager.queryForWEMO(deviceName, deviceID);
-                    wemo.setEvent(alertTypeName);
-                    opThread = new Thread(wemo);
-                    break;
-                case 4:
-                    //System.out.println("pushing new state to PHLE: " + deviceName);
-                    deviceManager.pushNewPHLE(deviceName, deviceID);
-                    PHLEStateMachine phle = deviceManager.queryForPHLE(deviceName, deviceID);
-                    phle.setEvent(alertTypeName);
-                    opThread = new Thread(phle);
-                    break;
-                default:
-                    opThread = new Thread(new StateMachine("empty", 0));
-                    break;
-            }
-            Instant finish = Instant.now();
-            System.out.println("Time = " + Duration.between(start, finish).toMillis() + " ms");
-            opThread.start();
+            Thread handlerThread = new Thread()
+            {
+                @Override
+                public void run() {
+                    try {
+                        switch (deviceTypeID){
+                            case 1:
+                                DLCStateMachine foundDevice = deviceManager.queryForDLC(deviceName, deviceID);
+                                synchronized (foundDevice){
+                                    foundDevice.setEvent(eventName);
+                                    foundDevice.callNative();
+                                }
+                            case 2:
+
+                            case 3:
+
+                            case 4:
+
+                            default:
+                        }
+                    }
+                    catch (UnsatisfiedLinkError e){
+
+                    }
+                }
+            };
+            handlerThread.start();
         }
     }
 

@@ -7,20 +7,22 @@ import edu.cmu.sei.ttg.kalki.controller.JavaDevices.UNTSStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.WEMOStateMachine;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 class DeviceManager {
 
-    private ArrayList<DLCStateMachine> dlcArrayList;
-    private ArrayList<PHLEStateMachine> phleArrayList;
-    private ArrayList<UNTSStateMachine> untsArrayList;
-    private ArrayList<WEMOStateMachine> wemoArrayList;
+    private List<DLCStateMachine> dlcArrayList;
+    private List<PHLEStateMachine> phleArrayList;
+    private List<UNTSStateMachine> untsArrayList;
+    private List<WEMOStateMachine> wemoArrayList;
 
     DeviceManager() {
-        this.dlcArrayList = new ArrayList<>();
-        this.phleArrayList = new ArrayList<>();
-        this.untsArrayList = new ArrayList<>();
-        this.wemoArrayList = new ArrayList<>();
+        this.dlcArrayList = Collections.synchronizedList(new ArrayList<>());
+        this.phleArrayList = Collections.synchronizedList(new ArrayList<>());
+        this.untsArrayList = Collections.synchronizedList(new ArrayList<>());
+        this.wemoArrayList = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**

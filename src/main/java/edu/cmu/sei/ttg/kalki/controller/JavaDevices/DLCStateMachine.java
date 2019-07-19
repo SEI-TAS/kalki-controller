@@ -25,25 +25,6 @@ public class DLCStateMachine extends StateMachine {
      * - C code contains synchronize statement on Java Obj
      * Publishes new currentState to Postgres Database
      */
-    @Override
-    public void run() {
-        System.out.println("DLC pre gen: current state: " + this.getCurrentState() + " Alert-Type " + this.getCurrentEvent());
-        try {
-            this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
-        }
-        catch (UnsatisfiedLinkError e){
-            System.out.println("Library not found, check build files");
-            e.printStackTrace();
-        }
-        System.out.println("DLC post gen: current state: " + this.getCurrentState() + " Alert-type " + this.getCurrentEvent());
-        System.out.println("Posting new security state to Postgres");
-        DeviceSecurityState newState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        newState.insert();
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        thisDevice.setCurrentState(newState);
-        thisDevice.insertOrUpdate();
-        System.out.println("Finished updating device security state");
-    }
 
     /**
      * Constructor for DeviceStateMachine inherits from StateMachine
@@ -59,5 +40,13 @@ public class DLCStateMachine extends StateMachine {
      * Uses this.currentState and this.currentEvent
      */
     private native int generateNextState(String alertType, int currentState);
+
+    public void callNative(){
+
+        int newState = this.generateNextState(this.getCurrentEvent(), this.getCurrentState());
+        this.setCurrentState(newState);
+
+
+    }
 
 }
