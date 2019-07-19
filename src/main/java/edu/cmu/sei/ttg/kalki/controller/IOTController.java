@@ -8,6 +8,7 @@ import edu.cmu.sei.ttg.kalki.models.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.experimental.theories.Theories;
 
 import java.io.File;
 import java.io.FileReader;
@@ -44,48 +45,35 @@ public class IOTController implements InsertHandler{
     @Override
     public void handleNewInsertion(int id) {
         //System.out.println("Here in handler");
-        Alert receivedAlert = Postgres.findAlert(id);
-        if (receivedAlert == null) {
-            System.out.println("alert not found");
-        } else {
-            System.out.println("alert found");
-            Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
-            String deviceName = foundDevice.getName();
-            int deviceID = foundDevice.getId();
-            int deviceTypeID = foundDevice.getType().getId();
-            int alertTypeID = receivedAlert.getAlertTypeId();
-            String eventName = Postgres.findAlertType(alertTypeID).getName();
-            //System.out.println("Alert Type Name: " + alertTypeName);
-            System.out.println(deviceID);
-            Thread handlerThread = new Thread()
-            {
-                @Override
-                public void run() {
-                    try {
-                        switch (deviceTypeID){
-                            case 1:
-                                deviceManager.pushNewDLC(deviceName, deviceID);
-                                DLCStateMachine foundDevice = deviceManager.queryForDLC(deviceName, deviceID);
-                                synchronized (foundDevice){
-                                    foundDevice.setEvent(eventName);
-                                    foundDevice.callNative();
-                                }
-                            case 2:
-
-                            case 3:
-
-                            case 4:
-
-                            default:
-                        }
-                    }
-                    catch (UnsatisfiedLinkError e){
-
+        Thread handlerThread = new Thread(){
+            @Override
+            public void run() {
+                Alert receivedAlert = Postgres.findAlert(id);
+                if (receivedAlert == null) {
+                    System.out.println("alert not found");
+                } else {
+                    System.out.println("alert found");
+                    Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
+                    String deviceName = foundDevice.getName();
+                    int deviceID = foundDevice.getId();
+                    int deviceTypeID = foundDevice.getType().getId();
+                    int alertTypeID = receivedAlert.getAlertTypeId();
+                    String eventName = Postgres.findAlertType(alertTypeID).getName();
+                    System.out.println("Alert Type Name: " + eventName);
+                    //System.out.println(deviceID);
+                    switch (deviceTypeID){
+                        case 1:
+                            System.out.println("Made it to DLC inside switch");
+                            deviceManager.pushNewDLC(deviceName, deviceID);
+                            DLCStateMachine pulledDevice = deviceManager.queryForDLC(deviceName, deviceID);
+                            pulledDevice.setEvent(eventName);
+                            pulledDevice.callNative();
+                            System.out.println("State from alert: "+ eventName + " state = " + pulledDevice.getCurrentState());
                     }
                 }
-            };
-            handlerThread.start();
-        }
+            }
+        };
+        handlerThread.start();
     }
 
     /**

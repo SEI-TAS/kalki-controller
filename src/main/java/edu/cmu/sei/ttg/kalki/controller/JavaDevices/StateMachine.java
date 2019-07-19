@@ -11,30 +11,6 @@ public class StateMachine {
     private String currentEvent; //the most recent alert-type associated with the device
 
     /**
-     * @return returns the name of the device
-     */
-    public String getName() {
-        return this.deviceName;
-    }
-
-    /**
-     * @param newEvent this is the latest alert-type received from listener given by the handler
-     */
-    public synchronized void setEvent(String newEvent) {
-        this.currentEvent = newEvent;
-    }
-
-    //Prints the variables associated with the state machine
-    protected void printStateMachine() {
-        System.out.println(
-                " Name: " + this.deviceName +
-                        " current state: " + this.currentState +
-                        " event: " + this.currentEvent +
-                        " deviceID: " + this.deviceID);
-    }
-
-
-    /**
      * Constructor for StateMachine
      * @param name
      * @param ID
@@ -62,11 +38,28 @@ public class StateMachine {
     /**
      * @return returns currentState
      */
-    synchronized int getCurrentState() {
+    public synchronized int getCurrentState() {
         return this.currentState;
     }
 
     String getCurrentEvent(){ return this.currentEvent; }
 
     synchronized void setCurrentState(int newState){ this.currentState = newState; }
+
+    /**
+     * @return returns the name of the device
+     */
+    public String getName() {
+        return this.deviceName;
+    }
+
+    /**
+     * @param newEvent this is the latest alert-type received from listener given by the handler
+     */
+    public synchronized void setEvent(String newEvent) {
+        System.out.println("Here setting event: "+ newEvent);
+        this.currentEvent = newEvent;
+    }
+
+    public synchronized String getEvent(){ return this.currentEvent; }
 }
