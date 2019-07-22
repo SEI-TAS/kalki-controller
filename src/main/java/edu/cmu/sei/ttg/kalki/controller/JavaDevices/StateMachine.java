@@ -1,5 +1,7 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
+import edu.cmu.sei.ttg.kalki.models.Device;
+
 public class StateMachine {
 
     private String deviceName; //name of device received from database
@@ -9,6 +11,8 @@ public class StateMachine {
     private int currentState; //the current state of device inits to zero and is changed by native calls
 
     private String currentEvent; //the most recent alert-type associated with the device
+
+    private boolean threadLock = false;
 
     /**
      * Constructor for StateMachine
@@ -38,13 +42,13 @@ public class StateMachine {
     /**
      * @return returns currentState
      */
-    public synchronized int getCurrentState() {
+    int getCurrentState() {
         return this.currentState;
     }
 
     String getCurrentEvent(){ return this.currentEvent; }
 
-    synchronized void setCurrentState(int newState){ this.currentState = newState; }
+    void setCurrentState(int newState){ this.currentState = newState; }
 
     /**
      * @return returns the name of the device
@@ -56,10 +60,23 @@ public class StateMachine {
     /**
      * @param newEvent this is the latest alert-type received from listener given by the handler
      */
-    public synchronized void setEvent(String newEvent) {
+    public void setEvent(String newEvent) {
         System.out.println("Here setting event: "+ newEvent);
         this.currentEvent = newEvent;
     }
 
-    public synchronized String getEvent(){ return this.currentEvent; }
+    public String getEvent(){ return this.currentEvent; }
+
+    void unlock(){ threadLock = false; }
+
+    void lock() { threadLock = true; }
+
+    synchronized boolean getLockState(){
+        return this.threadLock;
+    }
+
+    static void changeSampleRate(Device deviceIn){
+        int samplingRate = deviceIn.getSamplingRate();
+        deviceIn.setSamplingRate(samplingRate*2);
+    }
 }

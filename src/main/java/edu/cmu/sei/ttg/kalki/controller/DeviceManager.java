@@ -26,50 +26,22 @@ class DeviceManager {
     }
 
     /**
-     *
-     * @param deviceName name of device from postgres database
-     * @param deviceID   ID of device from Postgres database
      * pushNew* adds a statemachine object to an arraylist for access by the listener to push new states
-     *
      */
-    void pushNewDLC(String deviceName, int deviceID){
-        if(queryForDLC(deviceName, deviceID).getDeviceName().equals("empty")){
-            System.out.println("New DLC added to Device Manager");
-            dlcArrayList.add(new DLCStateMachine(deviceName, deviceID));
-        }
-        /*else {
-            System.out.println("device already exists... returning");
-        } */
+    void pushNewDLC(DLCStateMachine dlc){
+        dlcArrayList.add(dlc);
     }
 
-    void pushNewUNTS(String deviceName, int deviceID){
-        if(queryForUNTS(deviceName,deviceID).getDeviceName().equals("empty")){
-            System.out.println("New UNTS added to Device Manager");
-            untsArrayList.add(new UNTSStateMachine(deviceName, deviceID));
-        }
-        /*else {
-            System.out.println("device already exists... returning");
-        } */
+    void pushNewUNTS(UNTSStateMachine unts){
+        untsArrayList.add(unts);
     }
 
-    void pushNewPHLE(String deviceName, int deviceID){
-        if(queryForPHLE(deviceName, deviceID).getDeviceName().equals("empty")){
-            System.out.println("New PHLE added to Device Manager");
-            phleArrayList.add(new PHLEStateMachine(deviceName, deviceID));
-        }
-        /*else{
-            System.out.println("device already exists... returning");
-        } */
+    void pushNewPHLE(PHLEStateMachine phle){
+        phleArrayList.add(phle);
     }
 
-    void pushNewWEMO(String deviceName, int deviceID){
-        if(queryForWEMO(deviceName, deviceID).getDeviceName().equals("empty")){
-            System.out.println("New WEMO added to Device Manager");
-            wemoArrayList.add(new WEMOStateMachine(deviceName, deviceID));
-        }
-        else{
-            System.out.println("device already exists... returning");
-        }
+    void pushNewWEMO(WEMOStateMachine wemo){
+        wemoArrayList.add(wemo);
     }
 
     /**
@@ -81,30 +53,41 @@ class DeviceManager {
      */
 
     DLCStateMachine queryForDLC(String deviceName, int deviceID){
-        for(DLCStateMachine holder: dlcArrayList)
-            if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
-        //else return an empty device which will trigger nothing
-        return new DLCStateMachine("empty", 99);
+        for(DLCStateMachine holder: dlcArrayList){
+            if(deviceName.equals(holder.getName()) && (holder.getDeviceID() == deviceID)){ return holder; }
+        }
+        DLCStateMachine newDLC = new DLCStateMachine(deviceName, deviceID);
+        this.pushNewDLC(newDLC);
+        return newDLC;
+
     }
 
     WEMOStateMachine queryForWEMO(String deviceName, int deviceID){
-        for(WEMOStateMachine holder: wemoArrayList)
+        for(WEMOStateMachine holder: wemoArrayList){
             if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
-        //else return an empty device which will trigger nothing
-        return new WEMOStateMachine("empty", 99);
+        }
+        WEMOStateMachine newWEMO = new WEMOStateMachine(deviceName, deviceID);
+        this.pushNewWEMO(newWEMO);
+        return newWEMO;
     }
 
     UNTSStateMachine queryForUNTS(String deviceName, int deviceID){
-        for(UNTSStateMachine holder: untsArrayList)
+        for(UNTSStateMachine holder: untsArrayList){
             if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
-        //else return an empty device which will trigger nothing
-        return new UNTSStateMachine("empty", 99);
+
+        }
+        UNTSStateMachine newUNTS = new UNTSStateMachine(deviceName, deviceID);
+        this.pushNewUNTS(newUNTS);
+        return newUNTS;
+
     }
 
     PHLEStateMachine queryForPHLE(String deviceName, int deviceID){
-        for(PHLEStateMachine holder: phleArrayList)
+        for(PHLEStateMachine holder: phleArrayList){
             if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
-        //else return an empty device which will trigger nothing
-        return new PHLEStateMachine("empty", 99);
+        }
+        PHLEStateMachine newPHLE = new PHLEStateMachine(deviceName, deviceID);
+        this.pushNewPHLE(newPHLE);
+        return newPHLE;
     }
 }

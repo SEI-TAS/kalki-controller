@@ -6,7 +6,6 @@ JNIEXPORT int JNICALL
 Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
 jstring alertType, jint currentState)
 {
-    (*env) -> MonitorEnter(env, fsmObj);
 	char eventString[256];
 	strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));
 	if (currentState==1)
@@ -183,5 +182,4 @@ jstring alertType, jint currentState)
 		printf("not reset event\n");
 		return currentState;
 	}
-	(*env) -> MonitorExit(env, fsmObj);
 }

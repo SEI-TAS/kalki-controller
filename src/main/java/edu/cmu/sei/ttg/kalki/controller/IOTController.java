@@ -57,38 +57,41 @@ public class IOTController implements InsertHandler{
             int alertTypeID = receivedAlert.getAlertTypeId();
             String eventName = Postgres.findAlertType(alertTypeID).getName();
             System.out.println("Alert Type Name: " + eventName);
-            switch (deviceTypeID){
-                case 1:
-                    deviceManager.pushNewDLC(deviceName, deviceID);
-                    DLCStateMachine foundDLC = deviceManager.queryForDLC(deviceName, deviceID);
-                    foundDLC.setEvent(eventName);
-                    foundDLC.callNative();
-                    break;
-
-                case 2:
-                    deviceManager.pushNewUNTS(deviceName, deviceID);
-                    UNTSStateMachine foundUNTS = deviceManager.queryForUNTS(deviceName, deviceID);
-                    foundUNTS.setEvent(eventName);
-                    foundUNTS.callNative();
-                    break;
-
-                case 3:
-                    deviceManager.queryForWEMO(deviceName, deviceID);
-                    WEMOStateMachine foundWEMO = deviceManager.queryForWEMO(deviceName, deviceID);
-                    foundWEMO.setEvent(eventName);
-                    foundWEMO.callNative();
-                    break;
-
-                case 4:
-                    deviceManager.queryForPHLE(deviceName, deviceID);
-                    PHLEStateMachine foundPHLE = deviceManager.queryForPHLE(deviceName, deviceID);
-                    foundPHLE.setEvent(eventName);
-                    foundPHLE.callNative();
-                    break;
-
-                default:
-                    System.out.println("Wrong Device Type");
-                    break;
+            try {
+                Thread process = new Thread(){
+                    @Override
+                    public void run() {
+                        switch (deviceTypeID){
+                            case 1:
+                                DLCStateMachine dlcDevice = deviceManager.queryForDLC(deviceName, deviceID);
+                                dlcDevice.setEvent(eventName);
+                                dlcDevice.callNative();
+                                break;
+                            case 2:
+                                UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID);
+                                untsDevice.setEvent(eventName);
+                                untsDevice.callNative();
+                                break;
+                            case 3:
+                                WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID);
+                                wemoDevice.setEvent(eventName);
+                                wemoDevice.callNative();
+                                break;
+                            case 4:
+                                PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID);
+                                phleDevice.setEvent(eventName);
+                                phleDevice.callNative();
+                                break;
+                            default:
+                                System.out.println("Error in device type handling");
+                                break;
+                        }
+                    }
+                };
+                process.start();
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
         }
     }

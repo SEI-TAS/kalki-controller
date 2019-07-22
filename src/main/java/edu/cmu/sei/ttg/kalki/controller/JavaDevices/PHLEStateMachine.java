@@ -4,6 +4,8 @@ import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 
+import java.util.concurrent.TimeUnit;
+
 public class PHLEStateMachine extends StateMachine {
 
     static {
@@ -33,9 +35,27 @@ public class PHLEStateMachine extends StateMachine {
     private native int generateNextState(String alertType, int newState);
 
     public void callNative(){
-
-        setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
-
+        while (this.getLockState()){
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            }
+            catch (InterruptedException e ){
+                e.printStackTrace();
+            }
+        }
+        this.lock();
+        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
+        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        System.out.println("Current State: " + this.getCurrentState());
+        Device thisDevice = Postgres.findDevice(this.getDeviceID());
+        if (this.getCurrentState()==2){
+            changeSampleRate(thisDevice);
+        }
+        DeviceSecurityState thisSecurityState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
+        thisSecurityState.insert();
+        thisDevice.setCurrentState(thisSecurityState);
+        thisDevice.insertOrUpdate();
+        this.unlock();
     }
 
 }
