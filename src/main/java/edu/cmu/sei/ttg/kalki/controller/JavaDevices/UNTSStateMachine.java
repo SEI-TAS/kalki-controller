@@ -4,6 +4,8 @@ import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 
+import java.util.concurrent.TimeUnit;
+
 public class UNTSStateMachine extends StateMachine {
 
     static {
@@ -35,7 +37,7 @@ public class UNTSStateMachine extends StateMachine {
     public void callNative(){
         while (this.getLockState()){
             try {
-                wait(1);
+                TimeUnit.SECONDS.sleep(2);
             }
             catch (InterruptedException e ){
                 e.printStackTrace();
