@@ -45,35 +45,52 @@ public class IOTController implements InsertHandler{
     @Override
     public void handleNewInsertion(int id) {
         //System.out.println("Here in handler");
-        Thread handlerThread = new Thread(){
-            @Override
-            public void run() {
-                Alert receivedAlert = Postgres.findAlert(id);
-                if (receivedAlert == null) {
-                    System.out.println("alert not found");
-                } else {
-                    System.out.println("alert found");
-                    Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
-                    String deviceName = foundDevice.getName();
-                    int deviceID = foundDevice.getId();
-                    int deviceTypeID = foundDevice.getType().getId();
-                    int alertTypeID = receivedAlert.getAlertTypeId();
-                    String eventName = Postgres.findAlertType(alertTypeID).getName();
-                    System.out.println("Alert Type Name: " + eventName);
-                    //System.out.println(deviceID);
-                    switch (deviceTypeID){
-                        case 1:
-                            System.out.println("Made it to DLC inside switch");
-                            deviceManager.pushNewDLC(deviceName, deviceID);
-                            DLCStateMachine pulledDevice = deviceManager.queryForDLC(deviceName, deviceID);
-                            pulledDevice.setEvent(eventName);
-                            pulledDevice.callNative();
-                            System.out.println("State from alert: "+ eventName + " state = " + pulledDevice.getCurrentState());
-                    }
-                }
+        Alert receivedAlert = Postgres.findAlert(id);
+        if (receivedAlert == null) {
+            System.out.println("alert not found");
+        } else {
+            System.out.println("alert found");
+            Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
+            String deviceName = foundDevice.getName();
+            int deviceID = foundDevice.getId();
+            int deviceTypeID = foundDevice.getType().getId();
+            int alertTypeID = receivedAlert.getAlertTypeId();
+            String eventName = Postgres.findAlertType(alertTypeID).getName();
+            System.out.println("Alert Type Name: " + eventName);
+            switch (deviceTypeID){
+                case 1:
+                    deviceManager.pushNewDLC(deviceName, deviceID);
+                    DLCStateMachine foundDLC = deviceManager.queryForDLC(deviceName, deviceID);
+                    foundDLC.setEvent(eventName);
+                    foundDLC.callNative();
+                    break;
+
+                case 2:
+                    deviceManager.pushNewUNTS(deviceName, deviceID);
+                    UNTSStateMachine foundUNTS = deviceManager.queryForUNTS(deviceName, deviceID);
+                    foundUNTS.setEvent(eventName);
+                    foundUNTS.callNative();
+                    break;
+
+                case 3:
+                    deviceManager.queryForWEMO(deviceName, deviceID);
+                    WEMOStateMachine foundWEMO = deviceManager.queryForWEMO(deviceName, deviceID);
+                    foundWEMO.setEvent(eventName);
+                    foundWEMO.callNative();
+                    break;
+
+                case 4:
+                    deviceManager.queryForPHLE(deviceName, deviceID);
+                    PHLEStateMachine foundPHLE = deviceManager.queryForPHLE(deviceName, deviceID);
+                    foundPHLE.setEvent(eventName);
+                    foundPHLE.callNative();
+                    break;
+
+                default:
+                    System.out.println("Wrong Device Type");
+                    break;
             }
-        };
-        handlerThread.start();
+        }
     }
 
     /**
