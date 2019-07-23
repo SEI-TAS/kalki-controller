@@ -24,7 +24,8 @@ public class PHLEStateMachine extends StateMachine {
      */
     @Override
     public void run() {
-        System.out.println("PHLE pre gen: current state: " + this.getCurrentState());
+        int previousState = this.getCurrentState();
+        System.out.println("PHLE pre gen: current state: " + previousState);
         this.generateNextState();
         System.out.println("PHLE post gen: current state: " + this.getCurrentState());
         //uncomment this for running
@@ -32,7 +33,9 @@ public class PHLEStateMachine extends StateMachine {
         newState.insert();
         Device thisDevice = Postgres.findDevice(this.getDeviceID());
         thisDevice.setCurrentState(newState);
-        doubleSamplingRate(thisDevice);
+        if(previousState == 1 && this.getCurrentState()==2){
+            doubleSamplingRate(thisDevice);
+        }
         thisDevice.insertOrUpdate();
         System.out.println("Finished updating device security state");
     }

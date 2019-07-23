@@ -28,7 +28,8 @@ public class DLCStateMachine extends StateMachine {
      */
     @Override
     public void run() {
-        System.out.println("DLC pre gen: current state: " + this.getCurrentState());
+        int previousState = this.getCurrentState();
+        System.out.println("DLC pre gen: current state: " + previousState);
         this.generateNextState();
         System.out.println("DLC post gen: current state: " + this.getCurrentState());
         System.out.println("Posting new security state to Postgres");
@@ -36,7 +37,9 @@ public class DLCStateMachine extends StateMachine {
         newState.insert();
         Device thisDevice = Postgres.findDevice(this.getDeviceID());
         thisDevice.setCurrentState(newState);
-        doubleSamplingRate(thisDevice);
+        if(previousState == 1 && this.getCurrentState()==2){
+            doubleSamplingRate(thisDevice);
+        }
         thisDevice.insertOrUpdate();
         System.out.println("Finished updating device security state");
     }
