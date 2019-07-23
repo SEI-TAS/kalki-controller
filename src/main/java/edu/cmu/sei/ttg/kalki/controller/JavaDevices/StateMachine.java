@@ -1,5 +1,7 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
+import edu.cmu.sei.ttg.kalki.models.Device;
+
 public class StateMachine implements Runnable {
 
     private String deviceName; //name of device received from database
@@ -74,4 +76,8 @@ public class StateMachine implements Runnable {
         return this.currentState;
     }
 
+    static void doubleSamplingRate(Device thisDevice){
+        int rate = thisDevice.getSamplingRate();
+        thisDevice.setSamplingRate(rate*2);
+    }
 }

@@ -31,6 +31,7 @@ public class WEMOStateMachine extends StateMachine {
         newState.insert();
         Device thisDevice = Postgres.findDevice(this.getDeviceID());
         thisDevice.setCurrentState(newState);
+        doubleSamplingRate(thisDevice);
         thisDevice.insertOrUpdate();
         System.out.println("Finished updating device security state");
     }
