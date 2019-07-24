@@ -37,11 +37,12 @@ public class WEMOStateMachine extends StateMachine {
             }
         }
         this.lock();
-        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
+        int previousState = this.getCurrentState();
+        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + previousState);
         this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
         System.out.println("Current State: " + this.getCurrentState());
         Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        if (this.getCurrentState()==2){
+        if (this.getCurrentState()==2 && previousState == 1 ){
             changeSampleRate(thisDevice);
         }
         DeviceSecurityState thisSecurityState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
