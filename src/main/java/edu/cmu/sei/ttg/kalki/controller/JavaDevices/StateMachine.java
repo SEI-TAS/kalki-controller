@@ -2,7 +2,7 @@ package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
 import edu.cmu.sei.ttg.kalki.models.Device;
 
-public class StateMachine implements Runnable {
+public class StateMachine {
 
     private String deviceName; //name of device received from database
 
@@ -12,37 +12,7 @@ public class StateMachine implements Runnable {
 
     private String currentEvent; //the most recent alert-type associated with the device
 
-    /**
-     * @return returns the name of the device
-     */
-    public String getName() {
-        return this.deviceName;
-    }
-
-    /**
-     * @param newEvent this is the latest alert-type received from listener given by the handler
-     */
-    public void setEvent(String newEvent) {
-        this.currentEvent = newEvent;
-    }
-
-    //Prints the variables associated with the state machine
-    protected void printStateMachine() {
-        System.out.println(
-                " Name: " + this.deviceName +
-                        " current state: " + this.currentState +
-                        " event: " + this.currentEvent +
-                        " deviceID: " + this.deviceID);
-    }
-
-    /**
-     * Returns immediately
-     * Empty for default StateMachine, required for inheritance
-     */
-    @Override
-    public void run() {
-        return;
-    }
+    private boolean threadLock = false;
 
     /**
      * Constructor for StateMachine
@@ -52,7 +22,7 @@ public class StateMachine implements Runnable {
     public StateMachine(String name, int ID) {
         this.deviceName = name;
         this.deviceID = ID;
-        this.currentState=1;
+        this.currentState = 1; //default to normal
     }
 
     /**
@@ -75,9 +45,38 @@ public class StateMachine implements Runnable {
     int getCurrentState() {
         return this.currentState;
     }
+    
+    String getCurrentEvent(){ return this.currentEvent; }
 
-    static void doubleSamplingRate(Device thisDevice){
-        int rate = thisDevice.getSamplingRate();
-        thisDevice.setSamplingRate(rate*2);
+    void setCurrentState(int newState){ this.currentState = newState; }
+
+    /**
+     * @return returns the name of the device
+     */
+    public String getName() {
+        return this.deviceName;
+    }
+
+    /**
+     * @param newEvent this is the latest alert-type received from listener given by the handler
+     */
+    public void setEvent(String newEvent) {
+        System.out.println("Here setting event: "+ newEvent);
+        this.currentEvent = newEvent;
+    }
+
+    public String getEvent(){ return this.currentEvent; }
+
+    void unlock(){ threadLock = false; }
+
+    void lock() { threadLock = true; }
+
+    synchronized boolean getLockState(){
+        return this.threadLock;
+    }
+
+    static void changeSampleRate(Device deviceIn){
+        int samplingRate = deviceIn.getSamplingRate();
+        deviceIn.setSamplingRate(samplingRate*2);
     }
 }
