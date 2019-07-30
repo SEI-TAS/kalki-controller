@@ -106,7 +106,6 @@ public class IOTController implements InsertHandler{
             String dbPassword = (String) json.get("dbPassword");
             //System.out.println("ip: "+ ip + "port: " + port + "dbName: " + dbName + "dbUser: " + dbUser + "dbPassword: " + dbPassword);
             Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
-            Postgres.resetDatabase();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -123,7 +122,8 @@ public class IOTController implements InsertHandler{
      * Initializes database listener for the insertion of new alerts
      */
     void initListeners(InsertHandler alertHandler){
-        InsertListener.startUpListener("alerthistoryinsert", alertHandler);
+        InsertListener.addHandler("alerthistoryinsert", alertHandler);
+        InsertListener.startListening();
         try {
             TimeUnit.SECONDS.sleep(5);
         }

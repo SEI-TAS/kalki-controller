@@ -2,26 +2,41 @@ package edu.cmu.sei.ttg.kalki.controller;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.*;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
-
-public class TestIOTController {
+public class TestIOTController{
 
     private IOTController mainIOTController;
+    private static boolean hasRun;
+    @BeforeClass
+    public static void createTestDB() {
+        if (!hasRun) {
+            String rootPassword = "kalkipass";  //based on run script
+            String dbHost = "localhost";        //based on run script
+            String dbPort = "5432";             //based on run script
+            String dbName = "kalkidb_test";
+            String dbUser = "kalkiuser_test";
+            String dbPass = "kalkipass";
 
-    @Before
-    public void testIOTInit(){
-        Postgres.setLoggingLevel(Level.WARNING);
-        mainIOTController = new IOTController();
-        mainIOTController.initializeDatabase();
-        mainIOTController.initListeners(mainIOTController);
+            try {
+                // Recreate DB and user.
+                Postgres.removeDatabase(rootPassword, dbName);
+                Postgres.removeUser(rootPassword, dbUser);
+                Postgres.createUserIfNotExists(rootPassword, dbUser, dbPass);
+                Postgres.createDBIfNotExists(rootPassword, dbName, dbUser);
+
+                //initialize test DB
+                Postgres.initialize(dbHost, dbPort, dbName, dbUser, dbPass);
+                Postgres.resetDatabase();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            hasRun = true;
+        }
+        IOTController testController= new IOTController();
+        testController.initListeners(testController);
 
     }
 
@@ -44,7 +59,7 @@ public class TestIOTController {
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
-                wait(1);
+                wait(2);
             }
         }
     }
@@ -65,9 +80,8 @@ public class TestIOTController {
             testStatus.insert();
             testAlert = new Alert("new-alert", testStatus.getId(), 5);
             testAlert.insert();
-            wait(2);
             for (int j = 0; j < 2; j++) {
-                testAlert = new Alert( "new-alert", testStatus.getId(), i);
+                testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
                 wait(2);
             }
@@ -93,8 +107,8 @@ public class TestIOTController {
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
-                wait(1);
-            }
+                wait(2);
+           }
         }
     }
     
@@ -117,7 +131,7 @@ public class TestIOTController {
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
-                wait(1);
+                wait(2);
             }
         }
     }
