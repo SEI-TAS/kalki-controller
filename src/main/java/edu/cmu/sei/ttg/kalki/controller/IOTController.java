@@ -109,7 +109,6 @@ public class IOTController implements InsertHandler {
             String dbPassword = (String) json.get("dbPassword");
             //System.out.println("ip: "+ ip + "port: " + port + "dbName: " + dbName + "dbUser: " + dbUser + "dbPassword: " + dbPassword);
             Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
-            Postgres.resetDatabase();
         }
         catch (Exception e){
             e.printStackTrace();
