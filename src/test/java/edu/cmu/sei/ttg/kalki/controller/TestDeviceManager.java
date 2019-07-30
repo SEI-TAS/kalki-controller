@@ -49,6 +49,34 @@ public class TestDeviceManager {
         assertEquals("wemo01", mainManager.queryForWEMO("wemo01", 1).getName());
         assertEquals("empty", mainManager.queryForWEMO("wemo02", 1).getName());
     }
+    @Test
+    public void testPHLEEventSet(){ ;
+        mainManager.pushNewPHLE(new PHLEStateMachine("e", 2));
+        PHLEStateMachine device = mainManager.queryForPHLE("e", 2);
+        device.setEvent("brute-force");
+        assertEquals(device.getEvent(), "brute-force");
+    }
+    @Test
+    public void testDLCEventSet(){ ;
+        mainManager.pushNewDLC(new DLCStateMachine("e", 2));
+        DLCStateMachine device = mainManager.queryForDLC("e", 2);
+        device.setEvent("brute-force");
+        assertEquals(device.getEvent(), "brute-force");
+    }
 
+    @Test
+    public void testUNTSEventSet(){ ;
+        mainManager.pushNewUNTS(new UNTSStateMachine("e", 2));
+        UNTSStateMachine device = mainManager.queryForUNTS("e", 2);
+        device.setEvent("brute-force");
+        assertEquals(device.getEvent(), "brute-force");
+    }
 
+    @Test
+    public void testWEMOEventSet(){ ;
+        mainManager.pushNewWEMO(new WEMOStateMachine("e", 2));
+        WEMOStateMachine device = mainManager.queryForWEMO("e", 2);
+        device.setEvent("brute-force");
+        assertEquals(device.getEvent(), "brute-force");
+    }
 }
