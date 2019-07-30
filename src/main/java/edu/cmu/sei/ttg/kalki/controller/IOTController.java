@@ -122,7 +122,8 @@ public class IOTController implements InsertHandler{
      * Initializes database listener for the insertion of new alerts
      */
     void initListeners(InsertHandler alertHandler){
-        InsertListener.startUpListener("alerthistoryinsert", alertHandler);
+        InsertListener.addHandler("alerthistoryinsert", alertHandler);
+        InsertListener.startListening();
         try {
             TimeUnit.SECONDS.sleep(5);
         }
