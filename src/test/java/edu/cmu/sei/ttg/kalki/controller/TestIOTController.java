@@ -108,7 +108,7 @@ public class TestIOTController{
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
                 wait(2);
-=            }
+           }
         }
     }
     
