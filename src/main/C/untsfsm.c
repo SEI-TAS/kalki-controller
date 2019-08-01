@@ -2,166 +2,183 @@
 #include <jni.h>
 #include <string.h>
 #include "edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine.h"
-JNIEXPORT int JNICALL
+JNIEXPORT jintArray JNICALL
 Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
-jstring alertType, jint currentState)
+jstring alertType, jint currentState, jint samplingRate)
 {
 	char eventString[256];
+	int newCurrentState;
+    int newSamplingRate = samplingRate;
 	strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));
-	if (currentState==1)
+	if (currentState==2)
 	{
 		if (strcmp(eventString, "unts-gyro")==0)
 		{
 			printf("unts-gyro\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-acceleration")==0)
 		{
 			printf("unts-acceleration\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-temperature-avg")==0)
 		{
 			printf("unts-temperature-avg\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
 			printf("brute-force event\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-magnetometer-online-low")==0)
 		{
 			printf("unts-magnetometer-online-low\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-magnetometer")==0)
 		{
 			printf("unts-magnetometer\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-temperature")==0)
 		{
 			printf("unts-temperature\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "default-login")==0)
 		{
 			printf("default-login\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{
 			printf("max-login-attempts\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-gyro-secondary")==0)
 		{
 			printf("unts-gyro-secondary\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "unts-magnetometer-online-high")==0)
 		{
 			printf("unts-magnetometer-online-high\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "device-unavailable")==0)
 		{
 			printf("device-unavailable\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 1;
+			newCurrentState = 1;
 		}
 		else if (strcmp(eventString, "unts-temperature-online")==0)
 		{
 			printf("unts-temperature-online\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
 		}
 		else
 		{
 			printf("incorrect alert type\n");
-			return currentState;
+			newCurrentState = currentState;
 		}
 	}
-	else if (currentState==2)
+	else if (currentState==1)
 	{
 		if (strcmp(eventString, "unts-gyro-seconday")==0)
 		{
 			printf("unts-gyro-secondary\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-magnetometer-online-high")==0)
 		{
 			printf("unts-magnetometer-online-high\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-gyro")==0)
 		{
 			printf("unts-gyro\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "default-login")==0)
 		{
 			printf("default-logint\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-acceleration")==0)
 		{
 			printf("unts-acceleration\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-temperature-avg")==0)
 		{
 			printf("unts-acceleration\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 1;
+			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
 			printf("brute-force event\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-temperature-online")==0)
 		{
 			printf("unts-temperature-online\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "device-unavailable")==0)
 		{
 			printf("device-unavailable\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-magnetometer")==0)
 		{
 			printf("unts-magnetometer\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-temperature")==0)
 		{
 			printf("unts-temperature\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "unts-magnetometer-online-low")==0)
 		{
 			printf("unts-magentometer-online-low\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{
 			printf("max-login-attempts\n");
-			return currentState = currentState +1;
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
 		}
 		else
 		{
 			printf("incorrect alert type\n");
-			return currentState;
+			newCurrentState = currentState;
+			newSamplingRate = samplingRate;
 		}
 	}
 	else if (currentState==3)
@@ -169,17 +186,25 @@ jstring alertType, jint currentState)
 		if (strcmp(eventString, "state-reset")==0)
     {
 			printf("state-reset event\n");
-			return currentState = 1;
+			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else
 		{
 			printf("not reset event\n");
-			return currentState;
+			newCurrentState = currentState;
 		}
 	}
 	else
 	{
 		printf("not reset event\n");
-		return currentState;
+		newCurrentState = currentState;
 	}
+	//Build returnArray
+	int cArray[2];
+    cArray[0] = newCurrentState;
+    cArray[1] = newSamplingRate;
+    jintArray returnArray = (*env) ->NewIntArray(env, 2);
+    (*env) -> SetIntArrayRegion(env, returnArray, 0, 2, cArray);
+    return (returnArray);
 }

@@ -49,6 +49,7 @@ public class IOTController implements InsertHandler{
             int deviceID = foundDevice.getId();
             int deviceTypeID = foundDevice.getType().getId();
             int alertTypeID = receivedAlert.getAlertTypeId();
+            int samplingRate = foundDevice.getSamplingRate();
             String eventName = Postgres.findAlertType(alertTypeID).getName();
             System.out.println("Alert Type Name: " + eventName);
             try {
@@ -59,22 +60,22 @@ public class IOTController implements InsertHandler{
                             case 1:
                                 DLCStateMachine dlcDevice = deviceManager.queryForDLC(deviceName, deviceID);
                                 dlcDevice.setEvent(eventName);
-                                dlcDevice.callNative();
+                                dlcDevice.callNative(samplingRate);
                                 break;
                             case 2:
                                 UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID);
                                 untsDevice.setEvent(eventName);
-                                untsDevice.callNative();
+                                untsDevice.callNative(samplingRate);
                                 break;
                             case 3:
                                 WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID);
                                 wemoDevice.setEvent(eventName);
-                                wemoDevice.callNative();
+                                wemoDevice.callNative(samplingRate);
                                 break;
                             case 4:
                                 PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID);
                                 phleDevice.setEvent(eventName);
-                                phleDevice.callNative();
+                                phleDevice.callNative(samplingRate);
                                 break;
                             default:
                                 System.out.println("Error in device type handling");

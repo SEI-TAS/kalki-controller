@@ -1,5 +1,6 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
+import edu.cmu.sei.ttg.kalki.controller.IOTController;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
@@ -14,13 +15,13 @@ public class DLCStateMachine extends StateMachine {
     static {
         System.loadLibrary("dlcfsm");
     }
-    /*
+
     public static void main(String[] args) {
         DLCStateMachine main = new DLCStateMachine("device00", 0);
         main.setEvent("brute-force");
-        new Thread(main).start();
+        main.callNative(10);
     }
-    */
+
 
     /**
      * Constructor for DeviceStateMachine inherits from StateMachine
@@ -35,9 +36,9 @@ public class DLCStateMachine extends StateMachine {
      * Native call to method generateNextState from dlcfsm.c
      * Uses this.currentState and this.currentEvent
      */
-    private native int generateNextState(String alertType, int currentState);
+    private native int[] generateNextState(String alertType, int currentState, int samplingRate);
 
-    public void callNative(){
+    public void callNative(int samplingRate){
         while (this.getLockState()){
             try {
                 TimeUnit.SECONDS.sleep(2);
@@ -47,18 +48,11 @@ public class DLCStateMachine extends StateMachine {
             }
         }
         this.lock();
-        int previousState = this.getCurrentState();
         System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
-        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate);
+        this.setCurrentState(results[0]);
         System.out.println("Current State: " + this.getCurrentState());
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        if (this.getCurrentState()==2 && previousState==1){
-            changeSampleRate(thisDevice);
-        }
-        DeviceSecurityState thisSecurityState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        thisSecurityState.insert();
-        thisDevice.setCurrentState(thisSecurityState);
-        thisDevice.insertOrUpdate();
+        this.updateDevice(results[1]);
         this.unlock();
     }
 

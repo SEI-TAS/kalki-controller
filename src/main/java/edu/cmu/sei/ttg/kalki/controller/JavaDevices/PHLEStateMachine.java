@@ -32,9 +32,9 @@ public class PHLEStateMachine extends StateMachine {
      * Native call to method generateNextState from phlefsm.c
      * Uses this.currentState and this.currentEvent
      */
-    private native int generateNextState(String alertType, int newState);
+    private native int[] generateNextState(String alertType, int newState, int samplingRate);
 
-    public void callNative(){
+    public void callNative(int samplingRate){
         while (this.getLockState()){
             try {
                 TimeUnit.SECONDS.sleep(2);
@@ -44,18 +44,11 @@ public class PHLEStateMachine extends StateMachine {
             }
         }
         this.lock();
-        int previousState = this.getCurrentState();
-        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + previousState);
-        this.setCurrentState(this.generateNextState(this.getCurrentEvent(), this.getCurrentState()));
+        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate);
+        this.setCurrentState(results[0]);
         System.out.println("Current State: " + this.getCurrentState());
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        if (this.getCurrentState()==2 && previousState == 1){
-            changeSampleRate(thisDevice);
-        }
-        DeviceSecurityState thisSecurityState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        thisSecurityState.insert();
-        thisDevice.setCurrentState(thisSecurityState);
-        thisDevice.insertOrUpdate();
+        this.updateDevice(results[1]);
         this.unlock();
     }
 

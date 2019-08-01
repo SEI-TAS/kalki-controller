@@ -12,8 +12,8 @@ extern "C" {
  * Method:    generateNextState
  * Signature: ()V
  */
-JNIEXPORT int JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextState
-  (JNIEnv *, jobject, jstring, jint);
+JNIEXPORT jintArray JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextState
+  (JNIEnv *, jobject, jstring, jint, jint);
 
 #ifdef __cplusplus
 }
