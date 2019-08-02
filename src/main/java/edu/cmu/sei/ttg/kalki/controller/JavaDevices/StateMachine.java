@@ -84,5 +84,6 @@ public class StateMachine {
         thisDevice.setCurrentState(thisSecurityState);
         thisDevice.setSamplingRate(newSamplingRate);
         thisDevice.insertOrUpdate();
+        System.out.println("Sampling Rate:" + newSamplingRate);
     }
 }

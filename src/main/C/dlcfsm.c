@@ -41,7 +41,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else if (strcmp(eventString, "device-unavailable")==0)
 		{
 			printf("device-unavailable\n");
-			currentState = currentState + 1;
+			newCurrentState = currentState + 1;
 		}
 		else
 		{
