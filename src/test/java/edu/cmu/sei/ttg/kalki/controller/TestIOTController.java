@@ -54,13 +54,13 @@ public class TestIOTController{
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
                 wait(2);
             }
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
+            testAlert.insert();
         }
     }
 
@@ -78,13 +78,13 @@ public class TestIOTController{
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
                 wait(2);
             }
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
+            testAlert.insert();
         }
     }
 
@@ -102,13 +102,13 @@ public class TestIOTController{
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
                 wait(2);
            }
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
+            testAlert.insert();
         }
     }
     
@@ -126,13 +126,14 @@ public class TestIOTController{
             testDevice.insert();
             testStatus = new DeviceStatus(testDevice.getId());
             testStatus.insert();
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
+
             for (int j = 0; j < 2; j++) {
                 testAlert = new Alert("new-alert", testStatus.getId(), i);
                 testAlert.insert();
                 wait(2);
             }
+            testAlert = new Alert("new-alert", testStatus.getId(), 5);
+            testAlert.insert();
         }
     }
 

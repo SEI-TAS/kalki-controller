@@ -1,6 +1,8 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
+import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 
 public class StateMachine {
 
@@ -75,8 +77,13 @@ public class StateMachine {
         return this.threadLock;
     }
 
-    static void changeSampleRate(Device deviceIn){
-        int samplingRate = deviceIn.getSamplingRate();
-        deviceIn.setSamplingRate(samplingRate*2);
+    void updateDevice(int newSamplingRate){
+        Device thisDevice = Postgres.findDevice(this.getDeviceID());
+        DeviceSecurityState thisSecurityState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
+        thisSecurityState.insert();
+        thisDevice.setCurrentState(thisSecurityState);
+        thisDevice.setSamplingRate(newSamplingRate);
+        thisDevice.insertOrUpdate();
+        System.out.println("Sampling Rate:" + newSamplingRate);
     }
 }

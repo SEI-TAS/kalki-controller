@@ -3,47 +3,50 @@
 #include <string.h>
 #include "edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine.h"
 
-JNIEXPORT int JNICALL
-Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextState(JNIEnv *env, jobject fsmObj, jstring alertType, jint currentState)
+JNIEXPORT jintArray JNICALL
+Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextState(JNIEnv *env, jobject fsmObj, jstring alertType, jint currentState, jint samplingRate)
 {
+    int newCurrentState;
+    int newSamplingRate;
     char eventString[256];
     strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));
-	if (currentState==1)
+	if (currentState==2)
 	{
+	    newSamplingRate = samplingRate;
 		if (strcmp(eventString, "dlc-motion-sense")==0)
 		{
 			printf("dlc-motion-sense\n");
-			return currentState = currentState + 1;
+            newCurrentState = currentState + 1;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 1;
+			newCurrentState = 1;
 		}
 		else if (strcmp(eventString, "brute-force") == 0)
 		{
 			printf("brute-force event\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
 		}
 		else if (strcmp(eventString, "default-login")==0)
 		{
 			printf("default-login event\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
 		}
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{
 			printf("max-login-attempts\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
 		}
 		else if (strcmp(eventString, "device-unavailable")==0)
 		{
 			printf("device-unavailable\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
 		}
 		else
 		{
 			printf("incorrect alert type\n");
-			return currentState;
+			newCurrentState = currentState;
 		}
 	}
 	else if (currentState==3)
@@ -51,55 +54,74 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 1;
+			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else
 		{
 			printf("not reset event\n");
-			return currentState;
+			newCurrentState = currentState;
+			newSamplingRate = samplingRate;
 		}
 	}
-	else if (currentState==2)
+	else if (currentState==1)
 	{
+
 		if (strcmp(eventString, "max-login-attempts")==0)
 		{
 			printf("max-login-attempts\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "default-login")==0)
 		{
 			printf("default-login event\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
-			return currentState = 1;
+			newCurrentState = 1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
 			printf("brute-force event\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "device-unavailable")==0)
 		{
 			printf("device-unavailable\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
+			newSamplingRate = samplingRate*2;
 		}
 		else if (strcmp(eventString, "dlc-motion-sense")==0)
 		{
 			printf("dlc-motion-sense\n");
-			return currentState = currentState + 1;
+			newCurrentState = currentState + 1;
+			newSamplingRate = samplingRate*2;
 		}
 		else
 		{
 			printf("incorrect alert type\n");
-			return currentState;
+			newCurrentState = currentState;
 		}
 	}
 	else
 	{
 		printf("incorrect state type\n");
-		return currentState;
+		newCurrentState = currentState;
+	    newSamplingRate = samplingRate;
+
 	}
+	//Build returnArray
+    int cArray[2];
+    cArray[0] = newCurrentState;
+    cArray[1] = newSamplingRate;
+    jintArray returnArray = (*env) ->NewIntArray(env, 2);
+
+    (*env) -> SetIntArrayRegion(env, returnArray, 0, 2, cArray);
+    return (returnArray);
 }
