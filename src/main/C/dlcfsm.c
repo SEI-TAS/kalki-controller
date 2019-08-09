@@ -22,6 +22,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else if (strcmp(eventString, "brute-force") == 0)
 		{
@@ -83,7 +84,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
-			newSamplingRate = samplingRate*2;
+			newSamplingRate = samplingRate;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{

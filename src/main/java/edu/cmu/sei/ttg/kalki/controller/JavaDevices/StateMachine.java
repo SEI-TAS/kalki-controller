@@ -16,12 +16,8 @@ public class StateMachine {
 
     private boolean threadLock = false;
 
-    /**
-     * Constructor for StateMachine
-     * @param name
-     * @param ID
-     */
-    public StateMachine(String name, int ID) {
+    //constructor of base statemachine
+    StateMachine(String name, int ID) {
         this.deviceName = name;
         this.deviceID = ID;
         this.currentState = 1; //default to normal
@@ -35,21 +31,20 @@ public class StateMachine {
     }
 
     /**
-     * @return returns device name
-     */
-    public String getDeviceName() {
-        return this.deviceName;
-    }
-
-    /**
      * @return returns currentState
      */
     int getCurrentState() {
         return this.currentState;
     }
-    
+
+    /**
+     * @return returns currentevent
+     */
     String getCurrentEvent(){ return this.currentEvent; }
 
+    /**
+     * Sets the currentState of the device
+     */
     void setCurrentState(int newState){ this.currentState = newState; }
 
     /**
