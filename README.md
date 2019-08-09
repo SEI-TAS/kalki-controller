@@ -39,34 +39,54 @@
 #### Create C String
 
 - Create c style string for use in Control Flow
-  - ```char eventString[256];```
+  ```C
+  char eventString[256];
+  ```
 - Create int for sampling rate and currentState
-``` int newCurrentState```
-``` int newSamplingRate```
+``` C
+int newCurrentState
+int newSamplingRate
+```
 ##### Control Flow guard code
 
  - Compares the event string and an alert using string compare from <string.h>
  - Leave the last line of code per action or guard without a ; 
  - Leave control flow blank for else statement	
    - For checking current state: 
-   ``` currentState == 1 2 or 3```
+   ```C
+   currentState == 1 2 or 3
+   ```
    - For checking alert type: 
-   ```strcmp(eventString, "alert-name")==0```
+   ```C
+   strcmp(eventString, "alert-name")==0
+   ```
 
 ##### Action code
 
  - debug statement
- - ```printf("event-name\n");```
+ ```C
+ printf("event-name\n");
+ ```
  - set return current state++ for state transition, set to 1 for reset, return currentstate for still in attack
    - Alert (non reset)
-    ```newCurrentState = currentState + 1```	
+    ```C
+    newCurrentState = currentState + 1
+    ```	
     - if transition from state normal to suspicious: 
-    ``` newSamplingRate = samplingRate*2```
+    ```C
+    newSamplingRate = samplingRate*2
+    ```
     - else 
-    ``` newSamplingRate = samplingRate```
+    ``` C
+    newSamplingRate = samplingRate
+    ```
    - Alert (reset)
-   ```newCurrentState = 1; ```
-   ```newSamplingRate = samplingRate/2;```
+   ```C
+   newCurrentState = 1; 
+   ```
+   ```C
+   newSamplingRate = samplingRate/2;
+   ```
 
 ##### Ending Action
 ```C
