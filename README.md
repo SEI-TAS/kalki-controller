@@ -34,7 +34,7 @@
 -	Link State to State Actions with control flows
 -	Link State Actions to mergeState node
 
-Code Snippets
+### Code Snippets
 
 #### Create C String
 
@@ -55,9 +55,8 @@ Code Snippets
 
 ##### Action code
 
- - 	debug statement
-   - ```printf("event-name\n");```
-
+ - debug statement
+ - ```printf("event-name\n");```
  - set return current state++ for state transition, set to 1 for reset, return currentstate for still in attack
    - Alert (non reset)
     ```newCurrentState = currentState + 1```	
