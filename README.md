@@ -75,6 +75,4 @@ Code Snippets
 •	Paste Template below into file
   - `JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}`
 #### Gradle Build File:
--	Copy from components replacing device name to build libraries on gradle build
--	Add pointer to file in Test and Run tasks
--	Add dependency to bottom of build file for both test and run
+ - See Kalki-wiki

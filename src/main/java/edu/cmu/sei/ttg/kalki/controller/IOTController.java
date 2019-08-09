@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class IOTController implements InsertHandler{
 
-    DeviceManager deviceManager = new DeviceManager();
+    private DeviceManager deviceManager;
 
     /**
      * Initializes the database with the given parameters from the databaseVars JSON file, resets the database, and
@@ -114,7 +114,7 @@ public class IOTController implements InsertHandler{
     }
 
     public IOTController(){
-
+        this.deviceManager = new DeviceManager();
     }
 
     /**
