@@ -12,6 +12,7 @@ jstring alertType, jint currentState, jint samplingRate)
     int newSamplingRate = samplingRate;
 	if (currentState==2)
 	{
+	    newSamplingRate = samplingRate;
 		if (strcmp(eventString, "wemo-current-mw-greater-low")==0)
 		{
 			printf("wemo-current-me-greater-low\n");
@@ -21,6 +22,7 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else if (strcmp(eventString, "wemo-today-kwh")==0)
 		{
@@ -79,7 +81,7 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
-			newSamplingRate = samplingRate/2;
+			newSamplingRate = samplingRate;
 		}
 		else if (strcmp(eventString, "wemo-time-on")==0)
 		{

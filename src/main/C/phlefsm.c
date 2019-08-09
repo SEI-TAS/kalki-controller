@@ -43,6 +43,7 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else if (strcmp(eventString, "default-login")==0)
 		{
@@ -76,7 +77,7 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
-			newSamplingRate = samplingRate*2;
+			newSamplingRate = samplingRate;
 		}
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{

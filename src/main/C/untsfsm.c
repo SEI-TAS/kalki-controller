@@ -12,6 +12,7 @@ jstring alertType, jint currentState, jint samplingRate)
 	strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));
 	if (currentState==2)
 	{
+	    newSamplingRate = samplingRate;
 		if (strcmp(eventString, "unts-gyro")==0)
 		{
 			printf("unts-gyro\n");
@@ -76,6 +77,7 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
+			newSamplingRate = samplingRate/2;
 		}
 		else if (strcmp(eventString, "unts-temperature-online")==0)
 		{
@@ -130,7 +132,7 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
-			newSamplingRate = samplingRate/2;
+			newSamplingRate = samplingRate;
 		}
 		else if (strcmp(eventString, "brute-force")==0)
 		{
