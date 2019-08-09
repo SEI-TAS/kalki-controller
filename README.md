@@ -65,7 +65,7 @@ Code Snippets
     ``` newSamplingRate = samplingRate```
    - Alert (reset)
    ```newCurrentState = 1; ```
-			```newSamplingRate = samplingRate/2;```
+   ```newSamplingRate = samplingRate/2;```
 
 #### Ending Action
 ```int cArray[2];```
