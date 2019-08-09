@@ -84,8 +84,8 @@
 -	Add include statement with name of generated .h file into the C code template file for the device
 
 #### C File Template
-•	Create empty file (deviceName)fsm.c
-•	Paste Template below into file
+- Create empty file (deviceName)fsm.c
+- Paste Template below into file
   - `JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}`
 #### Gradle Build File:
 -	See Kalki-Wiki
