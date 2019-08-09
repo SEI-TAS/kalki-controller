@@ -69,12 +69,14 @@
    ```newSamplingRate = samplingRate/2;```
 
 ##### Ending Action
-```int cArray[2];```
-```cArray[0] = newCurrentState;```
-```cArray[1] = newSamplingRate;```
-``` jintArray returnArray = (*env) ->NewIntArray(env, 2);```
-```(*env) -> SetIntArrayRegion(env, returnArray, 0, 2, cArray);```
-```return (returnArray);```
+```C
+int cArray[2];
+cArray[0] = newCurrentState;
+cArray[1] = newSamplingRate;
+jintArray returnArray = (*env) ->NewIntArray(env, 2);
+(*env) -> SetIntArrayRegion(env, returnArray, 0, 2, cArray);
+return (returnArray); 
+```
 
 #### Generating C Header Files:
 -	In terminal inside the JavaDevices directory call
@@ -86,6 +88,8 @@
 #### C File Template
 - Create empty file (deviceName)fsm.c
 - Paste Template below into file
-  - `JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}`
+```Java
+JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}
+```
 #### Gradle Build File:
 -	See Kalki-Wiki
