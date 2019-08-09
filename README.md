@@ -1,7 +1,6 @@
 # Kalki-Controller
  
 ## Prerequisites
-- Make sure JAVA_HOME variable is set
 - Make sure GCC is installed
 - Requires Kalki-DB library
 - Requires connection to database
@@ -16,8 +15,8 @@
 -	Requirements:
 -	Clone kalki-uml with the StateMachineCode project
 -	Open StateMachineCode project in Enterprise Architect Ultimate Edition
--	Important Objects
 
+### Important EA Models
 #### Action
  - What is executed when control flow enters the object
    - Insert code snippet within action for event
@@ -41,14 +40,16 @@ Code Snippets
 
 - Create c style string for use in Control Flow
   - ```char eventString[256];```
-  
+- Create int for sampling rate and currentState
+``` int newCurrentState```
+``` int newSamplingRate```
 ##### Control Flow guard code
 
  - Compares the event string and an alert using string compare from <string.h>
  - Leave the last line of code per action or guard without a ; 
  - Leave control flow blank for else statement	
-   - ```strcmp(eventString, "alert-name")==0```
-
+   - For checking current state: ``` currentState == 1 2 or 3```
+   - For checking alert type: ```strcmp(eventString, "alert-name")==0```
 
 ##### Action code
 
@@ -56,12 +57,23 @@ Code Snippets
    - ```printf("event-name\n");```
 
  - set return current state++ for state transition, set to 1 for reset, return currentstate for still in attack
-   - ```return currentState = currentState + 1;```	
-   
-##### MonitorExit
+   - Alert (non reset)
+    ```newCurrentState = currentState + 1```	
+    - if transition from state normal to suspicious: 
+    ``` newSamplingRate = samplingRate*2```
+    - else 
+    ``` newSamplingRate = samplingRate```
+   - Alert (reset)
+   ```newCurrentState = 1; ```
+			```newSamplingRate = samplingRate/2;```
 
- - Need to dump local values
-   - ```(*env) -> DeleteLocalRef(env, fsmObj)```
+#### Ending Action
+```int cArray[2];```
+```cArray[0] = newCurrentState;```
+```cArray[1] = newSamplingRate;```
+``` jintArray returnArray = (*env) ->NewIntArray(env, 2);```
+```(*env) -> SetIntArrayRegion(env, returnArray, 0, 2, cArray);```
+```return (returnArray);```
 
 #### Generating C Header Files:
 -	In terminal inside the JavaDevices directory call
@@ -75,6 +87,4 @@ Code Snippets
 •	Paste Template below into file
   - `JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}`
 #### Gradle Build File:
--	Copy from components replacing device name to build libraries on gradle build
--	Add pointer to file in Test and Run tasks
--	Add dependency to bottom of build file for both test and run
+-	See Kalki-Wiki
