@@ -48,8 +48,10 @@ Code Snippets
  - Compares the event string and an alert using string compare from <string.h>
  - Leave the last line of code per action or guard without a ; 
  - Leave control flow blank for else statement	
-   - For checking current state: ``` currentState == 1 2 or 3```
-   - For checking alert type: ```strcmp(eventString, "alert-name")==0```
+   - For checking current state: 
+   ``` currentState == 1 2 or 3```
+   - For checking alert type: 
+   ```strcmp(eventString, "alert-name")==0```
 
 ##### Action code
 
@@ -67,7 +69,7 @@ Code Snippets
    ```newCurrentState = 1; ```
    ```newSamplingRate = samplingRate/2;```
 
-#### Ending Action
+##### Ending Action
 ```int cArray[2];```
 ```cArray[0] = newCurrentState;```
 ```cArray[1] = newSamplingRate;```
