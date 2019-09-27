@@ -84,6 +84,11 @@ jstring alertType, jint currentState, jint samplingRate)
 			printf("unts-temperature-online\n");
 			newCurrentState = currentState +1;
 		}
+		else if (strcmp(eventString, "unts-abnormal-traffic")==0)
+		{
+			printf("unts-abnormal-traffic\n");
+			newCurrentState = currentState +1;
+		}
 		else
 		{
 			printf("incorrect alert type\n");
@@ -173,6 +178,12 @@ jstring alertType, jint currentState, jint samplingRate)
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{
 			printf("max-login-attempts\n");
+			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate*2;
+		}
+		else if (strcmp(eventString, "unts-abnormal-traffic")==0)
+		{
+			printf("unts-abnormal-traffic\n");
 			newCurrentState = currentState +1;
 			newSamplingRate = samplingRate*2;
 		}
