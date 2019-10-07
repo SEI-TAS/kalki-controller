@@ -5,13 +5,49 @@
 
 JNIEXPORT jintArray JNICALL
 Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_PHLEStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
-jstring alertType, jint currentState, jint samplingRate)
+jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRate)
 {
 	char eventString[256];
 	int newCurrentState;
 	int newSamplingRate;
 	strcpy(eventString, (*env) -> GetStringUTFChars(env, alertType, NULL));;
-	if (currentState==2)
+    if (currentState==1)
+    {
+        if (strcmp(eventString, "state-reset")==0)
+        {
+            printf("state-reset event\n");
+            newCurrentState = 1;
+            newSamplingRate = defaultSamplingRate;
+        }
+        else if (strcmp(eventString, "phle-time-on")==0)
+        {
+            printf("phle-time-on\n");
+        }
+        else if (strcmp(eventString, "device-unavailable")==0)
+        {
+            printf("device-unavailable\n");
+            newCurrentState = currentState +1;
+            newSamplingRate = samplingRate*2;
+        }
+        else if (strcmp(eventString, "phle-odd-one-out")==0)
+        {
+            printf("phle-odd-one-out\n");
+            newCurrentState = currentState +1;
+            newSamplingRate = samplingRate*2;
+        }
+        else if (strcmp(eventString, "brute-force")==0)
+        {
+            printf("brute-force event\n");
+            newCurrentState = currentState +1;
+        }
+        else
+        {
+            printf("incorrect alert type\n");
+            newCurrentState = currentState;
+            newSamplingRate = samplingRate;
+        }
+    }
+    else if (currentState==2)
 	{
 	    newSamplingRate = samplingRate;
 		if (strcmp(eventString, "brute-force")==0)
@@ -24,31 +60,21 @@ jstring alertType, jint currentState, jint samplingRate)
 			printf("device-unavailable\n");
 			newCurrentState = currentState +1;
 		}
-		else if (strcmp(eventString, "max-login-attempts")==0)
-		{
-			printf("max-login-attempts\n");
-			newCurrentState = currentState +1;
-		}
 		else if (strcmp(eventString, "phle-odd-one-out")==0)
 		{
 			printf("phle-odd-one-out\n");
 			newCurrentState = currentState +1;
+			newSamplingRate = samplingRate * 2;
 		}
-		else if (strcmp(eventString, "phle-time-off")==0)
+		else if (strcmp(eventString, "phle-time-on")==0)
 		{
-			printf("phle-time-off\n");
-			newCurrentState = currentState +1;
+			printf("phle-time-on\n");
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
-			newSamplingRate = samplingRate/2;
-		}
-		else if (strcmp(eventString, "default-login")==0)
-		{
-			printf("default-login event\n");
-			newCurrentState = currentState +1;
+			newSamplingRate = defaultSamplingRate;
 		}
 		else
 		{
@@ -62,63 +88,11 @@ jstring alertType, jint currentState, jint samplingRate)
 		{
 			printf("state-reset event\n");
 			newCurrentState = 1;
-			newSamplingRate = samplingRate/2;
+			newSamplingRate = defaultSamplingRate;
 		}
 		else
 		{
 			printf("not reset event\n");
-			newCurrentState = currentState;
-			newSamplingRate = samplingRate;
-		}
-	}
-	else if (currentState==1)
-	{
-		if (strcmp(eventString, "state-reset")==0)
-		{
-			printf("state-reset event\n");
-			newCurrentState = 1;
-			newSamplingRate = samplingRate;
-		}
-		else if (strcmp(eventString, "max-login-attempts")==0)
-		{
-			printf("max-login-attempts\n");
-			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate*2;
-
-		}
-		else if (strcmp(eventString, "phle-time-off")==0)
-		{
-			printf("phle-time-ff\n");
-			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate*2;
-		}
-		else if (strcmp(eventString, "device-unavailable")==0)
-		{
-			printf("device-unavailable\n");
-			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate*2;
-		}
-		else if (strcmp(eventString, "default-login")==0)
-		{
-			printf("default-login event\n");
-			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate*2;
-		}
-		else if (strcmp(eventString, "phle-odd-one-out")==0)
-		{
-			printf("phle-odd-one-out\n");
-			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate*2;
-		}
-		else if (strcmp(eventString, "brute-force")==0)
-		{
-			printf("brute-force event\n");
-			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate*2;
-		}
-		else
-		{
-			printf("incorrect alert type\n");
 			newCurrentState = currentState;
 			newSamplingRate = samplingRate;
 		}

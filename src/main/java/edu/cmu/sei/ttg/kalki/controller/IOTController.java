@@ -75,7 +75,7 @@ public class IOTController implements InsertHandler{
                             case 4:
                                 PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID);
                                 phleDevice.setEvent(eventName);
-                                phleDevice.callNative(samplingRate);
+                                phleDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             default:
                                 System.out.println("Error in device type handling");
