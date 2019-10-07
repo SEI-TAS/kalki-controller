@@ -19,7 +19,7 @@ public class DLCStateMachine extends StateMachine {
     public static void main(String[] args) {
         DLCStateMachine main = new DLCStateMachine("device00", 0);
         main.setEvent("brute-force");
-        main.callNative(10);
+        main.callNative(10, 10);
     }
 
 
@@ -36,9 +36,9 @@ public class DLCStateMachine extends StateMachine {
      * Native call to method generateNextState from dlcfsm.c
      * Uses this.currentState and this.currentEvent
      */
-    private native int[] generateNextState(String alertType, int currentState, int samplingRate);
+    private native int[] generateNextState(String alertType, int currentState, int samplingRate, int defaultSamplingRate);
 
-    public void callNative(int samplingRate){
+    public void callNative(int samplingRate, int defaultSamplingRate){
         while (this.getLockState()){
             try {
                 TimeUnit.SECONDS.sleep(2);
@@ -49,7 +49,7 @@ public class DLCStateMachine extends StateMachine {
         }
         this.lock();
         System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
-        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate);
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate, defaultSamplingRate);
         this.setCurrentState(results[0]);
         System.out.println("Current State: " + this.getCurrentState());
         this.updateDevice(results[1]);

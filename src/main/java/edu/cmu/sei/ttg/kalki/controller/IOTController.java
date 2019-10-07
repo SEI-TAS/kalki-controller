@@ -60,7 +60,7 @@ public class IOTController implements InsertHandler{
                             case 1:
                                 DLCStateMachine dlcDevice = deviceManager.queryForDLC(deviceName, deviceID);
                                 dlcDevice.setEvent(eventName);
-                                dlcDevice.callNative(samplingRate);
+                                dlcDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             case 2:
                                 UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID);
