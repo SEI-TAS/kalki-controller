@@ -22,6 +22,7 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
         else if (strcmp(eventString, "phle-time-on")==0)
         {
             printf("phle-time-on\n");
+            newCurrentState = 1;
         }
         else if (strcmp(eventString, "device-unavailable")==0)
         {
@@ -68,6 +69,7 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
 		}
 		else if (strcmp(eventString, "phle-time-on")==0)
 		{
+		    newCurrentState = 2;
 			printf("phle-time-on\n");
 		}
 		else if (strcmp(eventString, "state-reset")==0)

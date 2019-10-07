@@ -33,6 +33,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
         else if (strcmp(eventString, "dlc-motion-sense")==0)
         {
             printf("dlc-motion-sense\n");
+            newCurrentState = 1;
         }
         else
         {
@@ -46,6 +47,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		if (strcmp(eventString, "dlc-motion-sense")==0)
 		{
 			printf("dlc-motion-sense\n");
+			newCurrentState = 2;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
 		{
@@ -56,6 +58,7 @@ Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_DLCStateMachine_generateNextSt
 		else if (strcmp(eventString, "max-login-attempts")==0)
 		{
 			printf("max-login-attempts\n");
+			newCurrentState = 2;
 		}
 		else
 		{
