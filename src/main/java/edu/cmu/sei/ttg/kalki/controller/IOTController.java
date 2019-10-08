@@ -65,7 +65,7 @@ public class IOTController implements InsertHandler{
                             case 2:
                                 UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID);
                                 untsDevice.setEvent(eventName);
-                                untsDevice.callNative(samplingRate);
+                                untsDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             case 3:
                                 WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID);
