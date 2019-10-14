@@ -28,13 +28,13 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
         {
             printf("device-unavailable\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "phle-odd-one-out")==0)
         {
             printf("phle-odd-one-out\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "brute-force")==0)
         {
@@ -65,7 +65,7 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
 		{
 			printf("phle-odd-one-out\n");
 			newCurrentState = currentState +1;
-			newSamplingRate = samplingRate * 2;
+			newSamplingRate = defaultSamplingRate/2;
 		}
 		else if (strcmp(eventString, "phle-time-on")==0)
 		{

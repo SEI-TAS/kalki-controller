@@ -23,7 +23,7 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
         {
             printf("unts-abnormal-traffic\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "device-unavailable")==0)
         {
@@ -34,25 +34,25 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
         {
             printf("unts-gyro\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "unts-acceleration")==0)
         {
             printf("unts-acceleration\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "unts-magnetometer")==0)
         {
             printf("unts-magnetometer\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "unts-temperature")==0)
         {
             printf("unts-temperature\n");
             newCurrentState = currentState +1;
-            newSamplingRate = samplingRate*2;
+            newSamplingRate = defaultSamplingRate/2;
         }
         else if (strcmp(eventString, "state-reset")==0)
         {
