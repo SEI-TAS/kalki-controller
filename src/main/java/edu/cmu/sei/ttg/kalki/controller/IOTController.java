@@ -70,7 +70,7 @@ public class IOTController implements InsertHandler{
                             case 3:
                                 WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID);
                                 wemoDevice.setEvent(eventName);
-                                wemoDevice.callNative(samplingRate);
+                                wemoDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             case 4:
                                 PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID);

@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT jintArray JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_WEMOStateMachine_generateNextState
-  (JNIEnv *, jobject, jstring, jint, jint);
+  (JNIEnv *, jobject, jstring, jint, jint, jint);
 
 #ifdef __cplusplus
 }

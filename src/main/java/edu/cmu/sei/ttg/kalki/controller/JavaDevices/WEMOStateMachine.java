@@ -25,9 +25,9 @@ public class WEMOStateMachine extends StateMachine {
      * Native call to method generateNextState from wemofsm.c
      * Uses this.currentState and this.currentEvent
      */
-    private native int[] generateNextState(String alertType, int newState, int samplingRate);
+    private native int[] generateNextState(String alertType, int newState, int samplingRate, int defaultSamplingRate);
 
-    public void callNative(int samplingRate){
+    public void callNative(int samplingRate, int defaultSamplingRate){
         while (this.getLockState()){
             try {
                 TimeUnit.SECONDS.sleep(2);
@@ -38,7 +38,7 @@ public class WEMOStateMachine extends StateMachine {
         }
         this.lock();
         System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
-        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate);
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate, defaultSamplingRate);
         this.setCurrentState(results[0]);
         System.out.println("Current State: " + this.getCurrentState());
         this.updateDevice(results[1]);
