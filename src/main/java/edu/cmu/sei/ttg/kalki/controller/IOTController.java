@@ -47,6 +47,7 @@ public class IOTController implements InsertHandler{
             Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
             String deviceName = foundDevice.getName();
             int deviceID = foundDevice.getId();
+            int currentState = foundDevice.getCurrentState().getId();
             int deviceTypeID = foundDevice.getType().getId();
             int alertTypeID = receivedAlert.getAlertTypeId();
             int samplingRate = foundDevice.getSamplingRate();
@@ -58,22 +59,22 @@ public class IOTController implements InsertHandler{
                     public void run() {
                         switch (deviceTypeID){
                             case 1:
-                                DLCStateMachine dlcDevice = deviceManager.queryForDLC(deviceName, deviceID);
+                                DLCStateMachine dlcDevice = deviceManager.queryForDLC(deviceName, deviceID, currentState);
                                 dlcDevice.setEvent(eventName);
                                 dlcDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             case 2:
-                                UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID);
+                                UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID, currentState);
                                 untsDevice.setEvent(eventName);
                                 untsDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             case 3:
-                                WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID);
+                                WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID, currentState);
                                 wemoDevice.setEvent(eventName);
                                 wemoDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
                             case 4:
-                                PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID);
+                                PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID, currentState);
                                 phleDevice.setEvent(eventName);
                                 phleDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;

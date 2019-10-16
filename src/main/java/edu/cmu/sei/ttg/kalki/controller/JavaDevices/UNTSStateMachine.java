@@ -24,8 +24,8 @@ public class UNTSStateMachine extends StateMachine {
      * @param name  deviceName
      * @param id    deviceID
      */
-    public UNTSStateMachine(String name, int id) {
-        super(name, id);
+    public UNTSStateMachine(String name, int id, int currentState) {
+        super(name, id, currentState);
     }
 
     /**

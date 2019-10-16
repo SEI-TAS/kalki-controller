@@ -52,41 +52,41 @@ class DeviceManager {
      * queryFor* returns the device object with the correct name and deviceId given for use by the listener
      */
 
-    DLCStateMachine queryForDLC(String deviceName, int deviceID){
+    DLCStateMachine queryForDLC(String deviceName, int deviceID, int currentState){
         for(DLCStateMachine holder: dlcArrayList){
             if(deviceName.equals(holder.getName()) && (holder.getDeviceID() == deviceID)){ return holder; }
         }
-        DLCStateMachine newDLC = new DLCStateMachine(deviceName, deviceID);
+        DLCStateMachine newDLC = new DLCStateMachine(deviceName, deviceID, currentState);
         this.pushNewDLC(newDLC);
         return newDLC;
 
     }
 
-    WEMOStateMachine queryForWEMO(String deviceName, int deviceID){
+    WEMOStateMachine queryForWEMO(String deviceName, int deviceID, int currentState){
         for(WEMOStateMachine holder: wemoArrayList){
             if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
         }
-        WEMOStateMachine newWEMO = new WEMOStateMachine(deviceName, deviceID);
+        WEMOStateMachine newWEMO = new WEMOStateMachine(deviceName, deviceID, currentState);
         this.pushNewWEMO(newWEMO);
         return newWEMO;
     }
 
-    UNTSStateMachine queryForUNTS(String deviceName, int deviceID){
+    UNTSStateMachine queryForUNTS(String deviceName, int deviceID, int currentState){
         for(UNTSStateMachine holder: untsArrayList){
             if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
 
         }
-        UNTSStateMachine newUNTS = new UNTSStateMachine(deviceName, deviceID);
+        UNTSStateMachine newUNTS = new UNTSStateMachine(deviceName, deviceID, currentState);
         this.pushNewUNTS(newUNTS);
         return newUNTS;
 
     }
 
-    PHLEStateMachine queryForPHLE(String deviceName, int deviceID){
+    PHLEStateMachine queryForPHLE(String deviceName, int deviceID, int currentState){
         for(PHLEStateMachine holder: phleArrayList){
             if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
         }
-        PHLEStateMachine newPHLE = new PHLEStateMachine(deviceName, deviceID);
+        PHLEStateMachine newPHLE = new PHLEStateMachine(deviceName, deviceID, currentState);
         this.pushNewPHLE(newPHLE);
         return newPHLE;
     }

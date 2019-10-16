@@ -24,8 +24,8 @@ public class PHLEStateMachine extends StateMachine {
      * @param name  deviceName
      * @param id    deviceID
      */
-    public PHLEStateMachine(String name, int id) {
-        super(name, id);
+    public PHLEStateMachine(String name, int id, int currentState) {
+        super(name, id, currentState);
     }
 
     /**

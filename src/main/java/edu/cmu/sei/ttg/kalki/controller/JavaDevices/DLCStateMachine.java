@@ -17,9 +17,9 @@ public class DLCStateMachine extends StateMachine {
     }
 
     public static void main(String[] args) {
-        DLCStateMachine main = new DLCStateMachine("device00", 0);
-        main.setEvent("brute-force");
-        main.callNative(10, 10);
+//        DLCStateMachine main = new DLCStateMachine("device00", 0);
+//        main.setEvent("brute-force");
+//        main.callNative(10, 10);
     }
 
 
@@ -28,8 +28,8 @@ public class DLCStateMachine extends StateMachine {
      * @param name  deviceName
      * @param id    deviceID
      */
-    public DLCStateMachine(String name, int id) {
-        super(name, id);
+    public DLCStateMachine(String name, int id, int currentState) {
+        super(name, id, currentState);
     }
 
     /**

@@ -18,10 +18,10 @@ public class StateMachine {
     private boolean threadLock = false;
 
     //constructor of base statemachine
-    StateMachine(String name, int ID) {
+    StateMachine(String name, int ID, int currentState) {
         this.deviceName = name;
         this.deviceID = ID;
-        this.currentState = 1; //default to normal
+        this.currentState = currentState; //default to normal
     }
 
     /**
