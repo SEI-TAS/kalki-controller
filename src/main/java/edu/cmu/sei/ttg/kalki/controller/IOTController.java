@@ -47,7 +47,7 @@ public class IOTController implements InsertHandler{
             Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
             String deviceName = foundDevice.getName();
             int deviceID = foundDevice.getId();
-            int currentState = foundDevice.getCurrentState().getId();
+            int currentState = foundDevice.getCurrentState().getStateId();
             int deviceTypeID = foundDevice.getType().getId();
             int alertTypeID = receivedAlert.getAlertTypeId();
             int samplingRate = foundDevice.getSamplingRate();
