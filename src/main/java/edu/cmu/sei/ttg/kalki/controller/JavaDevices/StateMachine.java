@@ -3,6 +3,7 @@ package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
+import edu.cmu.sei.ttg.kalki.models.StageLog;
 
 public class StateMachine {
 
@@ -80,5 +81,7 @@ public class StateMachine {
         thisDevice.setSamplingRate(newSamplingRate);
         thisDevice.insertOrUpdate();
         System.out.println("Sampling Rate:" + newSamplingRate);
+        StageLog log = new StageLog(thisDevice.getCurrentState().getId(), StageLog.Action.OTHER, StageLog.Stage.TRIGGER, "Updated device:"+thisDevice.getId());
+        log.insert();
     }
 }
