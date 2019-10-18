@@ -166,6 +166,8 @@ dependencies {
     compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    //compile group: 'org.json', name: 'json', version: '20180813'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 test.dependsOn 'dlcfsmSharedLibrary'

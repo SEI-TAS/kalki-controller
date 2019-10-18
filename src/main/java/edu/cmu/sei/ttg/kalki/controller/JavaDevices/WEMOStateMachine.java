@@ -1,7 +1,10 @@
 package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
+
+import java.util.concurrent.TimeUnit;
 
 public class WEMOStateMachine extends StateMachine {
 
@@ -9,26 +12,38 @@ public class WEMOStateMachine extends StateMachine {
         System.loadLibrary("wemofsm");
     }
 
-    public static void main(String[] args) {
-        WEMOStateMachine main = new WEMOStateMachine("device00", 0);
-        main.setEvent("brute-force");
-        new Thread(main).start();
+    /**
+     * Constructor for DeviceStateMachine inherits from StateMachine
+     * @param name  deviceName
+     * @param id    deviceID
+     */
+    public WEMOStateMachine(String name, int id, int currentState) {
+        super(name, id, currentState);
     }
 
-    @Override
-    public void run() {
-        System.out.println("WEMO pre gen: current state: " + this.getCurrentState());
-        this.generateNextState();
-        System.out.println("WEMO post gen: current state: " + this.getCurrentState());
-        // Uncomment this for running
-        Postgres.insertDeviceSecurityState(new DeviceSecurityState(this.getDeviceID(), this.getCurrentState()));
-    }
+    /**
+     * Native call to method generateNextState from wemofsm.c
+     * Uses this.currentState and this.currentEvent
+     */
+    private native int[] generateNextState(String alertType, int newState, int samplingRate, int defaultSamplingRate);
 
-    public WEMOStateMachine(String name, int id) {
-        super(name, id);
+    public void callNative(int samplingRate, int defaultSamplingRate){
+        while (this.getLockState()){
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            }
+            catch (InterruptedException e ){
+                e.printStackTrace();
+            }
+        }
+        this.lock();
+        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate, defaultSamplingRate);
+        this.setCurrentState(results[0]);
+        System.out.println("Current State: " + this.getCurrentState());
+        this.updateDevice(results[1]);
+        this.unlock();
     }
-
-    private native void generateNextState();
 
 }
 

@@ -8,6 +8,7 @@ build
 out/
 #Ignore Idea directory
 .idea/
+*.iml
 Ignore log files
 .log
 Class Files
@@ -16,3 +17,4 @@ Packages
 *.jar
 *.zip
 *.tar.gz
+.DS_Store
