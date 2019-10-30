@@ -143,6 +143,36 @@ model {
                 }
             }
         }
+        viziotvfsm(NativeLibrarySpec){
+            sources.c.source {
+                srcDir 'src/main/C'
+                include '**/viziotvfsm.c'
+            }
+            sources.c.exportedHeaders {
+                srcDir "src/main/C"
+            }
+            binaries.all {
+                if (targetPlatform.operatingSystem.macOsX) {
+                    cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+                    cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/darwin"
+                    cCompiler.args '-mmacosx-version-min=10.9'
+                    cCompiler.args '-dynamiclib'
+                    cCompiler.args '-o', "libviziofsm.dylib"
+                    linker.args '-mmacosx-version-min=10.9'
+                } else if (targetPlatform.operatingSystem.linux) {
+                    cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+                    cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
+                    cCompiler.args '-D_FILE_OFFSET_BITS=64'
+                } else if (targetPlatform.operatingSystem.windows) {
+                    cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+                    cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include/win32"
+                    linker.args "Shlwapi.lib", "Advapi32.lib"
+                } else if (targetPlatform.operatingSystem.freeBSD) {
+                    cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+                    cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/freebsd"
+                }
+            }
+        }
     }
 }
 
@@ -150,14 +180,16 @@ test {
     systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
             "${buildDir}/libs/untsfsm/shared:" +
             "${buildDir}/libs/wemofsm/shared:" +
-            "${buildDir}/libs/phlefsm/shared").absolutePath
+            "${buildDir}/libs/phlefsm/shared:" +
+            "${buildDir}/libs/viziotvfsm/shared").absolutePath
 }
 
 run {
     systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
             "${buildDir}/libs/untsfsm/shared:" +
             "${buildDir}/libs/wemofsm/shared:" +
-            "${buildDir}/libs/phlefsm/shared").absolutePath
+            "${buildDir}/libs/phlefsm/shared" +
+            "${buildDir}/libs/viziotvfsm/shared").absolutePath
 }
 
 dependencies {
@@ -174,7 +206,9 @@ test.dependsOn 'dlcfsmSharedLibrary'
 test.dependsOn 'wemofsmSharedLibrary'
 test.dependsOn 'untsfsmSharedLibrary'
 test.dependsOn 'phlefsmSharedLibrary'
+test.dependsOn 'viziotvfsmSharedLibrary'
 run.dependsOn 'dlcfsmSharedLibrary'
 run.dependsOn 'wemofsmSharedLibrary'
 run.dependsOn 'untsfsmSharedLibrary'
 run.dependsOn 'phlefsmSharedLibrary'
+run.dependsOn 'viziotvfsmSharedLibrary'

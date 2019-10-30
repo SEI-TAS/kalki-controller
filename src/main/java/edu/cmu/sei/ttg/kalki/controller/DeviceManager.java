@@ -5,6 +5,7 @@ import edu.cmu.sei.ttg.kalki.controller.JavaDevices.DLCStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.PHLEStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.UNTSStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.WEMOStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.VIZIOTVStateMachine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,12 +18,15 @@ class DeviceManager {
     private List<PHLEStateMachine> phleArrayList;
     private List<UNTSStateMachine> untsArrayList;
     private List<WEMOStateMachine> wemoArrayList;
+    private List<VIZIOTVStateMachine> viziotvArrayList;
+
 
     DeviceManager() {
         this.dlcArrayList = Collections.synchronizedList(new ArrayList<>());
         this.phleArrayList = Collections.synchronizedList(new ArrayList<>());
         this.untsArrayList = Collections.synchronizedList(new ArrayList<>());
         this.wemoArrayList = Collections.synchronizedList(new ArrayList<>());
+        this.viziotvArrayList = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
@@ -42,6 +46,10 @@ class DeviceManager {
 
     void pushNewWEMO(WEMOStateMachine wemo){
         wemoArrayList.add(wemo);
+    }
+
+    void pushNewVIZIOTV(VIZIOTVStateMachine viziotv){
+        viziotvArrayList.add(viziotv);
     }
 
     /**
@@ -89,5 +97,14 @@ class DeviceManager {
         PHLEStateMachine newPHLE = new PHLEStateMachine(deviceName, deviceID, currentState);
         this.pushNewPHLE(newPHLE);
         return newPHLE;
+    }
+
+    VIZIOTVStateMachine queryForVIZIOTV(String deviceName, int deviceID, int currentState){
+        for(VIZIOTVStateMachine holder: viziotvArrayList){
+            if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
+        }
+        VIZIOTVStateMachine newVIZIOTV = new VIZIOTVStateMachine(deviceName, deviceID, currentState);
+        this.pushNewVIZIOTV(newVIZIOTV);
+        return newVIZIOTV;
     }
 }

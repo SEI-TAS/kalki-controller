@@ -78,6 +78,11 @@ public class IOTController implements InsertHandler{
                                 phleDevice.setEvent(eventName);
                                 phleDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
+                            case 5:
+                                VIZIOTVStateMachine viziotvDevice = deviceManager.queryForVIZIOTV(deviceName, deviceID, currentState);
+                                viziotvDevice.setEvent(eventName);
+                                viziotvDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
+                                break;
                             default:
                                 System.out.println("Error in device type handling");
                                 break;
