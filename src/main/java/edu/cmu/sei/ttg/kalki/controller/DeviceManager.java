@@ -6,6 +6,7 @@ import edu.cmu.sei.ttg.kalki.controller.JavaDevices.PHLEStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.UNTSStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.WEMOStateMachine;
 import edu.cmu.sei.ttg.kalki.controller.JavaDevices.VIZIOTVStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.JavaDevices.ROOMBAStateMachine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,7 @@ class DeviceManager {
     private List<UNTSStateMachine> untsArrayList;
     private List<WEMOStateMachine> wemoArrayList;
     private List<VIZIOTVStateMachine> viziotvArrayList;
+    private List<ROOMBAStateMachine> roombaArrayList;
 
 
     DeviceManager() {
@@ -27,6 +29,7 @@ class DeviceManager {
         this.untsArrayList = Collections.synchronizedList(new ArrayList<>());
         this.wemoArrayList = Collections.synchronizedList(new ArrayList<>());
         this.viziotvArrayList = Collections.synchronizedList(new ArrayList<>());
+        this.roombaArrayList = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
@@ -48,9 +51,9 @@ class DeviceManager {
         wemoArrayList.add(wemo);
     }
 
-    void pushNewVIZIOTV(VIZIOTVStateMachine viziotv){
-        viziotvArrayList.add(viziotv);
-    }
+    void pushNewVIZIOTV(VIZIOTVStateMachine viziotv){ viziotvArrayList.add(viziotv); }
+
+    void pushNewROOMBA(ROOMBAStateMachine roomba){ roombaArrayList.add(roomba); }
 
     /**
      *
@@ -106,5 +109,14 @@ class DeviceManager {
         VIZIOTVStateMachine newVIZIOTV = new VIZIOTVStateMachine(deviceName, deviceID, currentState);
         this.pushNewVIZIOTV(newVIZIOTV);
         return newVIZIOTV;
+    }
+
+    ROOMBAStateMachine queryForROOMBA(String deviceName, int deviceID, int currentState){
+        for(ROOMBAStateMachine holder: roombaArrayList){
+            if(holder.getName().equals(deviceName) && holder.getDeviceID()==deviceID){ return holder; }
+        }
+        ROOMBAStateMachine newROOMBA = new ROOMBAStateMachine(deviceName, deviceID, currentState);
+        this.pushNewROOMBA(newROOMBA);
+        return newROOMBA;
     }
 }

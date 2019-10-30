@@ -83,6 +83,11 @@ public class IOTController implements InsertHandler{
                                 viziotvDevice.setEvent(eventName);
                                 viziotvDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
                                 break;
+                            case 6:
+                                ROOMBAStateMachine roombaDevice = deviceManager.queryForROOMBA(deviceName, deviceID, currentState);
+                                roombaDevice.setEvent(eventName);
+                                roombaDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
+                                break;
                             default:
                                 System.out.println("Error in device type handling");
                                 break;
