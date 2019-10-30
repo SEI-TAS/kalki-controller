@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <jni.h>
 #include <string.h>
-#include "edu_cmu_sei_ttg_kalki_controller_JavaDevices_VIZIOTVStateMachine.h"
+#include "edu_cmu_sei_ttg_kalki_controller_JavaDevices_ROOMBAStateMachine.h"
 
 JNIEXPORT jintArray JNICALL
-Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_VIZIOTVStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
+Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_ROOMBAStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
 jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRate)
 {
 	char eventString[256];
@@ -19,19 +19,19 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
             printf("state-reset event\n");
             newCurrentState = 1;
         }
-        else if (strcmp(eventString, "vizio-connected-devices")==0)
+        else if (strcmp(eventString, "roomba-unexpected-command")==0)
         {
-            printf("vizio-connected-devices\n");
+            printf("roomba-unexpected-command\n");
             newCurrentState = currentState + 1;
         }
-        else if (strcmp(eventString, "vizio-input-source")==0)
+        else if (strcmp(eventString, "roomba-cloud-traffic")==0)
         {
-            printf("vizio-input-source\n");
+            printf("roomba-cloud-traffic\n");
             newCurrentState = currentState + 1;
         }
-        else if (strcmp(eventString, "vizio-unexpected-auth")==0)
+        else if (strcmp(eventString, "roomba-unexpected-auth")==0)
         {
-            printf("vizio-unexpected-auth\n");
+            printf("roomba-unexpected-auth\n");
             newCurrentState = currentState +1;
         }
         else
@@ -43,9 +43,9 @@ jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRat
     else if (currentState==2)
 	{
 	    newSamplingRate = samplingRate;
-		if (strcmp(eventString, "vizio-combination-alert")==0)
+		if (strcmp(eventString, "roomba-auth-attempts")==0)
 		{
-			printf("vizio-combination-alert\n");
+			printf("roomba-auth-attempts\n");
 			newCurrentState = currentState +1;
 		}
 		else if (strcmp(eventString, "state-reset")==0)
