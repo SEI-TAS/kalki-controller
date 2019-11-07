@@ -146,11 +146,32 @@ model {
     }
 }
 
+dependencies {
+    // This dependency is found on compile classpath of this component and consumers.
+    implementation 'com.google.guava:guava:27.0.1-jre'
+    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
+    // Use JUnit test framework
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    //compile group: 'org.json', name: 'json', version: '20180813'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+}
+
 test {
     systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
             "${buildDir}/libs/untsfsm/shared:" +
             "${buildDir}/libs/wemofsm/shared:" +
             "${buildDir}/libs/phlefsm/shared").absolutePath
+    useJUnitPlatform()
+    dependsOn 'cleanTest'
+    testLogging {
+        events "passed", "skipped", "failed", "standard_out"
+        exceptionFormat 'full'
+        showCauses true
+        showExceptions true
+        showStackTraces true
+//        showStandardStreams true
+    }
 }
 
 run {
@@ -160,15 +181,7 @@ run {
             "${buildDir}/libs/phlefsm/shared").absolutePath
 }
 
-dependencies {
-    // This dependency is found on compile classpath of this component and consumers.
-    implementation 'com.google.guava:guava:27.0.1-jre'
-    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
-    //compile group: 'org.json', name: 'json', version: '20180813'
-    compile 'com.googlecode.json-simple:json-simple:1.1.1'
-}
+
 
 test.dependsOn 'dlcfsmSharedLibrary'
 test.dependsOn 'wemofsmSharedLibrary'

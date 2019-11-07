@@ -2,15 +2,21 @@ package edu.cmu.sei.ttg.kalki.controller;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+
 import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.logging.Level;
 
-public class TestIOTController{
+public abstract class TestIOTController {
 
-    private IOTController mainIOTController;
-    private static boolean hasRun;
-    @BeforeClass
+    private IOTController controller;
+    private static boolean hasRun = false;
+
+    @BeforeAll
     public static void createTestDB() {
         if (!hasRun) {
             String rootPassword = "kalkipass";  //based on run script
@@ -29,133 +35,49 @@ public class TestIOTController{
 
                 //initialize test DB
                 Postgres.initialize(dbHost, dbPort, dbName, dbUser, dbPass);
-                Postgres.resetDatabase();
+                Postgres.setLoggingLevel(Level.OFF);
             } catch (Exception e) {
                 System.out.println(e);
             }
             hasRun = true;
         }
-        IOTController testController= new IOTController();
-        testController.initListeners(testController);
+    }
+
+    @BeforeEach
+    public void reset() {
+        Postgres.resetDatabase();
 
     }
 
-    @Test
-    public void testPHLEAlerts(){
-        Postgres.insertGroup(new Group(14, "TestPHLE"));
-        Device testDevice;
-        Alert testAlert;
-        DeviceStatus testStatus;
-        System.out.println("Testing alerts for PHLE");
-        int[] alerts = {1, 2, 3, 4, 6, 16, 17};
-        for (int i:alerts) {
-            testDevice = new Device("test_device", "its a PHLE",
-                    4, 14, "0.0.0.0", 5, 5);
-            testDevice.insert();
-            testStatus = new DeviceStatus(testDevice.getId());
-            testStatus.insert();
-            for (int j = 0; j < 2; j++) {
-                testAlert = new Alert("new-alert", testStatus.getId(), i);
-                testAlert.insert();
-                wait(2);
-            }
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
+    protected int insertData(int deviceType, int state, String alertType) {
+        controller = null;
+
+        Device d = new Device("Test Device", "device", Postgres.findDeviceType(deviceType), "ip", 1, 1);
+        d.insert();
+
+        if(state > 1) {
+            DeviceSecurityState dss = new DeviceSecurityState(d.getId(), state);
+            dss.insert();
         }
+
+        AlertType at = new AlertType(alertType, "test alert", "test");
+        at.insert();
+
+
+        controller = new IOTController();
+        controller.initListeners(controller);
+
+        wait(1);
+
+        Alert alert = new Alert(d.getId(), at.getName(), at.getId());
+        alert.insert();
+
+        wait(1);
+
+        return d.getId();
     }
 
-    @Test
-    public void testDLCAlerts(){
-        Postgres.insertGroup(new Group(14, "TestPHLE"));
-        Device testDevice;
-        Alert testAlert;
-        DeviceStatus testStatus;
-        System.out.println("Testing alerts for DLC");
-        int[] alerts = {1, 2, 3, 4, 6, 15};
-        for (int i:alerts) {
-            testDevice = new Device("test_device", "its a DLC",
-                    1, 14, "0.0.0.0", 5, 5);
-            testDevice.insert();
-            testStatus = new DeviceStatus(testDevice.getId());
-            testStatus.insert();
-            for (int j = 0; j < 2; j++) {
-                testAlert = new Alert("new-alert", testStatus.getId(), i);
-                testAlert.insert();
-                wait(2);
-            }
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
-        }
-    }
-
-    @Test
-    public void testWEMOAlerts(){
-        Postgres.insertGroup(new Group(14, "TestPHLE"));
-        Device testDevice;
-        Alert testAlert;
-        DeviceStatus testStatus;
-        System.out.println("Testing alerts for WEMO");
-        int[] alerts = {1, 2, 3, 4, 6, 18, 19, 20, 21, 22, 23};
-        for (int i:alerts) {
-            testDevice = new Device("test_device", "its a WEMO",
-                    3, 14, "0.0.0.0", 5, 5);
-            testDevice.insert();
-            testStatus = new DeviceStatus(testDevice.getId());
-            testStatus.insert();
-            for (int j = 0; j < 2; j++) {
-                testAlert = new Alert("new-alert", testStatus.getId(), i);
-                testAlert.insert();
-                wait(2);
-           }
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
-        }
-    }
-    
-    @Test
-    public void testUNTSAlerts(){
-        Postgres.insertGroup(new Group(14, "TestPHLE"));
-        Device testDevice;
-        Alert testAlert;
-        DeviceStatus testStatus;
-        System.out.println("Testing alerts for UNTS");
-        int[] alerts = {1, 2, 3, 4, 6, 16, 17};
-        for (int i:alerts) {
-            testDevice = new Device("test_device", "its a UNTS",
-                    2, 14, "0.0.0.0", 5, 5);
-            testDevice.insert();
-            testStatus = new DeviceStatus(testDevice.getId());
-            testStatus.insert();
-
-            for (int j = 0; j < 2; j++) {
-                testAlert = new Alert("new-alert", testStatus.getId(), i);
-                testAlert.insert();
-                wait(2);
-            }
-            testAlert = new Alert("new-alert", testStatus.getId(), 5);
-            testAlert.insert();
-        }
-    }
-
-    @Test
-    public void testSecurityStateInsertion(){
-        Device testDevice;
-        DeviceStatus testStatus;
-        Alert testalert;
-        testDevice = new Device("test_device", "its a database tester",
-                1, 13, "0.0.0.0", 5, 5);
-        testDevice.insert();
-        wait(2);
-        DeviceSecurityState testState = new DeviceSecurityState(testDevice.getId(), 1);
-        testState.insert();
-        wait(2);
-        testDevice.setCurrentState(testState);
-        testDevice.insertOrUpdate();
-        wait(2);
-        System.out.println(Postgres.findDevice(testDevice.getId()));
-    }
-
-    static void wait(int time){
+    protected void wait(int time){
         try {
             TimeUnit.SECONDS.sleep(time);
         }
