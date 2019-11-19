@@ -69,7 +69,7 @@ public abstract class TestIOTController {
 
         wait(1);
 
-        Alert alert = new Alert(d.getId(), at.getName(), at.getId());
+        Alert alert = new Alert(d.getId(), at.getName(), at.getId(), "");
         alert.insert();
 
         wait(1);
