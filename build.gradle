@@ -13,6 +13,9 @@ repositories {
 model {
     components {
         all {
+            sources.c.source {
+                srcDir 'src/main/c'
+            }
             binaries.all {
                 if (targetPlatform.operatingSystem.macOsX) {
                     cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
