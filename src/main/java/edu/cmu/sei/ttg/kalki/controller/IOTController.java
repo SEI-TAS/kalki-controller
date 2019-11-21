@@ -27,6 +27,15 @@ public class IOTController implements InsertHandler{
         IOTController mainController = new IOTController();
         mainController.initializeDatabase();
         mainController.initListeners(mainController);
+
+        mainController.runTest();
+
+    /*
+        UNTSStateMachine fsm = new UNTSStateMachine("device00", 0);
+        fsm.setEvent("brute-force");
+        new Thread(fsm).start();
+     */
+
     }
 
     /**
@@ -133,6 +142,13 @@ public class IOTController implements InsertHandler{
             System.out.println("caught exception in init listeners");
         }
 
+    }
+
+    void runTest()
+    {
+        DLCStateMachine dlcDevice = deviceManager.queryForDLC("PHLE", 1, 1);
+        dlcDevice.setEvent("brute-force");
+        dlcDevice.callNative(10, 10);
     }
 
 

@@ -37,25 +37,25 @@ model {
         
         dlcfsm(NativeLibrarySpec) {
             sources.c.source {
-                include '**/dlcfsm.c'
+                include 'dlcfsm.c'
             }
         }
         
         phlefsm(NativeLibrarySpec){
             sources.c.source {
-                include '**/phlefsm.c'
+                include 'phlefsm.c'
             }
         }
         
         untsfsm(NativeLibrarySpec){
             sources.c.source {
-                include '**/untsfsm.c'
+                include 'untsfsm.c'
             }
         }
         
         wemofsm(NativeLibrarySpec){
             sources.c.source {
-                include '**/wemofsm.c'
+                include 'wemofsm.c'
             }
         }
     }
