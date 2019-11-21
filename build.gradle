@@ -6,8 +6,6 @@ apply plugin: 'application'
 mainClassName = 'edu.cmu.sei.ttg.kalki.controller.IOTController'
 
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here
     mavenLocal()
     mavenCentral()
 }
@@ -78,13 +76,6 @@ test {
             "${buildDir}/libs/phlefsm/shared").absolutePath
     useJUnitPlatform()
     dependsOn 'cleanTest'
-    testLogging {
-        events "passed", "skipped", "failed", "standard_out"
-        exceptionFormat 'full'
-        showCauses true
-        showExceptions true
-        showStackTraces true
-    }
 }
 
 run {
@@ -98,6 +89,7 @@ test.dependsOn 'dlcfsmSharedLibrary'
 test.dependsOn 'wemofsmSharedLibrary'
 test.dependsOn 'untsfsmSharedLibrary'
 test.dependsOn 'phlefsmSharedLibrary'
+
 run.dependsOn 'dlcfsmSharedLibrary'
 run.dependsOn 'wemofsmSharedLibrary'
 run.dependsOn 'untsfsmSharedLibrary'

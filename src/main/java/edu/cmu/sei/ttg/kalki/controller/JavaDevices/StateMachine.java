@@ -5,6 +5,8 @@ import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 import edu.cmu.sei.ttg.kalki.models.StageLog;
 
+import java.util.concurrent.TimeUnit;
+
 public class StateMachine {
 
     private String deviceName; //name of device received from database
@@ -83,5 +85,25 @@ public class StateMachine {
         System.out.println("Sampling Rate:" + newSamplingRate);
         StageLog log = new StageLog(thisDevice.getCurrentState().getId(), StageLog.Action.OTHER, StageLog.Stage.TRIGGER, "Updated device:"+thisDevice.getId());
         log.insert();
+    }
+
+    protected native int[] generateNextState(String alertType, int newState, int samplingRate, int defaultSamplingRate);
+
+    public void callNative(int samplingRate, int defaultSamplingRate){
+        while (this.getLockState()){
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            }
+            catch (InterruptedException e ){
+                e.printStackTrace();
+            }
+        }
+        this.lock();
+        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate, defaultSamplingRate);
+        this.setCurrentState(results[0]);
+        System.out.println("Current State: " + this.getCurrentState());
+        this.updateDevice(results[1]);
+        this.unlock();
     }
 }
