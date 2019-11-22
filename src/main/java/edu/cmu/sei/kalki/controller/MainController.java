@@ -110,11 +110,4 @@ public class MainController implements InsertHandler{
         }
 
     }
-
-    public void runTest()
-    {
-        StateMachine dlcDevice = stateMachineManager.getStateMachine("PHLE", 1, 1, 1);
-        dlcDevice.setEvent("brute-force");
-        dlcDevice.callNative(10, 10);
-    }
 }

@@ -10,14 +10,5 @@ public class Program
         MainController mainController = new MainController();
         mainController.initializeDatabase();
         mainController.initListeners(mainController);
-
-        mainController.runTest();
-
-    /*
-        UNTSStateMachine fsm = new UNTSStateMachine("device00", 0);
-        fsm.setEvent("brute-force");
-        new Thread(fsm).start();
-     */
-
     }
 }
