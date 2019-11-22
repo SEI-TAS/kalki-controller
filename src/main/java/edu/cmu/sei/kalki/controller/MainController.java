@@ -1,15 +1,15 @@
 package edu.cmu.sei.kalki.controller;
 
-import edu.cmu.sei.kalki.controller.fsm.StateMachine;
-import edu.cmu.sei.ttg.kalki.controller.fsm.*;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
-import edu.cmu.sei.ttg.kalki.listeners.InsertListener;
-import edu.cmu.sei.ttg.kalki.models.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.util.concurrent.TimeUnit;
+
+import edu.cmu.sei.kalki.controller.fsm.StateMachine;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
+import edu.cmu.sei.ttg.kalki.listeners.InsertListener;
+import edu.cmu.sei.ttg.kalki.models.*;
 
 /**
  * This class handles the initialization of the Postgres database connection as well as the initialization of
