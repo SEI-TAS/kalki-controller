@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-public abstract class TestMainController
+public abstract class TestStateMachineBase
 {
 
     private MainController controller;

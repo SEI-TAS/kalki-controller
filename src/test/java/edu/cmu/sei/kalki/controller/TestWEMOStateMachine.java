@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.cmu.sei.ttg.kalki.models.*;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 
-public class TestWEMOStateMachine extends TestMainController
+public class TestWEMOStateMachine extends TestStateMachineBase
 {
 
     @Test
