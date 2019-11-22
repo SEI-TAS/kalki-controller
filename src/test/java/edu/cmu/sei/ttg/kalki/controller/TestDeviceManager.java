@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 public class TestDeviceManager {
 
-    DeviceManager mainManager;
+    StateMachineManager mainManager;
 
     @BeforeEach
     public void testManagerInit(){
-        mainManager = new DeviceManager();
+        mainManager = new StateMachineManager();
     }
 
     @Test

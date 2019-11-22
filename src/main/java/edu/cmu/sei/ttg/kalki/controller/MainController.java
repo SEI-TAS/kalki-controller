@@ -15,27 +15,12 @@ import java.util.concurrent.TimeUnit;
  * the alert listeners and their handler
  */
 
-public class IOTController implements InsertHandler{
+public class MainController implements InsertHandler{
 
-    private DeviceManager deviceManager;
+    private StateMachineManager stateMachineManager;
 
-    /**
-     * Initializes the database with the given parameters from the databaseVars JSON file, resets the database, and
-     * initialized the alert listeners
-     */
-    public static void main(String[] args) {
-        IOTController mainController = new IOTController();
-        mainController.initializeDatabase();
-        mainController.initListeners(mainController);
-
-        mainController.runTest();
-
-    /*
-        UNTSStateMachine fsm = new UNTSStateMachine("device00", 0);
-        fsm.setEvent("brute-force");
-        new Thread(fsm).start();
-     */
-
+    public MainController(){
+        this.stateMachineManager = new StateMachineManager();
     }
 
     /**
@@ -61,38 +46,23 @@ public class IOTController implements InsertHandler{
             int alertTypeID = receivedAlert.getAlertTypeId();
             int samplingRate = foundDevice.getSamplingRate();
             String eventName = Postgres.findAlertType(alertTypeID).getName();
+
             System.out.println("Alert Type Name: " + eventName);
             try {
-                Thread process = new Thread(){
-                    @Override
-                    public void run() {
-                        switch (deviceTypeID){
-                            case 1:
-                                DLCStateMachine dlcDevice = deviceManager.queryForDLC(deviceName, deviceID, currentState);
-                                dlcDevice.setEvent(eventName);
-                                dlcDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
-                                break;
-                            case 2:
-                                UNTSStateMachine untsDevice = deviceManager.queryForUNTS(deviceName, deviceID, currentState);
-                                untsDevice.setEvent(eventName);
-                                untsDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
-                                break;
-                            case 3:
-                                WEMOStateMachine wemoDevice = deviceManager.queryForWEMO(deviceName, deviceID, currentState);
-                                wemoDevice.setEvent(eventName);
-                                wemoDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
-                                break;
-                            case 4:
-                                PHLEStateMachine phleDevice = deviceManager.queryForPHLE(deviceName, deviceID, currentState);
-                                phleDevice.setEvent(eventName);
-                                phleDevice.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
-                                break;
-                            default:
-                                System.out.println("Error in device type handling");
-                                break;
+                Thread process = new Thread(() ->
+                    {
+                        StateMachine stateMachine = stateMachineManager.getStateMachine(deviceName, deviceID, currentState, deviceTypeID);
+                        if(stateMachine != null)
+                        {
+                            stateMachine.setEvent(eventName);
+                            stateMachine.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
+                        }
+                        else
+                        {
+                            System.out.println("State machine for given device type not found");
                         }
                     }
-                };
+                );
                 process.start();
             }
             catch (Exception e){
@@ -105,7 +75,7 @@ public class IOTController implements InsertHandler{
      * Pulls relevant data from the databaseVars JSON file and call initialize using these values
      * Resets database back to default state
      */
-    void initializeDatabase(){
+    public void initializeDatabase(){
         JSONParser parser = new JSONParser();
         try {
             Object obj = parser.parse(new FileReader("databaseVars.json"));
@@ -123,16 +93,12 @@ public class IOTController implements InsertHandler{
         }
     }
 
-    public IOTController(){
-        this.deviceManager = new DeviceManager();
-    }
-
     /**
      *
      * @param alertHandler requires object that inherits from alertHandler
      * Initializes database listener for the insertion of new alerts
      */
-    void initListeners(InsertHandler alertHandler){
+    public void initListeners(InsertHandler alertHandler){
         InsertListener.addHandler("alerthistoryinsert", alertHandler);
         InsertListener.startListening();
         try {
@@ -144,12 +110,10 @@ public class IOTController implements InsertHandler{
 
     }
 
-    void runTest()
+    public void runTest()
     {
-        DLCStateMachine dlcDevice = deviceManager.queryForDLC("PHLE", 1, 1);
+        StateMachine dlcDevice = stateMachineManager.getStateMachine("PHLE", 1, 1, 1);
         dlcDevice.setEvent("brute-force");
         dlcDevice.callNative(10, 10);
     }
-
-
 }

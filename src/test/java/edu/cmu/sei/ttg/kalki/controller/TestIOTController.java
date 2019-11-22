@@ -3,17 +3,15 @@ package edu.cmu.sei.ttg.kalki.controller;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.*;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.concurrent.TimeUnit;
-import java.util.List;
 import java.util.logging.Level;
 
 public abstract class TestIOTController {
 
-    private IOTController controller;
+    private MainController controller;
     private static boolean hasRun = false;
 
     @BeforeAll
@@ -64,7 +62,7 @@ public abstract class TestIOTController {
         at.insert();
 
 
-        controller = new IOTController();
+        controller = new MainController();
         controller.initListeners(controller);
 
         wait(1);
