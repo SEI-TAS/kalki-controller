@@ -9,7 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-public abstract class TestIOTController {
+public abstract class TestMainController
+{
 
     private MainController controller;
     private static boolean hasRun = false;
@@ -60,7 +61,6 @@ public abstract class TestIOTController {
 
         AlertType at = new AlertType(alertType, "test alert", "test");
         at.insert();
-
 
         controller = new MainController();
         controller.initListeners(controller);

@@ -9,8 +9,9 @@ import edu.cmu.sei.kalki.controller.fsm.WEMOStateMachine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestDeviceManager {
-
+public class TestStateMachineManager
+{
+/*
     StateMachineManager mainManager;
 
     @BeforeEach
@@ -75,5 +76,5 @@ public class TestDeviceManager {
         WEMOStateMachine device = mainManager.queryForWEMO("e", 2, 1);
         device.setEvent("brute-force");
         assertEquals(device.getEvent(), "brute-force");
-    }
+    }*/
 }

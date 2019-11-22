@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.cmu.sei.ttg.kalki.models.*;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 
-public class TestPHLEStateMachine extends TestIOTController {
+public class TestPHLEStateMachine extends TestMainController
+{
 
     @Test
     public void testNormalStateReset() {
