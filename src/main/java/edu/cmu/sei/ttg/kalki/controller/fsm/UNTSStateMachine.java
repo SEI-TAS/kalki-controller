@@ -1,4 +1,4 @@
-package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
+package edu.cmu.sei.ttg.kalki.controller.fsm;
 
 public class UNTSStateMachine extends StateMachine {
 

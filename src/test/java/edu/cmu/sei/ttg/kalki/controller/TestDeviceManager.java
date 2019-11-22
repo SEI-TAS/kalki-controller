@@ -2,10 +2,10 @@ package edu.cmu.sei.ttg.kalki.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import edu.cmu.sei.ttg.kalki.controller.JavaDevices.DLCStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.JavaDevices.PHLEStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.JavaDevices.UNTSStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.JavaDevices.WEMOStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.fsm.DLCStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.fsm.PHLEStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.fsm.UNTSStateMachine;
+import edu.cmu.sei.ttg.kalki.controller.fsm.WEMOStateMachine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
