@@ -3,7 +3,7 @@ apply plugin: 'c'
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'edu.cmu.sei.ttg.kalki.controller.Program'
+mainClassName = 'edu.cmu.sei.kalki.controller.Program'
 
 repositories {
     mavenLocal()

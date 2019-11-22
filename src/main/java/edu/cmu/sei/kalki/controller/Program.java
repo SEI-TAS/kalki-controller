@@ -1,6 +1,4 @@
-package edu.cmu.sei.ttg.kalki.controller;
-
-import edu.cmu.sei.ttg.kalki.controller.MainController;
+package edu.cmu.sei.kalki.controller;
 
 public class Program
 {

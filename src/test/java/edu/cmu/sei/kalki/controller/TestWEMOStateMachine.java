@@ -1,4 +1,4 @@
-package edu.cmu.sei.ttg.kalki.controller;
+package edu.cmu.sei.kalki.controller;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

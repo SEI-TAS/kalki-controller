@@ -1,11 +1,11 @@
-package edu.cmu.sei.ttg.kalki.controller;
+package edu.cmu.sei.kalki.controller;
 
 
-import edu.cmu.sei.ttg.kalki.controller.fsm.StateMachine;
-import edu.cmu.sei.ttg.kalki.controller.fsm.DLCStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.fsm.PHLEStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.fsm.UNTSStateMachine;
-import edu.cmu.sei.ttg.kalki.controller.fsm.WEMOStateMachine;
+import edu.cmu.sei.kalki.controller.fsm.DLCStateMachine;
+import edu.cmu.sei.kalki.controller.fsm.PHLEStateMachine;
+import edu.cmu.sei.kalki.controller.fsm.StateMachine;
+import edu.cmu.sei.kalki.controller.fsm.UNTSStateMachine;
+import edu.cmu.sei.kalki.controller.fsm.WEMOStateMachine;
 
 import java.util.ArrayList;
 import java.util.Collections;

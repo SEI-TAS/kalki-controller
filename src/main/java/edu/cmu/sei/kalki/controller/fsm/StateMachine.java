@@ -1,4 +1,4 @@
-package edu.cmu.sei.ttg.kalki.controller.fsm;
+package edu.cmu.sei.kalki.controller.fsm;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
