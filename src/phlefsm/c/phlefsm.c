@@ -1,7 +1,6 @@
 #include <stdio.h>
-#include <jni.h>
 #include <string.h>
-#include "edu_cmu_sei_kalki_controller_fsm_PHLEStateMachine.h"
+#include "../../fsm/headers/edu_cmu_sei_kalki_controller_fsm_PHLEStateMachine.h"
 
 JNIEXPORT jintArray JNICALL
 Java_edu_cmu_sei_kalki_controller_fsm_PHLEStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,

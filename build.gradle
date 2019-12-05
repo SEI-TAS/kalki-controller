@@ -5,6 +5,10 @@ apply plugin: 'application'
 
 mainClassName = 'edu.cmu.sei.kalki.controller.Program'
 
+compileJava {
+    options.compilerArgs += ["-h", "src/fsm/headers"]
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
