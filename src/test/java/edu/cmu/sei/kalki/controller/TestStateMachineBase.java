@@ -45,31 +45,26 @@ public abstract class TestStateMachineBase
     @BeforeEach
     public void reset() {
         Postgres.resetDatabase();
-
+        controller = new MainController();
+        controller.initListeners(controller);
     }
 
     protected int insertData(int deviceType, int state, String alertType) {
-        controller = null;
+        System.out.println(System.getProperty( "java.library.path" ));
 
         Device d = new Device("Test Device", "device", Postgres.findDeviceType(deviceType), "ip", 1, 1);
         d.insert();
 
-        if(state > 1) {
-            DeviceSecurityState dss = new DeviceSecurityState(d.getId(), state);
-            dss.insert();
-        }
+        DeviceSecurityState dss = new DeviceSecurityState(d.getId(), state);
+        dss.insert();
 
         AlertType at = new AlertType(alertType, "test alert", "test");
         at.insert();
 
-        controller = new MainController();
-        controller.initListeners(controller);
-
         wait(1);
-
+        System.out.println("Inserting test alert of type: " + at.getName());
         Alert alert = new Alert(d.getId(), at.getName(), at.getId(), "");
         alert.insert();
-
         wait(1);
 
         return d.getId();

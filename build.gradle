@@ -10,12 +10,22 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation 'com.google.guava:guava:27.0.1-jre'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'edu.cmu.sei.ttg:kalki-db:0.0.4-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}
+
 model {
     components {
+        dlcfsm(NativeLibrarySpec)
+        phlefsm(NativeLibrarySpec)
+        untsfsm(NativeLibrarySpec)
+        wemofsm(NativeLibrarySpec)
+
         all {
-            sources.c.source {
-                srcDir 'src/main/c'
-            }
             binaries.all {
                 if (targetPlatform.operatingSystem.macOsX) {
                     cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
@@ -37,63 +47,28 @@ model {
                 }
             }
         }
-        
-        dlcfsm(NativeLibrarySpec) {
-            sources.c.source {
-                include 'dlcfsm.c'
-            }
-        }
-        
-        phlefsm(NativeLibrarySpec){
-            sources.c.source {
-                include 'phlefsm.c'
-            }
-        }
-        
-        untsfsm(NativeLibrarySpec){
-            sources.c.source {
-                include 'untsfsm.c'
-            }
-        }
-        
-        wemofsm(NativeLibrarySpec){
-            sources.c.source {
-                include 'wemofsm.c'
-            }
-        }
+
     }
 }
 
-dependencies {
-    implementation 'com.google.guava:guava:27.0.1-jre'
-    compile 'com.googlecode.json-simple:json-simple:1.1.1'
-    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-}
-
-test {
-    systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
-            "${buildDir}/libs/untsfsm/shared:" +
-            "${buildDir}/libs/wemofsm/shared:" +
-            "${buildDir}/libs/phlefsm/shared").absolutePath
-    useJUnitPlatform()
-    dependsOn 'cleanTest'
+// Copy all C FSM outputs into a single folder after assembling.
+task fsmcopy (type: Copy) {
+    dependsOn 'build'
+    def tree = fileTree("${buildDir}/libs") {
+        include '**/*.dylib'
+        include '**/*.so'
+        include '**/*.dll'
+    }
+    from tree.files
+    into "${buildDir}/libs/fsm"
 }
 
 run {
-    systemProperty "java.library.path", file("${buildDir}/libs/dlcfsm/shared:" +
-            "${buildDir}/libs/untsfsm/shared:" +
-            "${buildDir}/libs/wemofsm/shared:" +
-            "${buildDir}/libs/phlefsm/shared").absolutePath
+    dependsOn 'fsmcopy'
+    systemProperty "java.library.path", file("${buildDir}/libs/fsm").absolutePath
 }
 
-test.dependsOn 'dlcfsmSharedLibrary'
-test.dependsOn 'wemofsmSharedLibrary'
-test.dependsOn 'untsfsmSharedLibrary'
-test.dependsOn 'phlefsmSharedLibrary'
-
-run.dependsOn 'dlcfsmSharedLibrary'
-run.dependsOn 'wemofsmSharedLibrary'
-run.dependsOn 'untsfsmSharedLibrary'
-run.dependsOn 'phlefsmSharedLibrary'
+test {
+    systemProperty "java.library.path", file("${buildDir}/libs/fsm").absolutePath
+    useJUnitPlatform()
+}

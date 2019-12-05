@@ -7,6 +7,7 @@ public class Program
      * initialized the alert listeners
      */
     public static void main(String[] args) {
+        System.out.println(System.getProperty( "java.library.path" ));
         MainController mainController = new MainController();
         mainController.initializeDatabase();
         mainController.initListeners(mainController);

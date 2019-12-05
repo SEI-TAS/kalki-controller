@@ -6,10 +6,10 @@
 - Requires connection to database
 
 ## Usage
-- gradle build for testing and library generation
-- gradle run for controller startup
+- Execute `./gradlew build` for library generation
+- To run, first execute build command above, the `./gradlew run` for controller startup
 
-## Model Devlopment:
+## Model Development in EA:
 
 ### Enterprise Architect:
 -	Requirements:
@@ -100,10 +100,19 @@ return (returnArray);
 
 #### Generating C Header Files:
 -	In terminal inside the JavaDevices directory call
-  -	```Javac -h . StateMachine.java (deviceName)StateMachine.java ```
+  -	```javac -h . StateMachine.java (deviceName)StateMachine.java ```
 - Move the generated .h file into the C folder
 - Make sure stdio.h and string.h are included
 -	Add include statement with name of generated .h file into the C code template file for the device
+
+## Adding a New FSM to the Project
+
+1. Add a new component to build.gradle.
+   1. Inside `model { components {`, add a new line for the new component, with the format `<name>fsm(NativeLibrarySpec)`. I.e., `roombafsm(NativeLibrarySpec)`
+1. Create the source folders.
+   1. Create a folder  called `<name>fsm` (using the same name as the component, i.e., `rooombafsm`) inside the `src` folder. 
+   1. Create a subfolder inside it called `c`
+1. Put the C code inside the `c` subfolder.
 
 #### C File Template
 - Create empty file (deviceName)fsm.c
@@ -111,5 +120,3 @@ return (returnArray);
 ```Java
 JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}
 ```
-#### Gradle Build File:
--	See Kalki-Wiki

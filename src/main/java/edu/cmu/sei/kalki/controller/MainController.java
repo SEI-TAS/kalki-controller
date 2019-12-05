@@ -36,9 +36,9 @@ public class MainController implements InsertHandler{
         //System.out.println("Here in handler");
         Alert receivedAlert = Postgres.findAlert(id);
         if (receivedAlert == null) {
-            System.out.println("alert not found");
+            System.out.println("Newly inserted alert not found");
         } else {
-            System.out.println("alert found");
+            System.out.println("Newly inserted alert found");
             Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
             String deviceName = foundDevice.getName();
             int deviceID = foundDevice.getId();
@@ -100,6 +100,7 @@ public class MainController implements InsertHandler{
      * Initializes database listener for the insertion of new alerts
      */
     public void initListeners(InsertHandler alertHandler){
+        InsertListener.clearHandlers();
         InsertListener.addHandler("alerthistoryinsert", alertHandler);
         InsertListener.startListening();
         try {
