@@ -2,13 +2,6 @@ package edu.cmu.sei.kalki.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import edu.cmu.sei.kalki.controller.fsm.DLCStateMachine;
-import edu.cmu.sei.kalki.controller.fsm.PHLEStateMachine;
-import edu.cmu.sei.kalki.controller.fsm.UNTSStateMachine;
-import edu.cmu.sei.kalki.controller.fsm.WEMOStateMachine;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 public class TestStateMachineManager
 {
 /*

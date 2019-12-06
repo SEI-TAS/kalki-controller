@@ -1,17 +1,14 @@
 package edu.cmu.sei.kalki.controller;
 
-
-import edu.cmu.sei.kalki.controller.fsm.DLCStateMachine;
-import edu.cmu.sei.kalki.controller.fsm.PHLEStateMachine;
-import edu.cmu.sei.kalki.controller.fsm.UNTSStateMachine;
-import edu.cmu.sei.kalki.controller.fsm.WEMOStateMachine;
-
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 class StateMachineManager
 {
+    private static final String FSM_PACKAGE = "edu.cmu.sei.kalki.controller.fsm.";
+
     private List<StateMachine> stateMachines;
 
     StateMachineManager() {
@@ -32,27 +29,24 @@ class StateMachineManager
      * @return returns a state machine for the given device type.
      */
 
-    StateMachine getStateMachine(String deviceName, int deviceID, int currentState, int deviceTypeId){
+    StateMachine getStateMachine(String deviceName, int deviceID, int currentState, String deviceTypeName){
         for(StateMachine stateMachine: stateMachines){
             if(deviceName.equals(stateMachine.getName()) && (stateMachine.getDeviceID() == deviceID)){
                 return stateMachine;
             }
         }
 
+        // Ensure there are no spaces.
+        deviceTypeName = deviceTypeName.replaceAll(" ", "");
+
         StateMachine newStateMachine = null;
-        switch (deviceTypeId){
-            case 1:
-                newStateMachine = new DLCStateMachine(deviceName, deviceID, currentState);
-                break;
-            case 2:
-                newStateMachine = new UNTSStateMachine(deviceName, deviceID, currentState);
-                break;
-            case 3:
-                newStateMachine = new WEMOStateMachine(deviceName, deviceID, currentState);
-                break;
-            case 4:
-                newStateMachine = new PHLEStateMachine(deviceName, deviceID, currentState);
-                break;
+        try {
+            String classPath = FSM_PACKAGE + deviceTypeName + "StateMachine";
+            Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE, String.class);
+            newStateMachine = (StateMachine) con.newInstance(deviceName, deviceID, currentState);
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Error loading FSM: " + e.getMessage());
         }
 
         if(newStateMachine != null)

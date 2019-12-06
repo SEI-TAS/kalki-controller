@@ -42,7 +42,7 @@ public class MainController implements InsertHandler{
             String deviceName = foundDevice.getName();
             int deviceID = foundDevice.getId();
             int currentState = foundDevice.getCurrentState().getStateId();
-            int deviceTypeID = foundDevice.getType().getId();
+            String deviceTypeName = foundDevice.getType().getName();
             int alertTypeID = receivedAlert.getAlertTypeId();
             int samplingRate = foundDevice.getSamplingRate();
             String eventName = Postgres.findAlertType(alertTypeID).getName();
@@ -51,11 +51,11 @@ public class MainController implements InsertHandler{
             try {
                 Thread process = new Thread(() ->
                     {
-                        StateMachine stateMachine = stateMachineManager.getStateMachine(deviceName, deviceID, currentState, deviceTypeID);
+                        StateMachine stateMachine = stateMachineManager.getStateMachine(deviceName, deviceID, currentState, deviceTypeName);
                         if(stateMachine != null)
                         {
                             stateMachine.setEvent(eventName);
-                            stateMachine.callNative(foundDevice.getSamplingRate(), foundDevice.getDefaultSamplingRate());
+                            stateMachine.callNative(samplingRate, foundDevice.getDefaultSamplingRate());
                         }
                         else
                         {

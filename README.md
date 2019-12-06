@@ -85,7 +85,8 @@
    1. Create a folder  called `<name>fsm` (using the same name as the component, i.e., `rooombafsm`) inside the `src` folder. 
    1. Create a subfolder inside it called `c`
 1. Create the Java class for the fsm.
-   1. Copy `/src/fsm/templates/TemplateStateMachine.c` into the `fsm` Java package, renaming it to a proper name, i.e. `RoombaStateMachine.c`.
+   1. Copy `/src/fsm/templates/TemplateStateMachine.java` into the `fsm` Java package, renaming it to have the device type name from the DB in its name, without spaces.
+      - I.e., if the device type name in the DB is "Roomba Cleaner", the Java class name should be `RoombaCleanerStateMachine`.
    1. Modify this new class code for its name and constructor to match the file name.
    1. In the static block that loads the C code, indicate the component name defined in `build.gradle` above (i.e., "roombafsm").
 1. Create the C class for the fsm.
