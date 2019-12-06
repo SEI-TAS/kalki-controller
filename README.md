@@ -6,9 +6,33 @@
 - Requires connection to database
 
 ## Usage
-- Execute `./gradlew build -x test` for library generation
-- To run, first execute build command above, the `./gradlew run -x test` for controller startup
+To generate code:
+1. Execute `./gradlew build -x test`
+1. Execute `./gradlew fsmcopy -x test`
 
+To run:
+1. Execute code generation commands above first.
+1. Execute `./gradlew run -x test`
+
+## Adding a New FSM to the Project
+
+1. Add a new component to build.gradle.
+   1. Inside `model { components {`, add a new line for the new component, with the format `<name>fsm(NativeLibrarySpec)`. I.e., `roombafsm(NativeLibrarySpec)`
+1. Create the source folders.
+   1. Create a folder  called `<name>fsm` (using the same name as the component, i.e., `rooombafsm`) inside the `src` folder. 
+   1. Create a subfolder inside it called `c`
+1. Create the Java class for the fsm.
+   1. Copy `/src/fsm/templates/TemplateStateMachine.java` into the `fsm` Java package, renaming it to have the device type name from the DB in its name, without spaces.
+      - I.e., if the device type name in the DB is "Roomba Cleaner", the Java class name should be `RoombaCleanerStateMachine`.
+   1. Modify this new class code for its name and constructor to match the file name.
+   1. In the static block that loads the C code, indicate the component name defined in `build.gradle` above (i.e., "roombafsm").
+1. Create the C class for the fsm.
+   1. Run the build command at least once for the JNI headers to be generated.
+   1. Copy `/src/fsm/templates/templatefsm.c` into the `c` subfolder that was generated, and rename it to `<name>fsm.c`
+   1. Change the name of the header file being included to the proper new header file from `/src/fsm/headers`
+   1. Copy the function name definition from the corresponding header file in `/src/fsm/headers` to the C file created in the step below.
+   1. Fill in the FSM code.
+   
 ## Model Development in EA:
 
 ### Enterprise Architect:
@@ -21,7 +45,7 @@
  - What is executed when control flow enters the object
    - Insert code snippet within action for event
 #### Control Flow
- -	A control flow is what determines the if/else if/else structure of the code
+ -A control flow is what determines the if/else if/else structure of the code
  - A control flow with a guard becomes else if/if statement
  - An empty control flow is an else statement
 
@@ -76,22 +100,3 @@
    ```C
    newSamplingRate = samplingRate/2;
    ```
-
-## Adding a New FSM to the Project
-
-1. Add a new component to build.gradle.
-   1. Inside `model { components {`, add a new line for the new component, with the format `<name>fsm(NativeLibrarySpec)`. I.e., `roombafsm(NativeLibrarySpec)`
-1. Create the source folders.
-   1. Create a folder  called `<name>fsm` (using the same name as the component, i.e., `rooombafsm`) inside the `src` folder. 
-   1. Create a subfolder inside it called `c`
-1. Create the Java class for the fsm.
-   1. Copy `/src/fsm/templates/TemplateStateMachine.java` into the `fsm` Java package, renaming it to have the device type name from the DB in its name, without spaces.
-      - I.e., if the device type name in the DB is "Roomba Cleaner", the Java class name should be `RoombaCleanerStateMachine`.
-   1. Modify this new class code for its name and constructor to match the file name.
-   1. In the static block that loads the C code, indicate the component name defined in `build.gradle` above (i.e., "roombafsm").
-1. Create the C class for the fsm.
-   1. Run the build command at least once for the JNI headers to be generated.
-   1. Copy `/src/fsm/templates/templatefsm.c` into the `c` subfolder that was generated, and rename it to `<name>fsm.c`
-   1. Change the name of the header file being included to the proper new header file from `/src/fsm/headers`
-   1. Copy the function name definition from the corresponding header file in `/src/fsm/headers` to the C file created in the step below.
-   1. Fill in the FSM code.

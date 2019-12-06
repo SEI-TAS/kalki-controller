@@ -7,7 +7,6 @@ public class Program
     // TODO: Ensure tests work.
     // TODO: Ensure running individual tests thrhough IntelliJ Idea work.
     // TODO: Group FSM c code in one subfolder.
-    // TODO: Remove hardcoding of class names
 
     /**
      * Initializes the database with the given parameters from the databaseVars JSON file, resets the database, and

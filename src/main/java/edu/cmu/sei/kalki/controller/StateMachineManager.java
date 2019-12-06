@@ -42,7 +42,7 @@ class StateMachineManager
         StateMachine newStateMachine = null;
         try {
             String classPath = FSM_PACKAGE + deviceTypeName + "StateMachine";
-            Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE, String.class);
+            Constructor con = Class.forName(classPath).getConstructor(String.class, Integer.TYPE, Integer.TYPE);
             newStateMachine = (StateMachine) con.newInstance(deviceName, deviceID, currentState);
         } catch (Exception e){
             e.printStackTrace();
