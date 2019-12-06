@@ -24,12 +24,23 @@ dependencies {
 
 model {
     components {
-        dlcfsm(NativeLibrarySpec)
-        phlefsm(NativeLibrarySpec)
-        untsfsm(NativeLibrarySpec)
-        wemofsm(NativeLibrarySpec)
+        dlcfsm(NativeLibrarySpec) {
+            sources.c.source.include '**/dlcfsm.c'
+        }
+        phlefsm(NativeLibrarySpec){
+            sources.c.source.include '**/phlefsm.c'
+        }
+        untsfsm(NativeLibrarySpec){
+            sources.c.source.include '**/untsfsm.c'
+        }
+        wemofsm(NativeLibrarySpec){
+            sources.c.source.include '**/wemofsm.c'
+        }
 
         all {
+            sources.c.source {
+                srcDir 'src/fsm/c'
+            }
             binaries.all {
                 if (targetPlatform.operatingSystem.macOsX) {
                     cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
