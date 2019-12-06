@@ -17,7 +17,7 @@ To run:
 ## TODO
 - Automatically generate <>STateMachine java files from template.
 - Automatically generate C files from template.
-- Ensure running individual tests through IntelliJ Idea works.
+- NOTE: Running specific tests in IntelliJ won't work since C lib path is set only in gradle 'test' task.
 
 ## Adding a New FSM to the Project
 
