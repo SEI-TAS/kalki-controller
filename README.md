@@ -6,10 +6,37 @@
 - Requires connection to database
 
 ## Usage
-- gradle build for testing and library generation
-- gradle run for controller startup
+To generate code:
+1. Execute `./gradlew build -x test`
+1. Execute `./gradlew fsmcopy -x test`
 
-## Model Devlopment:
+To run:
+1. Execute code generation commands above first.
+1. Execute `./gradlew run -x test`
+
+## TODO
+- Automatically generate <>STateMachine java files from template.
+- Automatically generate C files from template.
+- NOTE: Running specific tests in IntelliJ won't work since C lib path is set only in gradle 'test' task.
+
+## Adding a New FSM to the Project
+
+1. Add a new component to build.gradle.
+   1. Inside `model { components {`, add a new line for the new component, with the format `<component>fsm(NativeLibrarySpec)`. I.e., `roombafsm(NativeLibrarySpec)`
+   1. Add the following next to it, changing <component> for the component name: `{ sources.c.source.include '**/<component>fsm.c'}`
+1. Create the Java class for the fsm.
+   1. Copy `/src/fsm/templates/TemplateStateMachine.java` into the `fsm` Java package, renaming it to have the device type name from the DB in its name, without spaces.
+      - I.e., if the device type name in the DB is "Roomba Cleaner", the Java class name should be `RoombaCleanerStateMachine`.
+   1. Modify this new class code for its name and constructor to match the file name.
+   1. In the static block that loads the C code, indicate the component name defined in `build.gradle` above (i.e., "roombafsm").
+1. Create the C class for the fsm.
+   1. Run the build command at least once for the JNI headers to be generated.
+   1. Copy `/src/fsm/templates/templatefsm.c` into the `/src/fsm/c` and rename it to `<component>fsm.c`
+   1. Change the name of the header file being included to the proper new header file from `/src/fsm/headers`
+   1. Copy the function name definition from the corresponding header file in `/src/fsm/headers` to the C file created in the step below.
+   1. Fill in the FSM code.
+   
+## Model Development in EA:
 
 ### Enterprise Architect:
 -	Requirements:
@@ -21,7 +48,7 @@
  - What is executed when control flow enters the object
    - Insert code snippet within action for event
 #### Control Flow
- -	A control flow is what determines the if/else if/else structure of the code
+ -A control flow is what determines the if/else if/else structure of the code
  - A control flow with a guard becomes else if/if statement
  - An empty control flow is an else statement
 
@@ -36,17 +63,6 @@
 
 ### Code Snippets
 
-#### Create C String
-
-- Create c style string for use in Control Flow
-  ```C
-  char eventString[256];
-  ```
-- Create int for sampling rate and currentState
-``` C
-int newCurrentState
-int newSamplingRate
-```
 ##### Control Flow guard code
 
  - Compares the event string and an alert using string compare from <string.h>
@@ -87,29 +103,3 @@ int newSamplingRate
    ```C
    newSamplingRate = samplingRate/2;
    ```
-
-##### Ending Action
-```C
-int cArray[2];
-cArray[0] = newCurrentState;
-cArray[1] = newSamplingRate;
-jintArray returnArray = (*env) ->NewIntArray(env, 2);
-(*env) -> SetIntArrayRegion(env, returnArray, 0, 2, cArray);
-return (returnArray); 
-```
-
-#### Generating C Header Files:
--	In terminal inside the JavaDevices directory call
-  -	```Javac -h . StateMachine.java (deviceName)StateMachine.java ```
-- Move the generated .h file into the C folder
-- Make sure stdio.h and string.h are included
--	Add include statement with name of generated .h file into the C code template file for the device
-
-#### C File Template
-- Create empty file (deviceName)fsm.c
-- Paste Template below into file
-```Java
-JNIEXPORT void JNICALL Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_(DeviceName)StateMachine_generateNextState(JNIEnv *env, jobject fsmObj){//generated method code goes here}
-```
-#### Gradle Build File:
--	See Kalki-Wiki

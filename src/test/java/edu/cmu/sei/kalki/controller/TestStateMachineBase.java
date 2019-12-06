@@ -1,19 +1,18 @@
-package edu.cmu.sei.ttg.kalki.controller;
+package edu.cmu.sei.kalki.controller;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.*;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.concurrent.TimeUnit;
-import java.util.List;
 import java.util.logging.Level;
 
-public abstract class TestIOTController {
+public abstract class TestStateMachineBase
+{
 
-    private IOTController controller;
+    private MainController controller;
     private static boolean hasRun = false;
 
     @BeforeAll
@@ -46,32 +45,26 @@ public abstract class TestIOTController {
     @BeforeEach
     public void reset() {
         Postgres.resetDatabase();
-
+        controller = new MainController();
+        controller.initListeners(controller);
     }
 
     protected int insertData(int deviceType, int state, String alertType) {
-        controller = null;
+        System.out.println(System.getProperty( "java.library.path" ));
 
         Device d = new Device("Test Device", "device", Postgres.findDeviceType(deviceType), "ip", 1, 1);
         d.insert();
 
-        if(state > 1) {
-            DeviceSecurityState dss = new DeviceSecurityState(d.getId(), state);
-            dss.insert();
-        }
+        DeviceSecurityState dss = new DeviceSecurityState(d.getId(), state);
+        dss.insert();
 
         AlertType at = new AlertType(alertType, "test alert", "test");
         at.insert();
 
-
-        controller = new IOTController();
-        controller.initListeners(controller);
-
         wait(1);
-
+        System.out.println("Inserting test alert of type: " + at.getName());
         Alert alert = new Alert(d.getId(), at.getName(), at.getId(), "");
         alert.insert();
-
         wait(1);
 
         return d.getId();
