@@ -5,7 +5,6 @@ import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.util.concurrent.TimeUnit;
 
-import edu.cmu.sei.kalki.controller.fsm.StateMachine;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
 import edu.cmu.sei.ttg.kalki.listeners.InsertListener;

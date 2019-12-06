@@ -1,6 +1,9 @@
 package edu.cmu.sei.kalki.controller.fsm;
 
-public class PHLEStateMachine extends StateMachine {
+import edu.cmu.sei.kalki.controller.StateMachine;
+
+public class PHLEStateMachine extends StateMachine
+{
 
     static {
         System.loadLibrary("phlefsm");

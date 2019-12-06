@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.controller.fsm;
+package edu.cmu.sei.kalki.controller;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
@@ -20,7 +20,7 @@ public class StateMachine {
     private boolean threadLock = false;
 
     //constructor of base statemachine
-    StateMachine(String name, int ID, int currentState) {
+    public StateMachine(String name, int ID, int currentState) {
         this.deviceName = name;
         this.deviceID = ID;
         this.currentState = currentState; //default to normal

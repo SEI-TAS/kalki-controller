@@ -1,5 +1,7 @@
 package edu.cmu.sei.kalki.controller.fsm;
 
+import edu.cmu.sei.kalki.controller.StateMachine;
+
 public class <NAME>StateMachine extends StateMachine {
 
     static {

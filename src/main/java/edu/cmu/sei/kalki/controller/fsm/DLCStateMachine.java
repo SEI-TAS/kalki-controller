@@ -1,6 +1,9 @@
 package edu.cmu.sei.kalki.controller.fsm;
 
-public class DLCStateMachine extends StateMachine {
+import edu.cmu.sei.kalki.controller.StateMachine;
+
+public class DLCStateMachine extends StateMachine
+{
 
     static {
         System.loadLibrary("dlcfsm");

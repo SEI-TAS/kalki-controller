@@ -1,6 +1,9 @@
 package edu.cmu.sei.kalki.controller.fsm;
 
-public class UNTSStateMachine extends StateMachine {
+import edu.cmu.sei.kalki.controller.StateMachine;
+
+public class UNTSStateMachine extends StateMachine
+{
 
     static {
         System.loadLibrary("untsfsm");
