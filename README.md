@@ -51,7 +51,7 @@ To run:
    - Insert code snippet within action for event
    
 #### Control Flow
- -A control flow is what determines the if/else if/else structure of the code
+ - A control flow is what determines the if/else if/else structure of the code
  - A control flow with a guard becomes else if/if statement
  - An empty control flow is an else statement
 
@@ -64,7 +64,7 @@ To run:
 -	Link State to State Actions with control flows
 -	Link State Actions to mergeState node
 
-##Code Snippets for new FSMs
+## Code Snippets for new FSMs
 
 ##### Control Flow guard code
 
