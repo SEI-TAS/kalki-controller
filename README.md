@@ -1,17 +1,17 @@
 # Kalki-Controller
  
 ## Prerequisites
-- Make sure GCC is installed
-- Requires Kalki-DB library
-- Requires connection to database
+- GCC installed
+- Kalki-DB library installed in local Maven repo (see https://github.com/SEI-TAS/kalki-db)
+- PostgreSQL has to be running to run the Controller (see https://github.com/SEI-TAS/kalki-db)
 
 ## Usage
-To generate code:
+To build the controller:
 1. Execute `./gradlew build -x test`
-1. Execute `./gradlew fsmcopy -x test`
 
 To run:
-1. Execute code generation commands above first.
+1. Execute build commands above.
+1. Execute `./gradlew fsmcopy -x test`
 1. Execute `./gradlew run -x test`
 
 ## TODO
