@@ -36,17 +36,20 @@ To run:
    1. Copy the function name definition from the corresponding header file in `/src/fsm/headers` to the C file created in the step below.
    1. Fill in the FSM code.
    
-## Model Development in EA:
+## Model Development in Enterprise Architect
 
-### Enterprise Architect:
--	Requirements:
--	Clone kalki-uml with the StateMachineCode project
--	Open StateMachineCode project in Enterprise Architect Ultimate Edition
+### Requirements
+- Enterprise Architect Ultimate Edition
 
-### Important EA Models
+### Usage
+-	Open StateMachineCode.eapx project in Enterprise Architect and modify as needed.
+-   Generate C code from model (details: TO-DO)
+
+### EA Model Concepts
 #### Action
  - What is executed when control flow enters the object
    - Insert code snippet within action for event
+   
 #### Control Flow
  -A control flow is what determines the if/else if/else structure of the code
  - A control flow with a guard becomes else if/if statement
@@ -55,13 +58,13 @@ To run:
 #### Merge
  - Creates decision tree structure must merge control flows from actions back to a merge node to compile correctly
  
-#### How to create device model
+### Creating a  Device Model
 -	Copy full device structure of DeviceActivity into a new structure
 -	Add Actions for each different event in Normal and Suspicious 
 -	Link State to State Actions with control flows
 -	Link State Actions to mergeState node
 
-### Code Snippets
+##Code Snippets for new FSMs
 
 ##### Control Flow guard code
 
@@ -87,7 +90,7 @@ To run:
    - Alert (non reset)
     ```C
     newCurrentState = currentState + 1
-    ```	
+    ```   
     - if transition from state normal to suspicious: 
     ```C
     newSamplingRate = samplingRate*2
