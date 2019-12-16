@@ -1,6 +1,7 @@
 # Kalki-Controller
  
 ## Prerequisites
+- Java JDK 1.8+
 - GCC installed
 - Kalki-DB library installed in local Maven repo (see https://github.com/SEI-TAS/kalki-db)
 - PostgreSQL has to be running to run the Controller (see https://github.com/SEI-TAS/kalki-db)
