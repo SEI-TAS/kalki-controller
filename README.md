@@ -12,7 +12,6 @@ To build the controller:
 
 To run:
 1. Execute build commands above.
-1. Execute `./gradlew fsmcopy -x test`
 1. Execute `./gradlew run -x test`
 
 ## TODO

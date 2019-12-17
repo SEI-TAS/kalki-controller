@@ -5,6 +5,8 @@ apply plugin: 'application'
 
 mainClassName = 'edu.cmu.sei.kalki.controller.Program'
 
+sourceCompatibility = 1.8
+
 compileJava {
     options.compilerArgs += ["-h", "src/fsm/headers"]
 }
@@ -84,6 +86,7 @@ run {
 }
 
 test {
+    dependsOn 'fsmcopy'
     systemProperty "java.library.path", file("${buildDir}/libs/fsm").absolutePath
     useJUnitPlatform()
 }
