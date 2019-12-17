@@ -70,7 +70,6 @@ model {
 
 // Copy all C FSM outputs into a single folder after assembling.
 task fsmcopy (type: Copy) {
-    dependsOn 'build'
     def tree = fileTree("${buildDir}/libs") {
         include '**/*.dylib'
         include '**/*.so'
