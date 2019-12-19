@@ -25,6 +25,13 @@ dependencies {
 }
 
 model {
+    toolChains {
+        gcc(Gcc){
+            target("linux_arm-v7") {
+                cppCompiler.executable = "/usr/bin/gcc"
+            }
+        }
+    }
     components {
         dlcfsm(NativeLibrarySpec) {
             sources.c.source.include '**/dlcfsm.c'
