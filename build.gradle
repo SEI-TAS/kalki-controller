@@ -87,12 +87,10 @@ task fsmcopy (type: Copy) {
 }
 
 run {
-    dependsOn 'fsmcopy'
     systemProperty "java.library.path", file("${buildDir}/libs/fsm").absolutePath
 }
 
 test {
-    dependsOn 'fsmcopy'
     systemProperty "java.library.path", file("${buildDir}/libs/fsm").absolutePath
     useJUnitPlatform()
 }

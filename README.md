@@ -8,7 +8,7 @@
 
 ## Usage
 To build the controller:
-1. Execute `./gradlew build -x test`
+1. Execute `bash full_build.sh`
 
 To run:
 1. Execute build commands above.
