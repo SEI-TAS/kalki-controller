@@ -36,22 +36,27 @@ class StateMachineManager
             }
         }
 
-        // Ensure there are no spaces.
-        deviceTypeName = deviceTypeName.replaceAll(" ", "");
+        // If machine was not found, create it and store it.
+        StateMachine newStateMachine = createStateMachine(deviceName, deviceID, currentState, deviceTypeName);
+        if(newStateMachine != null)
+        {
+            this.addStateMachine(newStateMachine);
+        }
+        return newStateMachine;
+    }
 
+    private StateMachine createStateMachine(String deviceName, int deviceID, int currentState, String deviceTypeName) {
         StateMachine newStateMachine = null;
         try {
+            // Ensure there are no spaces.
+            deviceTypeName = deviceTypeName.replaceAll(" ", "");
+
             String classPath = FSM_PACKAGE + deviceTypeName + "StateMachine";
             Constructor con = Class.forName(classPath).getConstructor(String.class, Integer.TYPE, Integer.TYPE);
             newStateMachine = (StateMachine) con.newInstance(deviceName, deviceID, currentState);
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error loading FSM: " + e.getMessage());
-        }
-
-        if(newStateMachine != null)
-        {
-            this.addStateMachine(newStateMachine);
         }
 
         return newStateMachine;
