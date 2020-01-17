@@ -18,3 +18,5 @@ Packages
 *.zip
 *.tar.gz
 .DS_Store
+*.ldb
+src/fsm/headers/*.*

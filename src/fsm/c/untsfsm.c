@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include <jni.h>
 #include <string.h>
-#include "edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine.h"
+#include "../../fsm/headers/edu_cmu_sei_kalki_controller_fsm_UdooNeoStateMachine.h"
+
 JNIEXPORT jintArray JNICALL
-Java_edu_cmu_sei_ttg_kalki_controller_JavaDevices_UNTSStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
+Java_edu_cmu_sei_kalki_controller_fsm_UdooNeoStateMachine_generateNextState(JNIEnv *env, jobject fsmObj,
 jstring alertType, jint currentState, jint samplingRate, jint defaultSamplingRate)
 {
 	char eventString[256];

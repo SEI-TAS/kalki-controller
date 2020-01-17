@@ -1,9 +1,11 @@
-package edu.cmu.sei.ttg.kalki.controller.JavaDevices;
+package edu.cmu.sei.kalki.controller;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 import edu.cmu.sei.ttg.kalki.models.StageLog;
+
+import java.util.concurrent.TimeUnit;
 
 public class StateMachine {
 
@@ -18,7 +20,7 @@ public class StateMachine {
     private boolean threadLock = false;
 
     //constructor of base statemachine
-    StateMachine(String name, int ID, int currentState) {
+    public StateMachine(String name, int ID, int currentState) {
         this.deviceName = name;
         this.deviceID = ID;
         this.currentState = currentState; //default to normal
@@ -83,5 +85,25 @@ public class StateMachine {
         System.out.println("Sampling Rate:" + newSamplingRate);
         StageLog log = new StageLog(thisDevice.getCurrentState().getId(), StageLog.Action.OTHER, StageLog.Stage.TRIGGER, "Updated device:"+thisDevice.getId());
         log.insert();
+    }
+
+    protected native int[] generateNextState(String alertType, int newState, int samplingRate, int defaultSamplingRate);
+
+    public void callNative(int samplingRate, int defaultSamplingRate){
+        while (this.getLockState()){
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            }
+            catch (InterruptedException e ){
+                e.printStackTrace();
+            }
+        }
+        this.lock();
+        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
+        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate, defaultSamplingRate);
+        this.setCurrentState(results[0]);
+        System.out.println("Current State: " + this.getCurrentState());
+        this.updateDevice(results[1]);
+        this.unlock();
     }
 }
