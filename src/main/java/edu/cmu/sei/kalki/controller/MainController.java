@@ -1,21 +1,23 @@
 package edu.cmu.sei.kalki.controller;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import java.io.FileReader;
-import java.util.concurrent.TimeUnit;
+import edu.cmu.sei.kalki.db.models.Alert;
+import edu.cmu.sei.kalki.db.models.AlertType;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.utils.Config;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
-import edu.cmu.sei.ttg.kalki.listeners.InsertListener;
-import edu.cmu.sei.ttg.kalki.models.*;
+import java.io.IOException;
+
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.listeners.InsertHandler;
+import edu.cmu.sei.kalki.db.listeners.InsertListener;
+import org.json.simple.parser.ParseException;
 
 /**
  * This class handles the initialization of the Postgres database connection as well as the initialization of
  * the alert listeners and their handler
  */
 
-public class MainController implements InsertHandler{
+public class MainController implements InsertHandler {
 
     private StateMachineManager stateMachineManager;
 
@@ -24,90 +26,63 @@ public class MainController implements InsertHandler{
     }
 
     /**
-     *
-     * @param id The id of the alert inserted into the database
      * Listens for alerts added to database retrieves the device associated with the alert and its type
-     * and generates a new state machine for this device pushing the alert type to the statemachine native code in a thread
-     *
+     * and generates a new state machine for this device pushing the alert type to the statemachine in a thread
+     * @param id The id of the alert inserted into the database
      */
     @Override
     public void handleNewInsertion(int id) {
-        //System.out.println("Here in handler");
-        Alert receivedAlert = Postgres.findAlert(id);
-        if (receivedAlert == null) {
-            System.out.println("Newly inserted alert not found");
-        } else {
-            System.out.println("Newly inserted alert found");
-            Device foundDevice = Postgres.findDeviceByAlert(receivedAlert);
-            String deviceName = foundDevice.getName();
-            int deviceID = foundDevice.getId();
-            int currentState = foundDevice.getCurrentState().getStateId();
-            String deviceTypeName = foundDevice.getType().getName();
-            int alertTypeID = receivedAlert.getAlertTypeId();
-            int samplingRate = foundDevice.getSamplingRate();
-            String eventName = Postgres.findAlertType(alertTypeID).getName();
+        try {
+            Alert receivedAlert = Postgres.findAlert(id);
+            if (receivedAlert == null) {
+                System.out.println("Newly inserted alert not found");
+                return;
+            }
 
-            System.out.println("Alert Type Name: " + eventName);
-            try {
-                Thread process = new Thread(() ->
-                    {
-                        StateMachine stateMachine = stateMachineManager.getStateMachine(deviceName, deviceID, currentState, deviceTypeName);
-                        if(stateMachine != null)
-                        {
-                            stateMachine.setEvent(eventName);
-                            stateMachine.callNative(samplingRate, foundDevice.getDefaultSamplingRate());
-                        }
-                        else
-                        {
+            AlertType alertType = Postgres.findAlertType(receivedAlert.getAlertTypeId());
+            System.out.println("Alert Type Found: " + alertType.getName());
+
+            Device device = Postgres.findDeviceByAlert(receivedAlert);
+
+            Thread process = new Thread(() -> {
+                    try {
+                        StateMachine stateMachine = stateMachineManager.getStateMachine(device);
+                        if (stateMachine != null) {
+                            stateMachine.executeStateChange(alertType);
+                        } else {
                             System.out.println("State machine for given device type not found");
                         }
                     }
-                );
-                process.start();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+                    catch (Exception e) {
+                        System.out.println("Error getting next state: " + e.toString());
+                        e.printStackTrace();
+                    }
+                }
+            );
+            process.start();
         }
-    }
-
-    /**
-     * Pulls relevant data from the databaseVars JSON file and call initialize using these values
-     * Resets database back to default state
-     */
-    public void initializeDatabase(){
-        JSONParser parser = new JSONParser();
-        try {
-            Object obj = parser.parse(new FileReader("databaseVars.json"));
-            JSONObject json = (JSONObject) obj;
-            String ip = (String) json.get("ip");
-            String port = (String) json.get("port");
-            String dbName = (String) json.get("dbName");
-            String dbUser = (String) json.get("dbUser");
-            String dbPassword = (String) json.get("dbPassword");
-            //System.out.println("ip: "+ ip + "port: " + port + "dbName: " + dbName + "dbUser: " + dbUser + "dbPassword: " + dbPassword);
-            Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
-        }
-        catch (Exception e){
+        catch (Exception e) {
+            System.out.println("Error handling new alert insertion: " + e.toString());
             e.printStackTrace();
         }
     }
 
     /**
-     *
-     * @param alertHandler requires object that inherits from alertHandler
+     * Pulls relevant data from the config JSON file and call initialize using these values
+     * Resets database back to default state
+     */
+    public void initializeDatabase() throws IOException, ParseException
+    {
+        Config.load("config.json");
+        Postgres.initializeFromConfig();
+    }
+
+    /**
      * Initializes database listener for the insertion of new alerts
      */
-    public void initListeners(InsertHandler alertHandler){
+    public void initListeners(){
         InsertListener.clearHandlers();
-        InsertListener.addHandler("alerthistoryinsert", alertHandler);
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_ALERT, this);
         InsertListener.startListening();
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        }
-        catch(InterruptedException e){
-            System.out.println("caught exception in init listeners");
-        }
-
     }
 }

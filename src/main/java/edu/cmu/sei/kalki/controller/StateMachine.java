@@ -1,109 +1,88 @@
 package edu.cmu.sei.kalki.controller;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
-import edu.cmu.sei.ttg.kalki.models.StageLog;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.models.AlertType;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceSecurityState;
+import edu.cmu.sei.kalki.db.models.PolicyCondition;
+import edu.cmu.sei.kalki.db.models.PolicyRule;
+import edu.cmu.sei.kalki.db.models.PolicyRuleLog;
+import edu.cmu.sei.kalki.db.models.SecurityState;
+import edu.cmu.sei.kalki.db.models.StageLog;
+import edu.cmu.sei.kalki.db.models.StateTransition;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 public class StateMachine {
+    private Device device;
+    private SecurityState currentState;
+    private List<PolicyRule> policyRules;
 
-    private String deviceName; //name of device received from database
-
-    private int deviceID; //ID of device received from database
-
-    private int currentState; //the current state of device inits to zero and is changed by native calls
-
-    private String currentEvent; //the most recent alert-type associated with the device
-
-    private boolean threadLock = false;
-
-    //constructor of base statemachine
-    public StateMachine(String name, int ID, int currentState) {
-        this.deviceName = name;
-        this.deviceID = ID;
-        this.currentState = currentState; //default to normal
+    /**
+     * Stores the device info, gets details about its current state, and loads all policy rules associated with the
+     * device type of this device.
+     * @param device
+     */
+    public StateMachine(Device device) {
+        this.device = device;
+        this.currentState = Postgres.findSecurityState(device.getCurrentState().getStateId());
+        this.policyRules = Postgres.findPolicyRules(device.getType().getId());
     }
 
     /**
-     * @return returns device ID
+     * If there is a state change associated to the given alert, execute it.
+     * @param alertType
      */
-    public int getDeviceID() {
-        return this.deviceID;
-    }
+    public void executeStateChange(AlertType alertType){
+        System.out.println("Alert: " + alertType.getName() + ", Device Type: " + device.getType().getName() + ", Current State: " + currentState.getName());
 
-    /**
-     * @return returns currentState
-     */
-    int getCurrentState() {
-        return this.currentState;
-    }
+        // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
+        for(PolicyRule rule : policyRules) {
+            PolicyCondition condition = Postgres.findPolicyCondition(rule.getPolicyCondId());
 
-    /**
-     * @return returns currentevent
-     */
-    String getCurrentEvent(){ return this.currentEvent; }
+            // TODO: Assuming only one alert per condition for now. Modify this to handle the concept of multiple alerts
+            // "at the same time".
+            if(condition.getAlertTypeIds().contains(alertType.getId())) {
+                StateTransition transition = Postgres.findStateTransition(rule.getStateTransId());
+                if(transition.getStartStateId() == currentState.getId()) {
+                    System.out.println("Matching policy rule found.");
+                    int finalSecStateId = transition.getFinishStateId();
+                    int samplingRate = rule.getSamplingRate();
+                    this.updateDeviceInDB(finalSecStateId, samplingRate);
 
-    /**
-     * Sets the currentState of the device
-     */
-    void setCurrentState(int newState){ this.currentState = newState; }
+                    // Store the fact that this rule was triggered.
+                    PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
+                    Postgres.insertPolicyRuleLog(log);
 
-    /**
-     * @return returns the name of the device
-     */
-    public String getName() {
-        return this.deviceName;
-    }
-
-    /**
-     * @param newEvent this is the latest alert-type received from listener given by the handler
-     */
-    public void setEvent(String newEvent) {
-        System.out.println("Here setting event: "+ newEvent);
-        this.currentEvent = newEvent;
-    }
-
-    public String getEvent(){ return this.currentEvent; }
-
-    void unlock(){ threadLock = false; }
-
-    void lock() { threadLock = true; }
-
-    synchronized boolean getLockState(){
-        return this.threadLock;
-    }
-
-    void updateDevice(int newSamplingRate){
-        Device thisDevice = Postgres.findDevice(this.getDeviceID());
-        DeviceSecurityState thisSecurityState = new DeviceSecurityState(this.getDeviceID(), this.getCurrentState());
-        thisSecurityState.insert();
-        thisDevice.setCurrentState(thisSecurityState);
-        thisDevice.setSamplingRate(newSamplingRate);
-        thisDevice.insertOrUpdate();
-        System.out.println("Sampling Rate:" + newSamplingRate);
-        StageLog log = new StageLog(thisDevice.getCurrentState().getId(), StageLog.Action.OTHER, StageLog.Stage.TRIGGER, "Updated device:"+thisDevice.getId());
-        log.insert();
-    }
-
-    protected native int[] generateNextState(String alertType, int newState, int samplingRate, int defaultSamplingRate);
-
-    public void callNative(int samplingRate, int defaultSamplingRate){
-        while (this.getLockState()){
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            }
-            catch (InterruptedException e ){
-                e.printStackTrace();
+                    // Assuming only one policy rule for the given alert and starting state, this would be the only
+                    // matching case.
+                    return;
+                }
             }
         }
-        this.lock();
-        System.out.println("Alert: " + this.getCurrentEvent() + " Previous State: " + this.getCurrentState());
-        int[] results = this.generateNextState(this.getCurrentEvent(), this.getCurrentState(), samplingRate, defaultSamplingRate);
-        this.setCurrentState(results[0]);
-        System.out.println("Current State: " + this.getCurrentState());
-        this.updateDevice(results[1]);
-        this.unlock();
+
+        System.out.println("No matching policy rule found.");
+    }
+
+    /**
+     * Updates a device security state and sampling rate in the DB.
+     * @param newStateId
+     * @param newSamplingRate
+     */
+    private void updateDeviceInDB(int newStateId, int newSamplingRate) {
+        SecurityState newState = Postgres.findSecurityState(newStateId);
+        System.out.println("New State: " + newState.getName());
+        DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
+        newDeviceSecurityState.insert();
+
+        System.out.println("Sampling Rate:" + newSamplingRate);
+        device.setCurrentState(newDeviceSecurityState);
+        device.setSamplingRate(newSamplingRate);
+        device.insertOrUpdate();
+
+        currentState = newState;
+
+        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.OTHER, StageLog.Stage.TRIGGER, "Updated device: " + device.getId());
+        log.insert();
     }
 }
