@@ -3,20 +3,15 @@ package edu.cmu.sei.kalki.controller;
 import edu.cmu.sei.kalki.db.models.Alert;
 import edu.cmu.sei.kalki.db.models.AlertType;
 import edu.cmu.sei.kalki.db.models.Device;
-import edu.cmu.sei.kalki.db.utils.Config;
-
-import java.io.IOException;
 
 import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.listeners.InsertHandler;
 import edu.cmu.sei.kalki.db.listeners.InsertListener;
-import org.json.simple.parser.ParseException;
 
 /**
  * This class handles the initialization of the Postgres database connection as well as the initialization of
  * the alert listeners and their handler
  */
-
 public class MainController implements InsertHandler {
 
     private StateMachineManager stateMachineManager;
@@ -65,16 +60,6 @@ public class MainController implements InsertHandler {
             System.out.println("Error handling new alert insertion: " + e.toString());
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Pulls relevant data from the config JSON file and call initialize using these values
-     * Resets database back to default state
-     */
-    public void initializeDatabase() throws IOException, ParseException
-    {
-        Config.load("config.json");
-        Postgres.initializeFromConfig();
     }
 
     /**

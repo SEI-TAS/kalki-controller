@@ -1,5 +1,9 @@
 package edu.cmu.sei.kalki.controller;
 
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.utils.Config;
+import edu.cmu.sei.kalki.db.utils.TestDB;
+
 public class Program
 {
     /**
@@ -8,8 +12,19 @@ public class Program
     public static void main(String[] args) {
         try
         {
+            Config.load("config.json");
+
+            if(args.length >= 2 && args[0].equals("test"))
+            {
+                String testFile = args[1];
+                TestDB.setupTestDBFromConfig(testFile);
+            }
+            else
+            {
+                Postgres.initializeFromConfig();
+            }
+
             MainController mainController = new MainController();
-            mainController.initializeDatabase();
             mainController.initListeners();
         }
         catch (Exception e){
