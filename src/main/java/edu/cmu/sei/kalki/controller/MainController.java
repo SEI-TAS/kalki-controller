@@ -63,6 +63,14 @@ public class MainController implements InsertHandler {
     }
 
     /**
+     * Initialize database connection.
+     */
+    public void initDB()
+    {
+        Postgres.initializeFromConfig();
+    }
+
+    /**
      * Initializes database listener for the insertion of new alerts
      */
     public void initListeners(){
