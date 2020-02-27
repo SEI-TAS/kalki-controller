@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.controller;
 
+import edu.cmu.sei.kalki.db.daos.DeviceTypeDAO;
 import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.models.*;
 import edu.cmu.sei.kalki.db.utils.Config;
@@ -28,7 +29,7 @@ public abstract class TestBase
     }
 
     protected int insertData(int deviceTypeId, int stateId, String alertType) {
-        Device d = new Device("Test Device", "device", Postgres.findDeviceType(deviceTypeId), "127.0.0.1", 1, 1);
+        Device d = new Device("Test Device", "device", DeviceTypeDAO.findDeviceType(deviceTypeId), "127.0.0.1", 1, 1);
         d.insert();
 
         DeviceSecurityState dss = new DeviceSecurityState(d.getId(), stateId);

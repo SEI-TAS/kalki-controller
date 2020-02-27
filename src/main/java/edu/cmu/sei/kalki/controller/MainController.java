@@ -1,5 +1,8 @@
 package edu.cmu.sei.kalki.controller;
 
+import edu.cmu.sei.kalki.db.daos.AlertDAO;
+import edu.cmu.sei.kalki.db.daos.AlertTypeDAO;
+import edu.cmu.sei.kalki.db.daos.DeviceDAO;
 import edu.cmu.sei.kalki.db.models.Alert;
 import edu.cmu.sei.kalki.db.models.AlertType;
 import edu.cmu.sei.kalki.db.models.Device;
@@ -28,16 +31,16 @@ public class MainController implements InsertHandler {
     @Override
     public void handleNewInsertion(int id) {
         try {
-            Alert receivedAlert = Postgres.findAlert(id);
+            Alert receivedAlert = AlertDAO.findAlert(id);
             if (receivedAlert == null) {
                 System.out.println("Newly inserted alert not found");
                 return;
             }
 
-            AlertType alertType = Postgres.findAlertType(receivedAlert.getAlertTypeId());
+            AlertType alertType = AlertTypeDAO.findAlertType(receivedAlert.getAlertTypeId());
             System.out.println("Alert Type Found: " + alertType.getName());
 
-            Device device = Postgres.findDeviceByAlert(receivedAlert);
+            Device device = DeviceDAO.findDeviceByAlert(receivedAlert);
 
             Thread process = new Thread(() -> {
                     try {

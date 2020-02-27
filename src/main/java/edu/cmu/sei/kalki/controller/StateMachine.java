@@ -1,5 +1,9 @@
 package edu.cmu.sei.kalki.controller;
 
+import edu.cmu.sei.kalki.db.daos.PolicyConditionDAO;
+import edu.cmu.sei.kalki.db.daos.PolicyRuleDAO;
+import edu.cmu.sei.kalki.db.daos.SecurityStateDAO;
+import edu.cmu.sei.kalki.db.daos.StateTransitionDAO;
 import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.models.AlertType;
 import edu.cmu.sei.kalki.db.models.Device;
@@ -25,8 +29,8 @@ public class StateMachine {
      */
     public StateMachine(Device device) {
         this.device = device;
-        this.currentState = Postgres.findSecurityState(device.getCurrentState().getStateId());
-        this.policyRules = Postgres.findPolicyRules(device.getType().getId());
+        this.currentState = SecurityStateDAO.findSecurityState(device.getCurrentState().getStateId());
+        this.policyRules = PolicyRuleDAO.findPolicyRules(device.getType().getId());
     }
 
     /**
@@ -38,12 +42,12 @@ public class StateMachine {
 
         // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
         for(PolicyRule rule : policyRules) {
-            PolicyCondition condition = Postgres.findPolicyCondition(rule.getPolicyCondId());
+            PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyCondId());
 
             // TODO: Assuming only one alert per condition for now. Modify this to handle the concept of multiple alerts
             // "at the same time".
             if(condition.getAlertTypeIds().contains(alertType.getId())) {
-                StateTransition transition = Postgres.findStateTransition(rule.getStateTransId());
+                StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransId());
                 if(transition.getStartStateId() == currentState.getId()) {
                     System.out.println("Matching policy rule found.");
                     int finalSecStateId = transition.getFinishStateId();
@@ -52,7 +56,7 @@ public class StateMachine {
 
                     // Store the fact that this rule was triggered.
                     PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
-                    Postgres.insertPolicyRuleLog(log);
+                    log.insert();
 
                     // Assuming only one policy rule for the given alert and starting state, this would be the only
                     // matching case.
@@ -70,7 +74,7 @@ public class StateMachine {
      * @param newSamplingRate
      */
     private void updateDeviceInDB(int newStateId, int newSamplingRate) {
-        SecurityState newState = Postgres.findSecurityState(newStateId);
+        SecurityState newState = SecurityStateDAO.findSecurityState(newStateId);
         System.out.println("New State: " + newState.getName());
         DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
         newDeviceSecurityState.insert();
