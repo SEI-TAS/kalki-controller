@@ -45,11 +45,7 @@ public class MainController implements InsertHandler {
             Thread process = new Thread(() -> {
                     try {
                         StateMachine stateMachine = stateMachineManager.getStateMachine(device);
-                        if (stateMachine != null) {
-                            stateMachine.executeStateChange(alertType);
-                        } else {
-                            System.out.println("State machine for given device type not found");
-                        }
+                        stateMachine.executeStateChange(alertType);
                     }
                     catch (Exception e) {
                         System.out.println("Error getting next state: " + e.toString());
