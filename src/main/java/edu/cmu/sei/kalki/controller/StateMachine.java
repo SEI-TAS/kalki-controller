@@ -4,7 +4,6 @@ import edu.cmu.sei.kalki.db.daos.PolicyConditionDAO;
 import edu.cmu.sei.kalki.db.daos.PolicyRuleDAO;
 import edu.cmu.sei.kalki.db.daos.SecurityStateDAO;
 import edu.cmu.sei.kalki.db.daos.StateTransitionDAO;
-import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.models.AlertType;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.DeviceSecurityState;

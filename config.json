@@ -1,8 +1,6 @@
  {
     "db_name": "kalkidb",
     "db_user": "kalkiuser",
-    "db_password": "kalkipass",
-
-    "db_root_user": "kalkiuser",
-    "db_root_password": "kalkipass"
-  }
+    "db_password": "kalkipass"
+ }
+ 
