@@ -77,4 +77,11 @@ public class MainController implements InsertHandler {
         InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_ALERT, this);
         InsertListener.startListening();
     }
+
+    /**
+     * Stops listening for alert insertions.
+     */
+    public void stopListeners() {
+        InsertListener.stopListening();
+    }
 }

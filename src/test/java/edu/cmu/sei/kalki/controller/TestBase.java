@@ -20,21 +20,16 @@ import java.util.logging.Level;
 
 public abstract class TestBase
 {
+    private static MainController mainController;
+
     @BeforeEach
     public void setup() {
         try {
-            // Small wait in case previous tests have not finished using the DB.
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             Postgres.setLoggingLevel(Level.SEVERE);
             TestDB.recreateTestDB();
             TestDB.initialize();
 
-            MainController mainController = new MainController();
+            mainController = new MainController();
             mainController.initListeners();
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,6 +39,7 @@ public abstract class TestBase
     @AfterEach
     public void reset() {
         try {
+            mainController.stopListeners();
             TestDB.cleanup();
         } catch (Exception e) {
             e.printStackTrace();
