@@ -37,15 +37,12 @@ public class MainController implements InsertHandler {
                 return;
             }
 
-            AlertType alertType = AlertTypeDAO.findAlertType(receivedAlert.getAlertTypeId());
-            System.out.println("Alert Type Found: " + alertType.getName());
-
             Device device = DeviceDAO.findDeviceByAlert(receivedAlert);
 
             Thread process = new Thread(() -> {
                     try {
                         StateMachine stateMachine = stateMachineManager.getStateMachine(device);
-                        stateMachine.executeStateChange(alertType);
+                        stateMachine.executeStateChangeIfNeeded(receivedAlert);
                     }
                     catch (Exception e) {
                         System.out.println("Error getting next state: " + e.toString());

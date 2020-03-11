@@ -1,9 +1,12 @@
 package edu.cmu.sei.kalki.controller;
 
+import edu.cmu.sei.kalki.db.daos.AlertDAO;
+import edu.cmu.sei.kalki.db.daos.AlertTypeDAO;
 import edu.cmu.sei.kalki.db.daos.PolicyConditionDAO;
 import edu.cmu.sei.kalki.db.daos.PolicyRuleDAO;
 import edu.cmu.sei.kalki.db.daos.SecurityStateDAO;
 import edu.cmu.sei.kalki.db.daos.StateTransitionDAO;
+import edu.cmu.sei.kalki.db.models.Alert;
 import edu.cmu.sei.kalki.db.models.AlertType;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.DeviceSecurityState;
@@ -14,6 +17,7 @@ import edu.cmu.sei.kalki.db.models.SecurityState;
 import edu.cmu.sei.kalki.db.models.StageLog;
 import edu.cmu.sei.kalki.db.models.StateTransition;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class StateMachine {
@@ -34,37 +38,72 @@ public class StateMachine {
 
     /**
      * If there is a state change associated to the given alert, execute it.
-     * @param alertType
+     * @param newAlert
      */
-    public void executeStateChange(AlertType alertType){
-        System.out.println("Alert: " + alertType.getName() + ", Device Type: " + device.getType().getName() + ", Current State: " + currentState.getName());
+    public void executeStateChangeIfNeeded(Alert newAlert){
+        AlertType newAlertType = AlertTypeDAO.findAlertType(newAlert.getAlertTypeId());
+        System.out.println("Alert: " + newAlertType.getName() + ", Device Type: " + device.getType().getName() + ", Current State: " + currentState.getName());
 
         // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
         for(PolicyRule rule : policyRules) {
             PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyCondId());
-
-            // TODO: Assuming only one alert per condition for now. Modify this to handle the concept of multiple alerts
-            // "at the same time".
-            if(condition.getAlertTypeIds().contains(alertType.getId())) {
-                StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransId());
-                if(transition.getStartStateId() == currentState.getId()) {
-                    System.out.println("Matching policy rule found.");
-                    int finalSecStateId = transition.getFinishStateId();
-                    int samplingRate = rule.getSamplingRate();
-                    this.updateDeviceInDB(finalSecStateId, samplingRate);
-
-                    // Store the fact that this rule was triggered.
-                    PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
-                    log.insert();
-
-                    // Assuming only one policy rule for the given alert and starting state, this would be the only
-                    // matching case.
+            if(conditionHasBeenMet(condition, newAlert.getTimestamp())) {
+                // We should only get here if alerts for all type in the condition for this rule have been stored in the last time.
+                if(executePolicyRule(rule)) {
+                    // If the policy executed (we were in the right state), stop checking other rules.
                     return;
                 }
             }
         }
 
         System.out.println("No matching policy rule found.");
+    }
+
+    /**
+     * Check that ALL alerts for this condition have been triggered in the given threshold.
+     * @param condition
+     * @return
+     */
+    private boolean conditionHasBeenMet(PolicyCondition condition, Timestamp lastAlertTimestamp) {
+        List<Integer> conditionAlertTypeIds = condition.getAlertTypeIds();
+        System.out.println("Ids for current condition: " + conditionAlertTypeIds.toString());
+        int threshold = condition.getThreshold();
+        for(int alertTypeId : conditionAlertTypeIds) {
+            // Check that all alerts have been triggered.
+            List<Alert> alerts = AlertDAO.findAlertsOverTime(device.getId(), alertTypeId, lastAlertTimestamp, threshold, "minutes");
+            System.out.println("Found " + alerts.size() + " alerts of type " + alertTypeId + " over the last " + threshold + " minutes.");
+            if(alerts.size() == 0) {
+                // If no alerts for one of the conditions were found, the condition has not been met.
+                System.out.println("Condition was not met.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Executes a triggered policy rule, if it applies to the current state.
+     * @param rule
+     */
+    private boolean executePolicyRule(PolicyRule rule) {
+        StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransId());
+        if(transition.getStartStateId() == currentState.getId()) {
+            // Update the device and its associated info in the DB, changing its state.
+            System.out.println("Policy rule for the conditions and current state found.");
+            int finalSecStateId = transition.getFinishStateId();
+            int samplingRate = rule.getSamplingRate();
+            updateDeviceInDB(finalSecStateId, samplingRate);
+
+            // Store the fact that this rule was triggered.
+            PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
+            log.insert();
+
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -78,7 +117,7 @@ public class StateMachine {
         DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
         newDeviceSecurityState.insert();
 
-        System.out.println("Sampling Rate:" + newSamplingRate);
+        System.out.println("Sampling Rate: " + newSamplingRate);
         device.setCurrentState(newDeviceSecurityState);
         device.setSamplingRate(newSamplingRate);
         device.insertOrUpdate();
