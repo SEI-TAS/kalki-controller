@@ -26,31 +26,20 @@ public class MainController implements InsertHandler {
     /**
      * Listens for alerts added to database retrieves the device associated with the alert and its type
      * and generates a new state machine for this device pushing the alert type to the statemachine in a thread
-     * @param id The id of the alert inserted into the database
+     * @param newAlertId The id of the alert inserted into the database
      */
     @Override
-    public void handleNewInsertion(int id) {
+    public void handleNewInsertion(int newAlertId) {
         try {
-            Alert receivedAlert = AlertDAO.findAlert(id);
+            Alert receivedAlert = AlertDAO.findAlert(newAlertId);
             if (receivedAlert == null) {
                 System.out.println("Newly inserted alert not found");
                 return;
             }
 
             Device device = DeviceDAO.findDeviceByAlert(receivedAlert);
-
-            Thread process = new Thread(() -> {
-                    try {
-                        StateMachine stateMachine = stateMachineManager.getStateMachine(device);
-                        stateMachine.executeStateChangeIfNeeded(receivedAlert);
-                    }
-                    catch (Exception e) {
-                        System.out.println("Error getting next state: " + e.toString());
-                        e.printStackTrace();
-                    }
-                }
-            );
-            process.start();
+            StateMachine stateMachine = stateMachineManager.getStateMachine(device);
+            stateMachine.executeStateChangeIfNeeded(receivedAlert);
         }
         catch (Exception e) {
             System.out.println("Error handling new alert insertion: " + e.toString());

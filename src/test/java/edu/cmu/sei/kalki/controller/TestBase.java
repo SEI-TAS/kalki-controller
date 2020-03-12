@@ -20,17 +20,22 @@ import java.util.logging.Level;
 
 public abstract class TestBase
 {
-    private static MainController mainController;
+    protected DeviceType testDeviceType;
+    protected Device testDevice;
+
+    protected static MainController mainController;
 
     @BeforeEach
     public void setup() {
         try {
+            testDeviceType = null;
+            testDevice = null;
+
             Postgres.setLoggingLevel(Level.SEVERE);
             TestDB.recreateTestDB();
             TestDB.initialize();
 
             mainController = new MainController();
-            mainController.initListeners();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,49 +57,40 @@ public abstract class TestBase
         return alertType;
     }
 
-    protected Device insertDeviceData(int stateId, AlertType alertType) {
-        DeviceType deviceType = new DeviceType(1, "Test Type");
-        deviceType.insert();
+    protected Device insertDeviceData(int stateId) {
+        testDeviceType = new DeviceType(1, "Test Type");
+        testDeviceType.insert();
 
-        Device device = new Device("Test Device", "device", deviceType, "127.0.0.1", 1, 1);
-        device.insert();
+        testDevice = new Device("Test Device", "device", testDeviceType, "127.0.0.1", 1, 1);
+        testDevice.insert();
 
-        DeviceSecurityState dss = new DeviceSecurityState(device.getId(), stateId);
+        DeviceSecurityState dss = new DeviceSecurityState(testDevice.getId(), stateId);
         dss.insert();
 
-        // Rule 1
+        return testDevice;
+    }
+
+    protected void insertDevicePolicy(int startingStateId, int finishStateId, AlertType alertType) {
         List<Integer> alertTypeIds = new ArrayList<>();
         alertTypeIds.add(alertType.getId());
+        insertDevicePolicy(startingStateId, finishStateId, alertTypeIds);
+    }
+
+    protected void insertDevicePolicy(int startingStateId, int finishStateId, List<Integer> alertTypeIds) {
         PolicyCondition policyCondition = new PolicyCondition(10, alertTypeIds);
         policyCondition.insert();
 
-        StateTransition stateTransition = new StateTransition(1, 2);
+        StateTransition stateTransition = new StateTransition(startingStateId, finishStateId);
         stateTransition.insert();
 
-        PolicyRule policyRule = new PolicyRule(stateTransition.getId(), policyCondition.getId(), deviceType.getId(), 10);
+        PolicyRule policyRule = new PolicyRule(stateTransition.getId(), policyCondition.getId(), testDeviceType.getId(), 10);
         policyRule.insert();
-
-        // Rule 2, same but from state 2 to 3
-        stateTransition = new StateTransition(2, 3);
-        stateTransition.insert();
-
-        policyRule = new PolicyRule(stateTransition.getId(), policyCondition.getId(), deviceType.getId(), 10);
-        policyRule.insert();
-
-        return device;
     }
 
-    protected void insertAlert(Device device, AlertType alertType) {
+    protected Alert insertAlert(Device device, AlertType alertType) {
         System.out.println("Inserting test alert of type: " + alertType.getName());
         Alert alert = new Alert(device.getId(), alertType.getName(), alertType.getId(), "this is a test");
         alert.insert();
-    }
-
-    protected void waitForNotification() {
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        return alert;
     }
 }
