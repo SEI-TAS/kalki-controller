@@ -3,6 +3,7 @@ package edu.cmu.sei.kalki.controller;
 import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.models.Alert;
 import edu.cmu.sei.kalki.db.models.AlertType;
+import edu.cmu.sei.kalki.db.models.DataNode;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.DeviceSecurityState;
 import edu.cmu.sei.kalki.db.models.DeviceType;
@@ -61,7 +62,10 @@ public abstract class TestBase
         testDeviceType = new DeviceType(1, "Test Type");
         testDeviceType.insert();
 
-        testDevice = new Device("Test Device", "device", testDeviceType, "127.0.0.1", 1, 1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+
+        testDevice = new Device("Test Device", "device", testDeviceType, "127.0.0.1", 1, 1, dataNode);
         testDevice.insert();
 
         DeviceSecurityState dss = new DeviceSecurityState(testDevice.getId(), stateId);
