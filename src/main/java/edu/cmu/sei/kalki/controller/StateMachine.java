@@ -46,10 +46,15 @@ public class StateMachine {
 
         // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
         for(PolicyRule rule : policyRules) {
-            PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyCondId());
-            if(conditionHasBeenMet(condition, newAlert.getTimestamp())) {
-                // We should only get here if alerts for all type in the condition for this rule have been stored in the last time.
-                if(executePolicyRule(rule)) {
+            // First check if this rule applies to this state as its starting point. Ignore otherwise.
+            StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransId());
+            if(transition.getStartStateId() == currentState.getId()) {
+                PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyCondId());
+                if(conditionHasBeenMet(condition, newAlert.getTimestamp())) {
+                    // We should only get here if alerts for all type in the condition for this rule have been stored in the last time.
+                    System.out.println("Condition was met, executing policy rule.");
+                    executePolicyRule(rule, transition);
+
                     // If the policy executed (we were in the right state), stop checking other rules.
                     return;
                 }
@@ -86,24 +91,15 @@ public class StateMachine {
      * Executes a triggered policy rule, if it applies to the current state.
      * @param rule
      */
-    private boolean executePolicyRule(PolicyRule rule) {
-        StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransId());
-        if(transition.getStartStateId() == currentState.getId()) {
-            // Update the device and its associated info in the DB, changing its state.
-            System.out.println("Policy rule for the conditions and current state found.");
-            int finalSecStateId = transition.getFinishStateId();
-            int samplingRate = rule.getSamplingRate();
-            updateDeviceInDB(finalSecStateId, samplingRate);
+    private void executePolicyRule(PolicyRule rule, StateTransition transition) {
+        // Update the device and its associated info in the DB, changing its state.
+        int finalSecStateId = transition.getFinishStateId();
+        int samplingRate = rule.getSamplingRate();
+        updateDeviceInDB(finalSecStateId, samplingRate);
 
-            // Store the fact that this rule was triggered.
-            PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
-            log.insert();
-
-            return true;
-        }
-        else {
-            return false;
-        }
+        // Store the fact that this rule was triggered.
+        PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
+        log.insert();
     }
 
     /**
@@ -117,9 +113,9 @@ public class StateMachine {
         DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
         newDeviceSecurityState.insert();
 
-        System.out.println("Sampling Rate: " + newSamplingRate);
-        device.setCurrentState(newDeviceSecurityState);
+        System.out.println("New Sampling Rate: " + newSamplingRate);
         device.setSamplingRate(newSamplingRate);
+        device.setCurrentState(newDeviceSecurityState);
         device.insertOrUpdate();
 
         currentState = newState;
