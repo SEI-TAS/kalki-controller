@@ -95,7 +95,7 @@ public class StateMachine {
         // Update the device and its associated info in the DB, changing its state.
         int finalSecStateId = transition.getFinishStateId();
         int samplingRate = rule.getSamplingRate();
-        updateDeviceInDB(finalSecStateId, samplingRate);
+        executeStateChange(finalSecStateId, samplingRate);
 
         // Store the fact that this rule was triggered.
         PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
@@ -107,7 +107,7 @@ public class StateMachine {
      * @param newStateId
      * @param newSamplingRate
      */
-    private void updateDeviceInDB(int newStateId, int newSamplingRate) {
+    private void executeStateChange(int newStateId, int newSamplingRate) {
         SecurityState newState = SecurityStateDAO.findSecurityState(newStateId);
         System.out.println("New State: " + newState.getName());
         DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
