@@ -94,8 +94,8 @@ public class StateMachine {
     private void executePolicyRule(PolicyRule rule, StateTransition transition) {
         // Update the device and its associated info in the DB, changing its state.
         int finalSecStateId = transition.getFinishStateId();
-        int samplingRate = rule.getSamplingRate();
-        executeStateChange(finalSecStateId, samplingRate);
+        int samplingRateFactor = rule.getSamplingRateFactor();
+        executeStateChange(finalSecStateId, samplingRateFactor);
 
         // Store the fact that this rule was triggered.
         PolicyRuleLog log = new PolicyRuleLog(rule.getId(), device.getId());
@@ -105,14 +105,16 @@ public class StateMachine {
     /**
      * Updates a device security state and sampling rate in the DB.
      * @param newStateId
-     * @param newSamplingRate
+     * @param newSamplingRateFactor
      */
-    private void executeStateChange(int newStateId, int newSamplingRate) {
+    private void executeStateChange(int newStateId, int newSamplingRateFactor) {
         SecurityState newState = SecurityStateDAO.findSecurityState(newStateId);
         System.out.println("New State: " + newState.getName());
         DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
         newDeviceSecurityState.insert();
 
+        System.out.println("New Sampling Rate Factor: " + newSamplingRateFactor);
+        int newSamplingRate = device.getDefaultSamplingRate() * newSamplingRateFactor;
         System.out.println("New Sampling Rate: " + newSamplingRate);
         device.setSamplingRate(newSamplingRate);
         device.setCurrentState(newDeviceSecurityState);
