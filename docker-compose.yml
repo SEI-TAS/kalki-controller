@@ -1,0 +1,8 @@
+version: '2'
+services:
+  kalki-main-controller:
+    image: kalki/kalki-main-controller
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}
+    command: ${CMD_PARAMS}
