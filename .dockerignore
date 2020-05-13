@@ -1,0 +1,15 @@
+.git
+.gradle
+.idea
+build
+out
+gradle
+.gitignore
+*.sh
+docker-compose.yml
+Dockerfile
+Dockerfile.*
+gradlew
+gradlew.*
+*.md
+*.iml
