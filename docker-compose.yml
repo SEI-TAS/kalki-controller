@@ -2,6 +2,7 @@ version: '2'
 services:
   kalki-main-controller:
     image: kalki/kalki-main-controller
+    container_name: kalki-main-controller
     network_mode: "host"
     environment:
       - TZ=${HOST_TZ}
