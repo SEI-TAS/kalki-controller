@@ -1,7 +1,6 @@
 # First stage: build.
 FROM kalki/kalki-db-env AS build_env
 COPY --chown=gradle:gradle . /home/gradle/src
-RUN cp /home/gradle/kalki-db/gradle.properties /home/gradle/src/
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon
 
