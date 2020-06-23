@@ -1,21 +1,22 @@
 package edu.cmu.sei.kalki.controller;
 
 import edu.cmu.sei.kalki.db.daos.AlertDAO;
-import edu.cmu.sei.kalki.db.daos.AlertTypeDAO;
 import edu.cmu.sei.kalki.db.daos.DeviceDAO;
 import edu.cmu.sei.kalki.db.models.Alert;
-import edu.cmu.sei.kalki.db.models.AlertType;
 import edu.cmu.sei.kalki.db.models.Device;
 
 import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.listeners.InsertHandler;
 import edu.cmu.sei.kalki.db.listeners.InsertListener;
 
+import java.util.logging.Logger;
+
 /**
  * This class handles the initialization of the Postgres database connection as well as the initialization of
  * the alert listeners and their handler
  */
 public class MainController implements InsertHandler {
+    protected static final Logger logger = Logger.getLogger(MainController.class.getName());
 
     private StateMachineManager stateMachineManager;
 
@@ -33,7 +34,7 @@ public class MainController implements InsertHandler {
         try {
             Alert receivedAlert = AlertDAO.findAlert(newAlertId);
             if (receivedAlert == null) {
-                System.out.println("Newly inserted alert not found");
+                logger.info("Newly inserted alert not found");
                 return;
             }
 
@@ -42,7 +43,7 @@ public class MainController implements InsertHandler {
             stateMachine.executeStateChangeIfNeeded(receivedAlert);
         }
         catch (Exception e) {
-            System.out.println("Error handling new alert insertion: " + e.toString());
+            logger.warning("Error handling new alert insertion: " + e.toString());
             e.printStackTrace();
         }
     }

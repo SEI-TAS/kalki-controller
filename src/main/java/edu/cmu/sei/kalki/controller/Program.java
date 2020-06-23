@@ -1,6 +1,7 @@
 package edu.cmu.sei.kalki.controller;
 
 import edu.cmu.sei.kalki.db.utils.Config;
+import edu.cmu.sei.kalki.db.utils.LoggerSetup;
 
 public class Program
 {
@@ -11,6 +12,7 @@ public class Program
         try
         {
             Config.load("config.json");
+            LoggerSetup.setup();
 
             MainController mainController = new MainController();
             mainController.initDB();

@@ -19,8 +19,11 @@ import edu.cmu.sei.kalki.db.models.StateTransition;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class StateMachine {
+    protected static final Logger logger = Logger.getLogger(StateMachine.class.getName());
+
     private Device device;
     private SecurityState currentState;
     private List<PolicyRule> policyRules;
@@ -42,7 +45,7 @@ public class StateMachine {
      */
     public void executeStateChangeIfNeeded(Alert newAlert){
         AlertType newAlertType = AlertTypeDAO.findAlertType(newAlert.getAlertTypeId());
-        System.out.println("Alert: " + newAlertType.getName() + ", Device Type: " + device.getType().getName() + ", Current State: " + currentState.getName());
+        logger.info("Alert: " + newAlertType.getName() + ", Device Type: " + device.getType().getName() + ", Current State: " + currentState.getName());
 
         // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
         for(PolicyRule rule : policyRules) {
@@ -52,7 +55,7 @@ public class StateMachine {
                 PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyCondId());
                 if(conditionHasBeenMet(condition, newAlert.getTimestamp())) {
                     // We should only get here if alerts for all type in the condition for this rule have been stored in the last time.
-                    System.out.println("Condition was met, executing policy rule.");
+                    logger.info("Condition was met, executing policy rule.");
                     executePolicyRule(rule, transition);
 
                     // If the policy executed (we were in the right state), stop checking other rules.
@@ -61,7 +64,7 @@ public class StateMachine {
             }
         }
 
-        System.out.println("No matching policy rule found.");
+        logger.info("No matching policy rule found.");
     }
 
     /**
@@ -71,15 +74,15 @@ public class StateMachine {
      */
     private boolean conditionHasBeenMet(PolicyCondition condition, Timestamp lastAlertTimestamp) {
         List<Integer> conditionAlertTypeIds = condition.getAlertTypeIds();
-        System.out.println("Ids for current condition: " + conditionAlertTypeIds.toString());
+        logger.info("Ids for current condition: " + conditionAlertTypeIds.toString());
         int threshold = condition.getThreshold();
         for(int alertTypeId : conditionAlertTypeIds) {
             // Check that all alerts have been triggered.
             List<Alert> alerts = AlertDAO.findAlertsOverTime(device.getId(), alertTypeId, lastAlertTimestamp, threshold, "minutes");
-            System.out.println("Found " + alerts.size() + " alerts of type " + alertTypeId + " over the last " + threshold + " minutes.");
+            logger.info("Found " + alerts.size() + " alerts of type " + alertTypeId + " over the last " + threshold + " minutes.");
             if(alerts.size() == 0) {
                 // If no alerts for one of the conditions were found, the condition has not been met.
-                System.out.println("Condition was not met.");
+                logger.info("Condition was not met.");
                 return false;
             }
         }
@@ -109,13 +112,13 @@ public class StateMachine {
      */
     private void executeStateChange(int newStateId, int newSamplingRateFactor) {
         SecurityState newState = SecurityStateDAO.findSecurityState(newStateId);
-        System.out.println("New State: " + newState.getName());
+        logger.info("New State: " + newState.getName());
         DeviceSecurityState newDeviceSecurityState = new DeviceSecurityState(device.getId(), newState.getId());
         newDeviceSecurityState.insert();
 
-        System.out.println("New Sampling Rate Factor: " + newSamplingRateFactor);
+        logger.info("New Sampling Rate Factor: " + newSamplingRateFactor);
         int newSamplingRate = device.getDefaultSamplingRate() * newSamplingRateFactor;
-        System.out.println("New Sampling Rate: " + newSamplingRate);
+        logger.info("New Sampling Rate: " + newSamplingRate);
         device.setSamplingRate(newSamplingRate);
         device.setCurrentState(newDeviceSecurityState);
         device.insertOrUpdate();
