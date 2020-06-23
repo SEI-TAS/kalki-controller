@@ -8,4 +8,4 @@ services:
       - TZ=${HOST_TZ}
     command: ${CMD_PARAMS}
     volumes:
-      - ./kmc-logs:/logs
+      - ./logs:/logs
