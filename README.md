@@ -1,4 +1,18 @@
 # Main Controller
+
+The Kalki Main Controller is the main engine of the Control node of Kalki. It listens for new alerts, and updates the security state of each device according to the configured policy rules, deploying security measures as needed.
+
+Kalki is an IoT platform for allowing untrusted IoT devices to connect to a network in a secure way, protecting both the IoT device and the network from malicious attackers.
+
+Kalki comprises a total of 8 GitHub projects:
+- kalki-node-setup (Kalki Main Repository, composes all non-UI components)
+- kalki-controller (Kalki Main Controller)
+- kalki-umbox-controller (Kalki Umbox Controller)
+- kalki-device-controller (Kalki Device Controller)
+- kalki-dashboard (Kalki Dashboard)
+- kalki-db (Kalki Database Library)
+- kalki-iot-interface (Kalki IoT Interface)
+- kalki-umboxes (Kalki Umboxes, sample umboxes and umboxes components)
  
 ## Prerequisites
  - Docker is required to compile and run this program.
