@@ -81,9 +81,9 @@ public class StateMachine {
         // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
         for(PolicyRule rule : policyRules) {
             // First check if this rule applies to this state as its starting point. Ignore otherwise.
-            StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransId());
+            StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransitionId());
             if(transition.getStartStateId() == currentState.getId()) {
-                PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyCondId());
+                PolicyCondition condition = PolicyConditionDAO.findPolicyCondition(rule.getPolicyConditionId());
                 if(conditionHasBeenMet(condition, newAlert.getTimestamp())) {
                     // We should only get here if alerts for all type in the condition for this rule have been stored in the last time.
                     logger.info("Condition was met, executing policy rule.");
