@@ -2,7 +2,8 @@
 FROM kalki/kalki-db-env AS build_env
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+ARG SKIP_TESTS=""
+RUN gradle build $SKIP_TESTS --no-daemon
 
 # Second stage: actual run environment.
 FROM openjdk:8-jre-alpine
