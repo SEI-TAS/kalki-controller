@@ -1,5 +1,6 @@
 # First stage: build.
-FROM kalki/kalki-db-env AS build_env
+ARG KALKI_DB_VER="latest"
+FROM kalki/kalki-db-env:$KALKI_DB_VER AS build_env
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 ARG SKIP_TESTS=""
