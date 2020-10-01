@@ -57,7 +57,6 @@ public class StateMachine {
 
     private Device device;
     private SecurityState currentState;
-    private List<PolicyRule> policyRules;
 
     /**
      * Stores the device info, gets details about its current state, and loads all policy rules associated with the
@@ -67,7 +66,6 @@ public class StateMachine {
     public StateMachine(Device device) {
         this.device = device;
         this.currentState = SecurityStateDAO.findSecurityState(device.getCurrentState().getStateId());
-        this.policyRules = PolicyRuleDAO.findPolicyRules(device.getType().getId());
     }
 
     /**
@@ -79,6 +77,7 @@ public class StateMachine {
         logger.info("Alert: " + newAlertType.getName() + ", Device Type: " + device.getType().getName() + ", Current State: " + currentState.getName());
 
         // Look in all policy rules for the ones that are triggered by this alert type, on our current state.
+        List<PolicyRule> policyRules = PolicyRuleDAO.findPolicyRules(device.getType().getId());
         for(PolicyRule rule : policyRules) {
             // First check if this rule applies to this state as its starting point. Ignore otherwise.
             StateTransition transition = StateTransitionDAO.findStateTransition(rule.getStateTransitionId());

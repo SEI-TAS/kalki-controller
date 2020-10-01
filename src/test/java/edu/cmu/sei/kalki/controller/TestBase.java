@@ -96,7 +96,7 @@ public abstract class TestBase
         DataNode dataNode = new DataNode("Test Node", "localhost");
         dataNode.insert();
 
-        testDevice = new Device("Test Device", "device", testDeviceType, "127.0.0.1", 1, 1, dataNode);
+        testDevice = new Device("Test Device", "device", testDeviceType, "127.0.0.1", 1, 1, dataNode, "");
         testDevice.insert();
 
         DeviceSecurityState dss = new DeviceSecurityState(testDevice.getId(), stateId);
