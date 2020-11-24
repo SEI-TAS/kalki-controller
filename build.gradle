@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 group 'edu.cmu.sei.ttg.kalki'
-version '1.7.0'
+version '1.8.0'
 
 mainClassName = 'edu.cmu.sei.kalki.controller.Program'
 sourceCompatibility = 1.8
@@ -15,7 +15,7 @@ repositories {
 dependencies {
     implementation 'com.google.guava:guava:27.0.1-jre'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-    implementation 'edu.cmu.sei.ttg:kalki-db:1.7.0'
+    implementation 'edu.cmu.sei.ttg:kalki-db:1.8.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
